@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "testesSvg": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
