@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
+using System.Runtime.Intrinsics.Arm;
 using System.Xml.Linq;
+using testesSvg.Components;
 
 namespace testesSvg;
 
@@ -51,15 +53,16 @@ public static class SvgComponentSide
         //    Offset = "1500",
         //};
 
-        ////PecaRebaixoMinifixMinParafuso --OK
-        //var payload = new SvgRequest
-        //{
-        //    Width = "12000",
-        //    Height = "20000",
-        //    Thickness = "700",
-        //    Offset = "0",
-        //    JoinSystemType = "minifix"
-        //};
+        //PecaRebaixoMinifixMinParafuso --OK
+        var payload = new SvgRequest
+        {
+            Width = "12000",
+            Height = "20000",
+            Thickness = "700",
+            Offset = "0",
+            JoinSystemType = "minifix",
+            Type = "Side"
+        };
 
         ////PecaRebaixoMinifixMaxParafuso --OK
         //var payload = new SvgRequest
@@ -91,7 +94,7 @@ public static class SvgComponentSide
         //    JoinSystemType = "minifix"
         //};
 
-        ////PecaRebaixoMinifixMinTambor -
+        //PecaRebaixoMinifixMinTambor - OK
         //var payload = new SvgRequest
         //{
         //    Width = "12000",
@@ -101,15 +104,66 @@ public static class SvgComponentSide
         //    JoinSystemType = "minifix"
         //};
 
-        //PecaRebaixoMinifixMaxTambor --
-        var payload = new SvgRequest
-        {
-            Width = "150000",
-            Height = "270000",
-            Thickness = "700",
-            Offset = "0",
-            JoinSystemType = "minifix"
-        };
+        ////PecaRebaixoMinifixMaxTambor -- OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "150000",
+        //    Height = "270000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "minifix",
+        //    Type = "Base"
+        //};
+
+        ////PecaCanalMinifixMinTambor --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "20000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix"
+        //};
+
+        ////PecaCanalMinifixMaxTambor --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "150000",
+        //    Height = "270000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix"
+        //};
+
+        //PecaCanalCavilhaMinParafuso--OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "30000",
+        //    Height = "30000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "dowels"
+        //};
+
+        ////PecaCanalCavilhaMinUmFuroParafuso -- Errado a proporcao do centro do furo
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "12000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "dowels"
+        //};
+
+        ////PecaCanalCavilhaMaxParafuso --
+        //var payload = new SvgRequest
+        //{
+        //    Width = "219000",
+        //    Height = "159000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "dowels"
+        //};
 
         string svgXml = GenerateSvgFromJson(payload);
         return svgXml;
@@ -123,7 +177,6 @@ public static class SvgComponentSide
         int? dadoOffsetFromEnd = !string.IsNullOrEmpty(json.Offset) ? Convert.ToInt32(json.Offset) : null;
         int? dadoThickness = !string.IsNullOrEmpty(json.Thickness) ? Convert.ToInt32(json.Thickness) : null;
 
-
         int viewBoxX = -width / 20;
         int viewBoxY = -height / 20; //regra para BOARD 15
         int viewBoxWidth = width / 10;
@@ -136,53 +189,65 @@ public static class SvgComponentSide
         int viewBoxHeight1 = (int)(viewBoxHeight * expandFactor);
 
 
-        // Criando o SVG com os elementos fixos
         var svg = new XElement("svg",
             new XAttribute("viewBox", $"{viewBoxX1} {viewBoxY1} {viewBoxWidth1} {viewBoxHeight1}"),
-            //verificar se o Landscape é true, caso seja já criar o viewBox alterado (width = height e height = width)
             new XAttribute("width", viewBoxWidth),
             new XAttribute("height", viewBoxHeight)
-            //,CreateOuterBackgroundPath(viewBoxX, viewBoxY)
-            , Label.CreateLabelGroup(width, height)
-            , Label.CreateTopLabelGroup(width, height)
-            , CreateBackgroundPath(viewBoxX, viewBoxY)
-            , CreateBorderGroup(viewBoxWidth, viewBoxHeight, viewBoxX, viewBoxY, true, false, false, false)
-        //, CreateMinifixPaths(viewBoxWidth, viewBoxHeight)
-        //  , CreateDowelsPath(viewBoxWidth, viewBoxHeight)
-
+            ,Label.CreateLabelGroup(width, height)
+            ,Label.CreateTopLabelGroup(width, height)
+            ,CreateBackgroundPath(viewBoxX, viewBoxY)
+            ,CreateBorderGroup(viewBoxWidth, viewBoxHeight, viewBoxX, viewBoxY, true, false, false, true)
         );
 
-        //if (dadoThickness is not null)
+        if (dadoThickness is not null)
+        {
+            svg.Add(Thickness.CreateThickness(viewBoxWidth, height, viewBoxX, dadoOffsetFromEnd, (int)dadoThickness));
+        }
+
+        if (!string.IsNullOrEmpty(json.JoinSystemType))
+        {
+            if (json.JoinSystemType.Contains("dowels"))
+            {
+                svg.Add(Dowels.GenerateSide(viewBoxWidth, viewBoxHeight));
+            }
+
+            if (json.JoinSystemType.Contains("minifix"))
+            {
+                if (json.Type.Equals("Base"))
+                    svg.Add(Minifix.GenerateBase(viewBoxWidth, viewBoxHeight));
+
+                if (json.Type.Equals("Side"))
+                {
+                    svg.Add(Minifix.GenerateSide(viewBoxWidth, viewBoxHeight));
+                    //svg.Add(CreateMinifixPaths(viewBoxWidth, viewBoxHeight));
+                }
+                    
+
+            }
+        }
+
+        //CRIAR VALIDACAO DE SIDE, BASE E DOOR
+        //if (!string.IsNullOrEmpty(json.JoinSystemType))
         //{
-        //    svg.Add(Thickness.CreateThickness(viewBoxWidth, height, viewBoxX, dadoOffsetFromEnd, (int)dadoThickness));
+        //  svg.Add(CreateMinifixPaths(viewBoxWidth, viewBoxHeight));
         //}
 
         //if (!string.IsNullOrEmpty(json.JoinSystemType))
         //{
-        //    svg.Add(CreateMinifixPaths(viewBoxWidth, viewBoxHeight));
+        //    svg.Add(CreateMinifixBase(viewBoxWidth, viewBoxHeight));
         //}
-
-        if (!string.IsNullOrEmpty(json.JoinSystemType))
-        {
-            //   svg.Add(MinifixBaseRightUp(viewBoxWidth, viewBoxHeight));
-            //    svg.Add(MinifixBaseCircleRightUp(viewBoxWidth, viewBoxHeight));
-            svg.Add(MinifixBaseRightDown(viewBoxWidth, viewBoxHeight));
-            svg.Add(MinifixBaseCircleRightDown(viewBoxWidth, viewBoxHeight));
-            svg.Add(MinifixBaseLefttUp(viewBoxWidth, viewBoxHeight));
-            svg.Add(MinifixBaseCircleLeftUp(viewBoxWidth, viewBoxHeight));
-        }
-
-        return svg.ToString();
-
-        #region testes
-        //rebaixo linha vermelha colada no canto da peça, canal um pouco acima
 
         //pensar melhor sobre essa regra
         //quando giro preciso redimensionar todos os groups
         //if (request.IsLandscape)
         //{
-        //    svg.Add(new XAttribute("transform", "rotate(90)"));
+         //   svg.Add(new XAttribute("transform", "rotate(-90)"));
         //}
+
+        return svg.ToString();
+
+        #region testes
+        //rebaixo linha vermelha colada no canto da peça, canal um pouco acima
 
 
         //testes
@@ -202,31 +267,31 @@ public static class SvgComponentSide
 
         //side (parafuso)
         //testar peças com rebaixo + minifix - ok
-        //testar peças com rebaixo + cavilha
-        //testar peças com rebaixo + vb 1 furo
-        //testar peças com rebaixo + vb 2 furos
-        //testar peças com rebaixo + minifix + cavilha
+        //testar peças com rebaixo + cavilha - pulei por causa dos 3 furos
+        //testar peças com rebaixo + vb 1 furo -
+        //testar peças com rebaixo + vb 2 furos -
+        //testar peças com rebaixo + minifix + cavilha -
 
         //side (parafuso)
         //testar peças com canal + minifix - ok
-        //testar peças com canal + cavilha
-        //testar peças com canal + vb 1 furo
-        //testar peças com canal + vb 2 furos
-        //testar peças com canal + minifix + cavilha
+        //testar peças com canal + cavilha -  (PecaCanalCavilhaMinParafuso final do arquivo exemplo de um furo para logica dobradiça)
+        //testar peças com canal + vb 1 furo -
+        //testar peças com canal + vb 2 furos - 
+        //testar peças com canal + minifix + cavilha -
 
         //base (tambor)
-        //testar peças com rebaixo + minifix
-        //testar peças com rebaixo + cavilha
-        //testar peças com rebaixo + vb 1 furo
-        //testar peças com rebaixo + vb 2 furos
-        //testar peças com rebaixo + minifix + cavilha
+        //testar peças com rebaixo + minifix - ok
+        //testar peças com rebaixo + cavilha -
+        //testar peças com rebaixo + vb 1 furo -
+        //testar peças com rebaixo + vb 2 furos -
+        //testar peças com rebaixo + minifix + cavilha -
 
         //side (tambor)
-        //testar peças com canal + minifix
-        //testar peças com canal + cavilha
-        //testar peças com canal + vb 1 furo
-        //testar peças com canal + vb 2 furos
-        //testar peças com canal + minifix + cavilha
+        //testar peças com canal + minifix - ok
+        //testar peças com canal + cavilha -
+        //testar peças com canal + vb 1 furo -
+        //testar peças com canal + vb 2 furos -
+        //testar peças com canal + minifix + cavilha -
 
         //se receber dowels (cavilha), tem que criar 3 dowels, top, center e down
 
@@ -292,14 +357,17 @@ public static class SvgComponentSide
         return group;
     }
 
+
+    //QUANDO AUMENTA MT A BORDA COME UM PEDAÇO DA PEÇA
+    //DIMINUI O ESPAÇO DO FURO COM A MARGEM DA PEÇA
     static XElement CreateBorderGroup(int w, int h, int x, int y, bool top, bool right, bool bottom, bool left)
     {
         var group = new XElement("g", new XAttribute("name", "border"));
 
         // Estilo padrão
-        string defaultStyle = "fill:none;stroke:#666;stroke-width:10;stroke-linejoin:round;stroke-dasharray:none;";
+        string defaultStyle = "fill:none;stroke:#666;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;";
         // Estilo em destaque
-        string highlightStyle = "fill:none;stroke:#000000;stroke-width:30;stroke-linejoin:round;";
+        string highlightStyle = "fill:none;stroke:#000000;stroke-width:70;stroke-linejoin:round;";
 
         var borders = new[]
         {
@@ -327,7 +395,6 @@ public static class SvgComponentSide
     {
         return new List<XElement>
         {
-            MinifixSideRightUp(w, h),
             MinifixSideRightDown(w, h),
             MinifixSideLeftUp(w, h),
             MinifixSideLeftDown(w, h)
@@ -338,7 +405,7 @@ public static class SvgComponentSide
     {
         return new List<XElement>
         {
-            MinifixSideRightUp(w, h),
+          
             CreateDowels(w, h),
             MinifixSideRightDown(w, h),
             MinifixSideLeftUp(w, h),
@@ -346,209 +413,7 @@ public static class SvgComponentSide
             MinifixSideLeftDown(w, h)
         };
     }
-
-    #region Minifix
-
-    #region side
-    //sem formula
-    static XElement MinifixSideRightUp(int w, int h)
-    {
-        var group = new XElement("g", new XAttribute("name", "minifix-right-up"));
-
-        // Base de posição do minifix
-        double baseX = (w / 2.0) - 50;
-        double baseY = (h / 2.0) - 280;
-
-        #region Paths
-
-        // ----- Primeiro Path -----
-        double x1 = baseX;
-        double y1 = -(baseY);
-
-        double x2 = baseX - 3.3494;
-        double y2 = -(baseY + 12.5);
-
-        var g1 = GenericDouble(x1, x2, y1, y2);
-        group.Add(g1);
-
-        // ----- Segundo Path -----
-        double x3 = x2;
-        double y3 = y2;
-
-        double x4 = x3 - 9.1506;
-        double y4 = y3 - 9.1506;
-
-        var g2 = GenericDouble(x3, x4, y3, y4);
-        group.Add(g2);
-
-        // ----- Terceiro Path -----
-        double x5 = x4;
-        double y5 = y4;
-
-        double x6 = x5 - 12.5;
-        double y6 = y5 - 3.3492;
-
-        x5 = Math.Round(x5, 4);
-        y5 = Math.Round(y5, 4);
-        x6 = Math.Round(x6, 4);
-        y6 = Math.Round(y6, 2);
-
-        var g3 = GenericDouble(x5, x6, y5, y6);
-        group.Add(g3);
-
-        // ---- Quarto Path -----
-        double x7 = x6 - 12.5;
-        double y7 = y6 + 3.3492;
-
-        double x8 = x7;
-        double y8 = y7 + 0.0002;
-
-        x7 = Math.Round(x7, 4);
-        y7 = Math.Round(y7, 4);
-        x8 = Math.Round(x8, 4);
-        y8 = Math.Round(y8, 4);
-
-
-        string d4 = $"M {x6.ToString("0.####", CultureInfo.InvariantCulture)} {y6.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x7.ToString("0.####", CultureInfo.InvariantCulture)} {y7.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x8.ToString("0.####", CultureInfo.InvariantCulture)} {y8.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x6.ToString("0.####", CultureInfo.InvariantCulture)} {y6.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d4),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Quinto Path -----
-        double x9 = x7 - 9.1506;
-        double y9 = y7 + 9.1508;
-
-        x9 = Math.Round(x9, 4);
-        y9 = Math.Round(y9, 4);
-
-
-        string d5 = $"M {x7.ToString("0.####", CultureInfo.InvariantCulture)} {y7.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x9.ToString("0.####", CultureInfo.InvariantCulture)} {y9.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x9.ToString("0.####", CultureInfo.InvariantCulture)} {y9.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x8.ToString("0.####", CultureInfo.InvariantCulture)} {y8.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d5),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Sexto Path -----
-        double x10 = x9 - 3.3494;
-        double y10 = y9 + 12.5;
-
-        x10 = Math.Round(x10, 4);
-        y10 = Math.Round(y10, 4);
-
-        var g6 = GenericDouble(x9, x10, y9, y10);
-        group.Add(g6);
-
-        // ----- Setimo Path -----
-        double x11 = x10 + 3.3494;
-        double y11 = y10 + 12.5;
-
-        x11 = Math.Round(x11, 4);
-        y11 = Math.Round(y11, 4);
-
-        var g7 = GenericDouble(x10, x11, y10, y11);
-        group.Add(g7);
-
-        // ----- Oitavo Path -----
-        double x12 = x11 + 9.1506;
-        double y12 = y11 + 9.1505;
-
-        x12 = Math.Round(x12, 4);
-        y12 = Math.Round(y12, 4);
-
-        var g8 = GenericDouble(x11, x12, y11, y12);
-        group.Add(g8);
-
-        // ----- Nono Path -----
-        double x13 = x12 + 12.5;
-        double y13 = y12 + 3.3495;
-
-        x13 = Math.Round(x13, 4);
-        y13 = Math.Round(y13, 4);
-
-        var g9 = GenericDouble(x12, x13, y12, y13);
-        group.Add(g9);
-
-        // ----- Decimo Path -----
-        double x14 = x13 + 12.5;
-        double y14 = y13 - 3.3495;
-
-        x14 = Math.Round(x14, 4);
-        y14 = Math.Round(y14, 4);
-
-        var g10 = GenericDouble(x13, x14, y13, y14);
-        group.Add(g10);
-
-        // ----- Decimo Primeiro Path -----
-        double x15 = x14 + 9.1506;
-        double y15 = y14 - 9.1505;
-
-        x15 = Math.Round(x15, 4);
-        y15 = Math.Round(y15, 4);
-
-        var g11 = GenericDouble(x14, x15, y14, y15);
-        group.Add(g11);
-
-        // ----- Decimo Segundo Path -----
-        double x16 = x15 + 3.3494;
-        double y16 = y15 - 12.5;
-
-        x16 = Math.Round(x16, 4);
-        y16 = Math.Round(y16, 4);
-
-        var g12 = GenericDouble(x15, x16, y15, y16);
-        group.Add(g12);
-
-        #endregion 
-
-        // ----- Decimo Terceiro background Path -----
-        var points = new (double X, double Y)[]
-    {
-        (baseX, -(baseY)),
-        (baseX - 3.3494, -(baseY + 12.5)),
-        (baseX - 12.5, -(baseY + 21.6508)),
-        (baseX - 25, -(baseY + 25)),
-        (baseX - 37.5, -(baseY + 21.6508)),
-        (baseX - 46.6506, -(baseY + 12.5)),
-        (baseX - 50, -(baseY)),
-        (baseX - 46.6506, -(baseY - 12.5)),
-        (baseX - 37.5, -(baseY - 21.6505)),
-        (baseX - 25, -(baseY - 25)),
-        (baseX - 12.5, -(baseY - 21.6505)),
-        (baseX - 3.3494, -(baseY - 12.5))
-    };
-
-        var d15 = "M " + string.Join(" L ", points.Select(p =>
-            $"{p.X.ToString("0.####", CultureInfo.InvariantCulture)} {p.Y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d15),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        var d16 = Circle(baseX, baseY);
-
-        group.Add(new XElement("path",
-           new XAttribute("d", d16),
-           new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-           new XAttribute("stroke", "black")
-       ));
-
-        return group;
-    }
-
+   
     //sem formula
     static XElement MinifixSideRightDown(double width, double height)
     {
@@ -1108,1017 +973,7 @@ public static class SvgComponentSide
         return group;
     }
 
-    #endregion
-
-    static XElement MinifixBaseRightUp(int width, int height)
-    {
-        // ----- Primeiro Path -----
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseRightUp"));
-
-        double x1 = 0.5 * width - 239.5;
-        double x2 = 0.5 * width + 0.5;
-        double y1 = -(0.5 * height - 320);
-        double y2 = -(0.5 * height - 314.641);
-
-        string d1 = $"M {x1.ToString("0.####", CultureInfo.InvariantCulture)} {y1.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                 $"L {x1.ToString("0.####", CultureInfo.InvariantCulture)} {y2.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                 $"L {x2.ToString("0.####", CultureInfo.InvariantCulture)} {y2.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                 $"L {x2.ToString("0.####", CultureInfo.InvariantCulture)} {y1.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d1),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Segundo Path -----
-        double x3 = 0.5 * width - 239.5;
-        double x4 = 0.5 * width + 0.5;
-        double y3 = -(0.5 * height - 314.641);
-        double y4 = -(0.5 * height - 300);
-
-        string d2 = $"M {x3.ToString("0.####", CultureInfo.InvariantCulture)} {y3.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x3.ToString("0.####", CultureInfo.InvariantCulture)} {y4.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x4.ToString("0.####", CultureInfo.InvariantCulture)} {y4.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x4.ToString("0.####", CultureInfo.InvariantCulture)} {y3.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d2),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Terceiro Path -----
-        double x5 = 0.5 * width - 239.5;
-        double x6 = 0.5 * width + 0.5;
-        double y5 = -(0.5 * height - 300);
-        double y6 = -(0.5 * height - 280);
-
-        string d3 = $"M {x5.ToString("0.####", CultureInfo.InvariantCulture)} {y5.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x5.ToString("0.####", CultureInfo.InvariantCulture)} {y6.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x6.ToString("0.####", CultureInfo.InvariantCulture)} {y6.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x6.ToString("0.####", CultureInfo.InvariantCulture)} {y5.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d3),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Quarto Path -----
-        double x7 = 0.5 * width - 239.5;
-        double x8 = 0.5 * width + 0.5;
-        double y7 = -(0.5 * height - 280);
-        double y8 = -(0.5 * height - 260);
-
-        string d4 = $"M {x7.ToString("0.####", CultureInfo.InvariantCulture)} {y7.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x7.ToString("0.####", CultureInfo.InvariantCulture)} {y8.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x8.ToString("0.####", CultureInfo.InvariantCulture)} {y8.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x8.ToString("0.####", CultureInfo.InvariantCulture)} {y7.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d4),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Quinto Path -----
-        double x9 = 0.5 * width - 239.5;
-        double x10 = 0.5 * width + 0.5;
-        double y9 = -(0.5 * height - 260);
-        double y10 = -(0.5 * height - 245.359);
-
-        string d5 = $"M {x9.ToString("0.####", CultureInfo.InvariantCulture)} {y9.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x9.ToString("0.####", CultureInfo.InvariantCulture)} {y10.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x10.ToString("0.####", CultureInfo.InvariantCulture)} {y10.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x10.ToString("0.####", CultureInfo.InvariantCulture)} {y9.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d5),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Sexto Path -----
-        double x11 = 0.5 * width - 239.5;
-        double x12 = 0.5 * width + 0.5;
-        double y11 = -(0.5 * height - 245.359);
-        double y12 = -(0.5 * height - 240);
-
-        string d6 = $"M {x11.ToString("0.####", CultureInfo.InvariantCulture)} {y11.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x11.ToString("0.####", CultureInfo.InvariantCulture)} {y12.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x12.ToString("0.####", CultureInfo.InvariantCulture)} {y12.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x12.ToString("0.####", CultureInfo.InvariantCulture)} {y11.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d6),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Sétimo Path -----
-        double x13 = 0.5 * width - 239.5;
-        double x14 = 0.5 * width + 0.5;
-        double y13 = -(0.5 * height - 240);
-        double y14 = -(0.5 * height - 245.359);
-
-        string d7 = $"M {x13.ToString("0.####", CultureInfo.InvariantCulture)} {y13.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x13.ToString("0.####", CultureInfo.InvariantCulture)} {y14.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x14.ToString("0.####", CultureInfo.InvariantCulture)} {y14.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x14.ToString("0.####", CultureInfo.InvariantCulture)} {y13.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d7),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Oitavo Path -----
-        double x15 = 0.5 * width - 239.5;
-        double x16 = 0.5 * width + 0.5;
-        double y15 = -(0.5 * height - 245.359);
-        double y16 = -(0.5 * height - 260);
-
-        string d8 = $"M {x15.ToString("0.####", CultureInfo.InvariantCulture)} {y15.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x15.ToString("0.####", CultureInfo.InvariantCulture)} {y16.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x16.ToString("0.####", CultureInfo.InvariantCulture)} {y16.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x16.ToString("0.####", CultureInfo.InvariantCulture)} {y15.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d8),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Nono Path -----
-        double x17 = 0.5 * width - 239.5;
-        double x18 = 0.5 * width + 0.5;
-        double y17 = -(0.5 * height - 260);
-        double y18 = -(0.5 * height - 280);
-
-        string d9 = $"M {x17.ToString("0.####", CultureInfo.InvariantCulture)} {y17.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x17.ToString("0.####", CultureInfo.InvariantCulture)} {y18.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x18.ToString("0.####", CultureInfo.InvariantCulture)} {y18.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                    $"L {x18.ToString("0.####", CultureInfo.InvariantCulture)} {y17.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d9),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Path -----
-        double x19 = 0.5 * width - 239.5;
-        double x20 = 0.5 * width + 0.5;
-        double y19 = -(0.5 * height - 280);
-        double y20 = -(0.5 * height - 300);
-
-        string d10 = $"M {x19.ToString("0.####", CultureInfo.InvariantCulture)} {y19.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x19.ToString("0.####", CultureInfo.InvariantCulture)} {y20.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x20.ToString("0.####", CultureInfo.InvariantCulture)} {y20.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x20.ToString("0.####", CultureInfo.InvariantCulture)} {y19.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d10),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Primeiro Path -----
-        double x21 = 0.5 * width - 239.5;
-        double x22 = 0.5 * width + 0.5;
-        double y21 = -(0.5 * height - 300);
-        double y22 = -(0.5 * height - 314.641);
-
-        string d11 = $"M {x21.ToString("0.####", CultureInfo.InvariantCulture)} {y21.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x21.ToString("0.####", CultureInfo.InvariantCulture)} {y22.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x22.ToString("0.####", CultureInfo.InvariantCulture)} {y22.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x22.ToString("0.####", CultureInfo.InvariantCulture)} {y21.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d11),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Segundo Path -----
-        double x23 = 0.5 * width - 239.5;
-        double x24 = 0.5 * width + 0.5;
-        double y23 = -(0.5 * height - 314.641);
-        double y24 = -(0.5 * height - 320);
-
-        string d12 = $"M {x23.ToString("0.####", CultureInfo.InvariantCulture)} {y23.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x23.ToString("0.####", CultureInfo.InvariantCulture)} {y24.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x24.ToString("0.####", CultureInfo.InvariantCulture)} {y24.ToString("0.####", CultureInfo.InvariantCulture)} " +
-                     $"L {x24.ToString("0.####", CultureInfo.InvariantCulture)} {y23.ToString("0.####", CultureInfo.InvariantCulture)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d12),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Terceiro Path -----
-        double x25 = 0.5 * width - 239.5;
-        var yCoords = new[]
-        {
-    -(0.5 * height - 320),
-    -(0.5 * height - 314.641),
-    -(0.5 * height - 300),
-    -(0.5 * height - 280),
-    -(0.5 * height - 260),
-    -(0.5 * height - 245.359),
-    -(0.5 * height - 240),
-    -(0.5 * height - 245.359),
-    -(0.5 * height - 260),
-    -(0.5 * height - 280),
-    -(0.5 * height - 300),
-    -(0.5 * height - 314.641)
-};
-
-        var d13 = $"M {x25.ToString("0.####", CultureInfo.InvariantCulture)} {yCoords[0].ToString("0.####", CultureInfo.InvariantCulture)} ";
-        for (int i = 1; i < yCoords.Length; i++)
-        {
-            d13 += $"L {x25.ToString("0.####", CultureInfo.InvariantCulture)} {yCoords[i].ToString("0.####", CultureInfo.InvariantCulture)} ";
-        }
-        d13 += "Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d13),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Quarto Path -----
-        double xFinal = 0.5 * width + 0.5;
-
-        var yCoordsPath14 = new[]
-        {
-    -(0.5 * height - 320),         // -13180 para height = 15000
-    -(0.5 * height - 314.641),    // -13185.359
-    -(0.5 * height - 300),        // -13200
-    -(0.5 * height - 280),        // -13220
-    -(0.5 * height - 260),        // -13240
-    -(0.5 * height - 245.359),    // -13254.641
-    -(0.5 * height - 240),        // -13260
-    -(0.5 * height - 245.359),    // -13254.641 (mesmo que acima)
-    -(0.5 * height - 260),        // -13240
-    -(0.5 * height - 280),        // -13220
-    -(0.5 * height - 300),        // -13200
-    -(0.5 * height - 314.641)     // -13185.359
-};
-
-        string d14 = "M " + string.Join(" L ", yCoordsPath14.Select(y =>
-            $"{xFinal.ToString("0.####", CultureInfo.InvariantCulture)} {y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d14),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-    }
-
-    static XElement MinifixBaseCircleRightUp(int width, int height)
-    {
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseCircleRightUp"));
-        var ci = CultureInfo.InvariantCulture;
-
-        // ----- Primeiro Path -----
-        double x1 = 0.5 * width - 165;
-        double y1 = -(0.5 * height - 280);
-        double x2 = 0.5 * width - 175.0481;
-        double y2 = -(0.5 * height - 242.5);
-
-        string d1 = $"M {x1.ToString("0.####", ci)} {y1.ToString("0.####", ci)} " +
-                    $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
-                    $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
-                    $"L {x1.ToString("0.####", ci)} {y1.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d1),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Segundo Path -----
-        double x3 = 0.5 * width - 202.5;
-        double y3 = -(0.5 * height - 215.048);
-
-        string d2 = $"M {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
-                    $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
-                    $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
-                    $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d2),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Terceiro Path -----
-        double x4 = 0.5 * width - 240;
-        double y4 = -(0.5 * height - 205);
-
-        string d3 = $"M {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
-                    $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} " +
-                    $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} " +
-                    $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d3),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Quarto Path -----
-        double x5 = 0.5 * width - 277.5;
-        double y5 = -(0.5 * height - 215.048);
-
-        string d4 = $"M {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y5.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y5.ToString("0.####", ci)} " +
-                    $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d4),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Quinto Path -----
-        double x6 = 0.5 * width - 304.9517;
-        double y6 = -(0.5 * height - 242.5);
-
-        string d5 = $"M {x5.ToString("0.####", ci)} {y5.ToString("0.####", ci)} " +
-                    $"L {x6.ToString("0.####", ci)} {y6.ToString("0.####", ci)} " +
-                    $"L {x6.ToString("0.####", ci)} {y6.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y5.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d5),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Sexto Path -----
-        double x7 = 0.5 * width - 315;
-        double y7 = -(0.5 * height - 280);
-
-        string d6 = $"M {x6.ToString("0.####", ci)} {y6.ToString("0.####", ci)} " +
-                    $"L {x7.ToString("0.####", ci)} {y7.ToString("0.####", ci)} " +
-                    $"L {x7.ToString("0.####", ci)} {y7.ToString("0.####", ci)} " +
-                    $"L {x6.ToString("0.####", ci)} {y6.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d6),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Sétimo Path -----
-        double x8 = 0.5 * width - 304.9517;
-        double y8 = -(0.5 * height - 318);
-
-        string d7 = $"M {x7.ToString("0.####", ci)} {y7.ToString("0.####", ci)} " +
-                    $"L {x8.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                    $"L {x8.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                    $"L {x7.ToString("0.####", ci)} {y7.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d7),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Oitavo Path -----
-        double y9 = -(0.5 * height - 344.951);           // -13182.5 + 27.4517 ≈ -13155.049
-
-        string d8 = $"M {x8.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                    $"L {x8.ToString("0.####", ci)} {y8.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d8),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Nono Path -----
-        double y10 = -(0.5 * height - 355);          // -13155.049 + 10.0483 = -13145.0007 → aproximado para -13145
-
-        string d9 = $"M {x5.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                    $"L {x4.ToString("0.####", ci)} {y10.ToString("0.####", ci)} " +
-                    $"L {x4.ToString("0.####", ci)} {y10.ToString("0.####", ci)} " +
-                    $"L {x5.ToString("0.####", ci)} {y9.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d9),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Path -----
-
-        string d10 = $"M {x4.ToString("0.####", ci)} {y10.ToString("0.####", ci)} " +
-                     $"L {x3.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                     $"L {x3.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                     $"L {x4.ToString("0.####", ci)} {y10.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d10),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Primeiro Path -----
-
-        string d11 = $"M {x3.ToString("0.####", ci)} {y9.ToString("0.####", ci)} " +
-                     $"L {x2.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                     $"L {x2.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                     $"L {x3.ToString("0.####", ci)} {y9.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d11),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Segundo Path -----
-
-        string d12 = $"M {x2.ToString("0.####", ci)} {y8.ToString("0.####", ci)} " +
-                     $"L {x1.ToString("0.####", ci)} {y1.ToString("0.####", ci)} " +
-                     $"L {x1.ToString("0.####", ci)} {y1.ToString("0.####", ci)} " +
-                     $"L {x2.ToString("0.####", ci)} {y8.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d12),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Decimo Terceiro background Path -----
-        var points = new (double X, double Y)[]
-    {
-        (x1, y1),
-        (x2, y2),
-        (x3, y3),
-        (x4, y4),
-        (x5, y5),
-        (x6, y6),
-        (x7, y7),
-        (x6, y8),
-        (x5, y9),
-        (x4, y10),
-        (x3, y9),
-        (x2, y8)
-    };
-
-        var d15 = "M " + string.Join(" L ", points.Select(p =>
-            $"{p.X.ToString("0.####", CultureInfo.InvariantCulture)} {p.Y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d15),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-
-    }
-
-    static XElement MinifixBaseRightDown(double width, double height)
-    {
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseRightDown"));
-        var ci = CultureInfo.InvariantCulture;
-
-        // ----- Formulas -----
-        double x1 = 0.5 * width - 239.5;
-        double y1 = 0.5 * height - 420;
-        double x2 = 0.5 * width + 0.5;
-        double y2 = 0.5 * height - 425.359;
-        double y3 = 0.5 * height - 425.358;
-        double y4 = 0.5 * height - 440;
-        double y5 = 0.5 * height - 460;
-        double y6 = 0.5 * height - 480;
-        double y7 = 0.5 * height - 494.642;
-        double y8 = 0.5 * height - 494.641;
-        double y9 = 0.5 * height - 500;
-
-
-        // ----- Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y1, x1, y2, x2, y3, x2, y1);
-
-        // ----- Segundo Path -----
-        AddMinifixBaseQuadPath(group, x1, y2, x1, y4, x2, y4, x2, y3);
-
-        // ----- Terceiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y4, x1, y5, x2, y5, x2, y4);
-
-        // ----- Quarto Path -----
-        AddMinifixBaseQuadPath(group, x1, y5, x1, y6, x2, y6, x2, y5);
-
-        // ----- Quinto Path -----
-        AddMinifixBaseQuadPath(group, x1, y6, x1, y7, x2, y8, x2, y6);
-
-        // ----- Sexto Path -----
-        AddMinifixBaseQuadPath(group, x1, y7, x1, y9, x2, y9, x2, y8);
-
-        // ----- Sétimo Path -----
-        AddMinifixBaseQuadPath(group, x1, y9, x1, y8, x2, y8, x2, y9);
-
-        // ----- Oitavo Path -----
-        AddMinifixBaseQuadPath(group, x1, y8, x1, y6, x2, y6, x2, y8);
-
-        // ----- Nono Path -----
-        AddMinifixBaseQuadPath(group, x1, y6, x1, y5, x2, y5, x2, y6);
-
-        // ----- Décimo Path -----
-        AddMinifixBaseQuadPath(group, x1, y5, x1, y4, x2, y4, x2, y5);
-
-        // ----- Décimo Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y4, x1, y2, x2, y3, x2, y4);
-
-        // ----- Décimo Segundo Path -----
-        AddMinifixBaseQuadPath(group, x1, y2, x1, y1, x2, y1, x2, y3);
-
-        // ----- Décimo Terceiro Path -----
-        var pointsLeft = new[]
-        {
-        (x1, y1),
-        (x1, y2),
-        (x1, y4),
-        (x1, y5),
-        (x1, y6),
-        (x1, y7),
-        (x1, y9),
-        (x1, y8),
-        (x1, y6),
-        (x1, y5),
-        (x1, y4),
-        (x1, y2)
-    };
-
-        string d13 = "M " + string.Join(" L ", pointsLeft.Select(p =>
-            $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d13),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Quarto Path -----
-        var pointsRight = new[]
-        {
-        (x2, y1),
-        (x2, y3),
-        (x2, y4),
-        (x2, y5),
-        (x2, y6),
-        (x2, y8),
-        (x2, y9),
-        (x2, y8),
-        (x2, y6),
-        (x2, y5),
-        (x2, y4),
-        (x2, y3)
-    };
-
-        string d14 = "M " + string.Join(" L ", pointsRight.Select(p =>
-            $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d14),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-    }
-
-    static XElement MinifixBaseCircleRightDown(int width, int height)
-    {
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseCircleRightUp"));
-        var ci = CultureInfo.InvariantCulture;
-
-        // ----- Primeiro Path -----
-        double x1 = 0.5 * width - 165;
-        double x2 = 0.5 * width - 175.0483;
-        double x3 = 0.5 * width - 202.5;
-        double x4 = 0.5 * width - 240;
-        double x5 = 0.5 * width - 277.5;
-        double x6 = 0.5 * width - 304.9517;
-        double x7 = 0.5 * width - 315;
-
-        double y1 = 0.5 * height - 460;
-        double y2 = 0.5 * height - 497.5;
-        double y3 = 0.5 * height - 524.951;
-        double y4 = 0.5 * height - 535;
-        double y5 = 0.5 * height - 422.5;
-        double y6 = 0.5 * height - 395.048;
-        double y7 = 0.5 * height - 385;
-
-        // ----- Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y1, x2, y2, x2, y2, x1, y1);
-
-        // ----- Segundo Path -----
-        AddMinifixBaseQuadPath(group, x2, y2, x3, y3, x3, y3, x2, y2);
-
-        // ----- Terceiro Path -----
-        AddMinifixBaseQuadPath(group, x3, y3, x4, y4, x4, y4, x3, y3);
-
-        // ----- Quarto Path -----
-        AddMinifixBaseQuadPath(group, x4, y4, x5, y3, x5, y3, x4, y4);
-
-        // ----- Quinto Path -----
-        AddMinifixBaseQuadPath(group, x5, y3, x6, y2, x6, y2, x5, y3);
-
-        // ----- Sexto Path -----
-        AddMinifixBaseQuadPath(group, x6, y2, x7, y1, x7, y1, x6, y2);
-
-        // ----- Sétimo Path -----
-        AddMinifixBaseQuadPath(group, x7, y1, x6, y5, x6, y5, x7, y1);
-
-        // ----- Oitavo Path -----
-        AddMinifixBaseQuadPath(group, x6, y5, x5, y6, x5, y6, x6, y5);
-
-        // ----- Nono Path -----
-        AddMinifixBaseQuadPath(group, x5, y6, x4, y7, x4, y7, x5, y6);
-
-        // ----- Décimo Path -----
-        AddMinifixBaseQuadPath(group, x4, y7, x3, y6, x3, y6, x4, y7);
-
-        // ----- Décimo Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x3, y6, x2, y5, x2, y5, x3, y6);
-
-        // ----- Décimo Segundo Path -----
-        AddMinifixBaseQuadPath(group, x2, y5, x1, y1, x1, y1, x2, y5);
-
-        // ----- Decimo Terceiro background Path -----
-        var points = new (double X, double Y)[]
-    {
-        (x1, y1),
-        (x2, y2),
-        (x3, y3),
-        (x4, y4),
-        (x5, y3),
-        (x6, y2),
-        (x7, y1),
-        (x6, y5),
-        (x5, y6),
-        (x4, y7),
-        (x3, y6),
-        (x2, y5)
-    };
-
-        var d15 = "M " + string.Join(" L ", points.Select(p =>
-            $"{p.X.ToString("0.####", CultureInfo.InvariantCulture)} {p.Y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d15),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-
-    }
-
-    static XElement MinifixBaseLefttUp(int width, int height)
-    {
-        var ci = CultureInfo.InvariantCulture;
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseLeftUp"));
-
-        // ----- Formula -----
-        double x1 = -(0.5 * width + 0.5);
-        double x2 = -(0.5 * width - 239.5);
-
-        double y1 = -(0.5 * height - 320);
-        double y2 = -(0.5 * height - 314.641);
-        double y3 = -(0.5 * height - 300);
-        double y4 = -(0.5 * height - 280);
-        double y5 = -(0.5 * height - 260);
-        double y6 = -(0.5 * height - 245.359);
-        double y7 = -(0.5 * height - 240);
-
-        // ----- Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y1, x1, y2, x2, y2, x2, y1);
-
-        // ----- Segundo Path -----
-        AddMinifixBaseQuadPath(group, x1, y2, x1, y3, x2, y3, x2, y2);
-
-        // ----- Terceiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y3, x1, y4, x2, y4, x2, y3);
-
-        // ----- Quarto Path -----
-        AddMinifixBaseQuadPath(group, x1, y4, x1, y5, x2, y5, x2, y4);
-
-        // ----- Quinto Path -----
-        AddMinifixBaseQuadPath(group, x1, y5, x1, y6, x2, y6, x2, y5);
-
-        // ----- Sexto Path -----
-        AddMinifixBaseQuadPath(group, x1, y6, x1, y7, x2, y7, x2, y6);
-
-        // ----- Sétimo Path -----
-        AddMinifixBaseQuadPath(group, x1, y7, x1, y6, x2, y6, x2, y7);
-
-        // ----- Oitavo Path -----
-        AddMinifixBaseQuadPath(group, x1, y6, x1, y5, x2, y5, x2, y6);
-
-        // ----- Nono Path -----
-        AddMinifixBaseQuadPath(group, x1, y5, x1, y4, x2, y4, x2, y5);
-
-        // ----- Décimo Path -----
-        AddMinifixBaseQuadPath(group, x1, y4, x1, y3, x2, y3, x2, y4);
-
-        // ----- Décimo Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y3, x1, y2, x2, y2, x2, y3);
-
-        // ----- Décimo Segundo Path -----
-        AddMinifixBaseQuadPath(group, x1, y2, x1, y1, x2, y1, x2, y2);
-
-        // ----- Décimo Terceiro Path -----
-        var pointsLeft = new[]
-        {
-        (x1, y1),
-        (x1, y2),
-        (x1, y3),
-        (x1, y4),
-        (x1, y5),
-        (x1, y6),
-        (x1, y7),
-        (x1, y6),
-        (x1, y5),
-        (x1, y4),
-        (x1, y3),
-        (x1, y2)
-    };
-
-        string d13 = "M " + string.Join(" L ", pointsLeft.Select(p =>
-            $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d13),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        // ----- Décimo Quarto Path -----
-        var pointsRight = new[]
-        {
-        (x2, y1),
-        (x2, y2),
-        (x2, y3),
-        (x2, y4),
-        (x2, y5),
-        (x2, y6),
-        (x2, y7),
-        (x2, y6),
-        (x2, y5),
-        (x2, y4),
-        (x2, y3),
-        (x2, y2)
-        };
-
-        string d14 = "M " + string.Join(" L ", pointsRight.Select(p =>
-            $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d14),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-    }
-    3
-    static XElement MinifixBaseCircleLeftUp(int width, int height)
-    {
-        var group = new XElement("g", new XAttribute("name", "MinifixBaseCircleLeftUp"));
-        var ci = CultureInfo.InvariantCulture;
-
-        // ----- Primeiro Path -----
-        double x1 = -(0.5 * width - 315);
-        double x2 = -(0.5 * width - 304.9517);
-        double x3 = -(0.5 * width - 277.5);
-        double x4 = -(0.5 * width - 240);
-        double x5 = -(0.5 * width - 202.5);
-        double x6 = -(0.5 * width - 175.0483);
-        double x7 = -(0.5 * width - 165);
-
-        double y1 = -(0.5 * height - 280);
-        double y2 = -(0.5 * height - 242.5);
-        double y3 = -(0.5 * height - 215.048);
-        double y4 = -(0.5 * height - 205);
-        double y5 = -(0.5 * height - 317.5);
-        double y6 = -(0.5 * height - 344.951);
-        double y7 = -(0.5 * height - 355);
-
-        // ----- Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x1, y1, x2, y2, x2, y2, x1, y1);
-
-        // ----- Segundo Path -----
-        AddMinifixBaseQuadPath(group, x2, y2, x3, y3, x3, y3, x2, y2);
-
-        // ----- Terceiro Path -----
-        AddMinifixBaseQuadPath(group, x3, y3, x4, y4, x4, y4, x3, y3);
-
-        // ----- Quarto Path -----
-        AddMinifixBaseQuadPath(group, x4, y4, x5, y3, x5, y3, x4, y4);
-
-        // ----- Quinto Path -----
-        AddMinifixBaseQuadPath(group, x5, y3, x6, y2, x6, y2, x5, y3);
-
-        // ----- Sexto Path -----
-        AddMinifixBaseQuadPath(group, x6, y2, x7, y1, x7, y1, x6, y2);
-
-        // ----- Sétimo Path -----
-        AddMinifixBaseQuadPath(group, x7, y1, x6, y5, x6, y5, x7, y1);
-
-        // ----- Oitavo Path -----
-        AddMinifixBaseQuadPath(group, x6, y5, x5, y6, x5, y6, x6, y5);
-
-        // ----- Nono Path -----
-        AddMinifixBaseQuadPath(group, x5, y6, x4, y7, x4, y7, x5, y6);
-
-        // ----- Décimo Path -----
-        AddMinifixBaseQuadPath(group, x4, y7, x3, y6, x3, y6, x4, y7);
-
-        // ----- Décimo Primeiro Path -----
-        AddMinifixBaseQuadPath(group, x3, y6, x2, y5, x2, y5, x3, y6);
-
-        // ----- Décimo Segundo Path -----
-        AddMinifixBaseQuadPath(group, x2, y5, x1, y1, x1, y1, x2, y5);
-
-        // ----- Decimo Terceiro background Path -----
-        var points = new (double X, double Y)[]
-    {
-        (x1, y1),
-        (x2, y2),
-        (x3, y3),
-        (x4, y4),
-        (x5, y3),
-        (x6, y2),
-        (x7, y1),
-        (x6, y5),
-        (x5, y6),
-        (x4, y7),
-        (x3, y6),
-        (x2, y5)
-    };
-
-        var d15 = "M " + string.Join(" L ", points.Select(p =>
-            $"{p.X.ToString("0.####", CultureInfo.InvariantCulture)} {p.Y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d15),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-
-        return group;
-
-    }
-
-    //static XElement MinifixBaseLefttUp(int width, int height)
-    //{
-    //    var ci = CultureInfo.InvariantCulture;
-    //    var group = new XElement("g", new XAttribute("name", "MinifixBaseLeftUp"));
-
-    //    // ----- Formula -----
-    //    double x1 = -(0.5 * width + 0.5);
-    //    double x2 = -(0.5 * width - 239.5);
-
-    //    double y1 = -(0.5 * height - 320);
-    //    double y2 = -(0.5 * height - 314.641);
-    //    double y3 = -(0.5 * height - 300);
-    //    double y4 = -(0.5 * height - 280);
-    //    double y5 = -(0.5 * height - 260);
-    //    double y6 = -(0.5 * height - 245.359);
-    //    double y7 = -(0.5 * height - 240);
-
-    //    // ----- Primeiro Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y1, x1, y2, x2, y2, x2, y1);
-
-    //    // ----- Segundo Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y2, x1, y3, x2, y3, x2, y2);
-
-    //    // ----- Terceiro Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y3, x1, y4, x2, y4, x2, y3);
-
-    //    // ----- Quarto Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y4, x1, y5, x2, y5, x2, y4);
-
-    //    // ----- Quinto Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y5, x1, y6, x2, y6, x2, y5);
-
-    //    // ----- Sexto Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y6, x1, y7, x2, y7, x2, y6);
-
-    //    // ----- Sétimo Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y7, x1, y6, x2, y6, x2, y7);
-
-    //    // ----- Oitavo Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y6, x1, y5, x2, y5, x2, y6);
-
-    //    // ----- Nono Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y5, x1, y4, x2, y4, x2, y5);
-
-    //    // ----- Décimo Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y4, x1, y3, x2, y3, x2, y4);
-
-    //    // ----- Décimo Primeiro Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y3, x1, y2, x2, y2, x2, y3);
-
-    //    // ----- Décimo Segundo Path -----
-    //    AddMinifixBaseQuadPath(group, x1, y2, x1, y1, x2, y1, x2, y2);
-
-    //    // ----- Décimo Terceiro Path -----
-    //    var pointsLeft = new[]
-    //    {
-    //    (x1, y1),
-    //    (x1, y2),
-    //    (x1, y3),
-    //    (x1, y4),
-    //    (x1, y5),
-    //    (x1, y6),
-    //    (x1, y7),
-    //    (x1, y6),
-    //    (x1, y5),
-    //    (x1, y4),
-    //    (x1, y3),
-    //    (x1, y2)
-    //};
-
-    //    string d13 = "M " + string.Join(" L ", pointsLeft.Select(p =>
-    //        $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-    //    )) + " Z";
-
-    //    group.Add(new XElement("path",
-    //        new XAttribute("d", d13),
-    //        new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-    //        new XAttribute("stroke", "black")
-    //    ));
-
-    //    // ----- Décimo Quarto Path -----
-    //    var pointsRight = new[]
-    //    {
-    //    (x2, y1),
-    //    (x2, y2),
-    //    (x2, y3),
-    //    (x2, y4),
-    //    (x2, y5),
-    //    (x2, y6),
-    //    (x2, y7),
-    //    (x2, y6),
-    //    (x2, y5),
-    //    (x2, y4),
-    //    (x2, y3),
-    //    (x2, y2)
-    //    };
-
-    //    string d14 = "M " + string.Join(" L ", pointsRight.Select(p =>
-    //        $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}"
-    //    )) + " Z";
-
-    //    group.Add(new XElement("path",
-    //        new XAttribute("d", d14),
-    //        new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-    //        new XAttribute("stroke", "black")
-    //    ));
-
-    //    return group;
-    //}
-
-    static void AddMinifixBaseQuadPath(XElement group, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
-    {
-        var ci = CultureInfo.InvariantCulture;
-        string d = $"M {x1.ToString("0.####", ci)} {y1.ToString("0.####", ci)} " +
-                  $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
-                  $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
-                  $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} Z";
-
-        group.Add(new XElement("path",
-            new XAttribute("d", d),
-            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
-            new XAttribute("stroke", "black")
-        ));
-    }
-
-    #endregion
-
-    #region Dowels
+  
     static XElement CreateDowels(double width, double height)
     {
         var group = new XElement("g", new XAttribute("name", "dowels"));
@@ -2626,33 +1481,7 @@ public static class SvgComponentSide
 
         return group;
     }
-
-    #endregion
-
-    static string Circle(double baseX, double baseY)
-    {
-        var points = new (double X, double Y)[]
-        {
-            (baseX, -(baseY)),
-            (baseX - 3.3494, -(baseY + 12.5)),
-            (baseX - 12.5, -(baseY + 21.6508)),
-            (baseX - 25, -(baseY + 25)),
-            (baseX - 37.5, -(baseY + 21.6508)),
-            (baseX - 46.6506, -(baseY + 12.5)),
-            (baseX - 50, -(baseY)),
-            (baseX - 46.6506, -(baseY - 12.5)),
-            (baseX - 37.5, -(baseY - 21.6505)),
-            (baseX - 25, -(baseY - 25)),
-            (baseX - 12.5, -(baseY - 21.6505)),
-        (baseX - 3.3494, -(baseY - 12.5))
-};
-
-        var d15 = "M " + string.Join(" L ", points.Select(p =>
-            $"{p.X.ToString("0.####", CultureInfo.InvariantCulture)} {p.Y.ToString("0.####", CultureInfo.InvariantCulture)}"
-        )) + " Z";
-
-        return d15;
-    }
+  
 
     static XElement GenericDouble(double x1, double x2, double y1, double y2)
     {

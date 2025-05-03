@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace testesSvg
+namespace testesSvg.Components
 {
     public static class Thickness
     {
@@ -13,12 +13,12 @@ namespace testesSvg
 
             if (offsetFromEnd != null)
             {
-                int offset = offsetFromEnd == 0 ? 0 : (int)((offsetFromEnd / 10.0) * 1.0);
-                highlightY = (h / 20) - highlightHeight - offset;
+                int offset = offsetFromEnd == 0 ? 0 : (int)(offsetFromEnd / 10.0 * 1.0);
+                highlightY = h / 20 - highlightHeight - offset;
             }
             else
             {
-                highlightY = (h / 20) - highlightHeight - 160;
+                highlightY = h / 20 - highlightHeight - 160;
             }
 
             //validar se quando é zero no offset se tem uma correcao de +1 no highlightY e +2 highlightY + highlightHeight (rebaixo minimo e maximo)
