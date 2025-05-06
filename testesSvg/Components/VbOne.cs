@@ -4,192 +4,130 @@ using System.Xml.Linq;
 namespace testesSvg.Components
 {
     #region testes
-    ////PecaRebaixoMinifixMinParafuso --OK
+    ////PecaRebaixoVbOneMinParafuso -- OK
     //var payload = new SvgRequest
     //{
     //    Width = "12000",
     //    Height = "20000",
     //    Thickness = "700",
     //    Offset = "0",
-    //    JoinSystemType = "minifix",
+    //    JoinSystemType = "VbOne",
     //    Type = "Side"
     //};
 
-    ////PecaRebaixoMinifixMaxParafuso --OK
+    ////PecaRebaixoVbOneMaxParafuso -- OK
     //var payload = new SvgRequest
     //{
     //    Width = "219000",
     //    Height = "100000",
     //    Thickness = "700",
     //    Offset = "0",
-    //    JoinSystemType = "minifix",
+    //    JoinSystemType = "VbOne",
     //    Type = "Side"
     //};
 
-    ////PecaCanalMinifixMinParafuso --OK
-    //var payload = new SvgRequest
-    //{
-    //    Width = "30000",
-    //    Height = "30000",
-    //    Thickness = "700",
-    //    Offset = "1500",
-    //    JoinSystemType = "minifix"
-    //};
-
-    ////PecaCanalMinifixMaxParafuso --OK
-    //var payload = new SvgRequest
-    //{
-    //    Width = "219000",
-    //    Height = "159000",
-    //    Thickness = "700",
-    //    Offset = "1500",
-    //    JoinSystemType = "minifix"
-    //};
-
-    //PecaRebaixoMinifixMinTambor - OK
+    ////PecaRebaixoVbOneMinTambor -- ok
     //var payload = new SvgRequest
     //{
     //    Width = "12000",
     //    Height = "20000",
     //    Thickness = "700",
     //    Offset = "0",
-    //    JoinSystemType = "minifix"
-    //};
-
-    ////PecaRebaixoMinifixMaxTambor -- OK
-    //var payload = new SvgRequest
-    //{
-    //    Width = "150000",
-    //    Height = "270000",
-    //    Thickness = "700",
-    //    Offset = "0",
-    //    JoinSystemType = "minifix",
+    //    JoinSystemType = "VbOne",
     //    Type = "Base"
     //};
 
-    ////PecaCanalMinifixMinTambor --OK
-    //var payload = new SvgRequest
-    //{
-    //    Width = "12000",
-    //    Height = "20000",
-    //    Thickness = "700",
-    //    Offset = "1500",
-    //    JoinSystemType = "minifix"
-    //};
-
-    ////PecaCanalMinifixMaxTambor --OK
+    ////PecaRebaixoVbOneMaxTambor-- ok
     //var payload = new SvgRequest
     //{
     //    Width = "150000",
-    //    Height = "270000",
+    //    Height = "100000",
     //    Thickness = "700",
-    //    Offset = "1500",
-    //    JoinSystemType = "minifix"
+    //    Offset = "0",
+    //    JoinSystemType = "VbOne",
+    //    Type = "Base"
     //};
-
     #endregion
 
-    public static class Minifix
+    public static class VbOne
     {
         #region Base (Tambor)
         public static IEnumerable<XElement> GenerateBase(int width, int height)
         {
             // ----- Formula -----
-            double[] x1 =
-            [
-                0.5 * width - 239.5,     // x1
-                0.5 * width + 0.5,  // x2
-            ];
+            var x1 = new List<double>
+            {
+                0.5 * width + 5.0,
+                0.5 * width - 8.39746,
+                0.5 * width - 45,
+                0.5 * width - 95,
+                0.5 * width - 145,
+                0.5 * width - 181.60254,
+                0.5 * width - 195
+            };
 
-            double[] x2 =
-            [
-                -(0.5 * width + 0.5),     // x1
-                -(0.5 * width - 239.5),  // x2
-            ];
+            if (width < 15998)
+            {
+                x1.Add(0.5 * width - 44.99994);
+            }
 
-            double[] y1 =
-           [
-            -(0.5 * height - 320),// y1
-            -(0.5 * height - 314.641),  // y2
-            -(0.5 * height - 300),   // y3
-            -(0.5 * height - 280),   // y4
-            -(0.5 * height - 260),    // y5
-            -(0.5 * height - 245.359),   // y6
-            -(0.5 * height - 240)  // y7
-           ];
+            var x2 = new List<double>
+            {
+                -0.5 * width + 195,
+                -0.5 * width + 181.60254,
+                -0.5 * width + 145,
+                -0.5 * width + 95,
+                -0.5 * width + 45,
+                -0.5 * width + 8.39746,
+                -0.5 * width + 5.0,
+            };
 
-            double[] y2 =
-           [
-            0.5 * height - 420,// y1
-            0.5 * height - 425.359,  // y2
-            0.5 * height - 425.358,   // y3
-            0.5 * height - 440,   // y4
-            0.5 * height - 460,    // y5
-            0.5 * height - 480,   // y6
-            0.5 * height - 494.642,  // y7
-            0.5 * height - 494.641,  // y8
-            0.5 * height - 500  // y9
-           ];
+            if (width < 15998)
+            {
+                x2.Add(0.5 * width - 145.00003);
+            }
 
+            var y1 = new List<double>
+            {
+            -0.5 * height + 280,
+            -0.5 * height + 230,
+            -0.5 * height + 193.39746,
+            -0.5 * height + 180,
+            -0.5 * height + 330,
+            -0.5 * height + 366.60254,
+            -0.5 * height + 380,
+            -0.5 * height + 329.99994
+           };
 
-            #region Formula Circle
-            // ----- Formula Circle-----
-            double[] circleX1 =
-            [
-                0.5 * width - 165,     // x1
-                0.5 * width - 175.0481,  // x2
-                0.5 * width - 202.5,  // x3
-                0.5 * width - 240,  // x4
-                0.5 * width - 277.5,  // x5
-                0.5 * width - 304.9517,  // x6
-                0.5 * width - 315  // x7
-            ];
+            if (width > 15998)
+            {
+                y1.Add(-0.5 * width + 366.602);
+            }
 
-            double[] circleX2 =
-           [
-                -(0.5 * width - 315),     // x1
-                -(0.5 * width - 304.9517),  // x2
-                -(0.5 * width - 277.5),  // x3
-                -(0.5 * width - 240),  // x4
-                -(0.5 * width - 202.5),  // x5
-                -(0.5 * width - 175.0483),  // x6
-                -(0.5 * width - 165)  // x7
-           ];
+            var y2 = new List<double>
+            {
+            0.5 * height - 460,
+            0.5 * height - 510,  // y2
+            0.5 * height - 546.60254,   // y3
+            0.5 * height - 560,   // y4
+            0.5 * height - 410,    // y5
+            0.5 * height - 373.39746,   // y6
+            0.5 * height - 360,  // y7
+            0.5 * height - 410.00006,  // y8
+            0.5 * height - 373.3975  // y9
+           };
 
-            double[] circleY1 =
-            [
-                -(0.5 * height - 280), //y1
-                -(0.5 * height - 242.5), //y2
-                -(0.5 * height - 215.048), //y3
-                -(0.5 * height - 205), //y4
-                -(0.5 * height - 318), //y5
-                -(0.5 * height - 344.951), //y6
-                -(0.5 * height - 355)//y7
-            ];
-
-            double[] circleY2 =
-            [
-                0.5 * height - 460, //y1
-                0.5 * height - 497.5, //y2
-                0.5 * height - 524.951, //y3
-                0.5 * height - 535, //y4
-                0.5 * height - 422.5, //y5
-                0.5 * height - 395.048, //y6
-                0.5 * height - 385//y7
-            ];
-
-            #endregion
+            if (width > 15998)
+            {
+                y2.Add(0.5 * height - 373.3975);
+            }
 
             return
               [
-                 Base(x1, y1, "minifix-base-up-right"),
-                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right"),
-                 BaseDown(x1, y2, "minifix-base-down-right"),
-                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right"),
-                 Base(x2, y1, "minifix-base-up-left"),
-                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left"),
-                 BaseDown(x2, y2, "minifix-base-down-left"),
-                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left"),
+                 BaseCircleUpper([.. x1], [.. y1], "vbone-base-circle-up-right"),
+                 BaseCircle([.. x1], [.. y2], "vbone-base-circle-down-right"),
+                 BaseCircleUpper([.. x2], [.. y1], "vbone-base-circle-up-left"),
+                 BaseCircle([.. x2], [..y2], "vbone-base-circle-down-left"),
 
               ];
         }
@@ -240,6 +178,69 @@ namespace testesSvg.Components
 
             // ----- Décimo Quarto Path -----
             AddDrawColor(group, points, x[1]);
+
+            return group;
+        }
+
+        static XElement BaseCircleUpper(double[] x, double[] y, string name)
+        {
+            var group = new XElement("g", new XAttribute("name", name));
+
+            // ----- Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
+
+            // ----- Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[1], y[1], x[2], y[2], x[2], y[2], x[1], y[1]);
+
+            // ----- Terceiro Path -----
+            AddMinifixBaseQuadPath(group, x[2], y[2], x[3], y[3], x[3], y[3], x[2], y[2]);
+
+            // ----- Quarto Path -----
+            AddMinifixBaseQuadPath(group, x[3], y[3], x[4], y[2], x[4], y[2], x[3], y[3]);
+
+            // ----- Quinto Path -----
+            AddMinifixBaseQuadPath(group, x[4], y[2], x[5], y[1], x[5], y[1], x[4], y[2]);
+
+            // ----- Sexto Path -----
+            AddMinifixBaseQuadPath(group, x[5], y[1], x[6], y[0], x[6], y[0], x[5], y[1]);
+
+            // ----- Sétimo Path -----
+            AddMinifixBaseQuadPath(group, x[6], y[0], x[5], y[4], x[5], y[4], x[6], y[0]);
+
+            // ----- Oitavo Path -----
+            AddMinifixBaseQuadPath(group, x[5], y[4], x[4], y[5], x[4], y[5], x[5], y[4]);
+
+            // ----- Nono Path -----
+            AddMinifixBaseQuadPath(group, x[4], y[5], x[3], y[6], x[3], y[6], x[4], y[5]);
+
+            // ----- Décimo Path -----
+            AddMinifixBaseQuadPath(group, x[3], y[6], x[2], y[5], x[2], y[5], x[3], y[6]);
+
+            // ----- Décimo Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[2], y[5], x[1], y[4], x[1], y[4], x[2], y[5]);
+
+            // ----- Décimo Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[1], y[4], x[0], y[0], x[0], y[0], x[1], y[4]);
+
+            // ----- Decimo Terceiro background Path -----
+            var points = new (double X, double Y)[]
+            {
+                (x[0], y[0]),
+                (x[1], y[1]),
+                (x[2], y[2]),
+                (x[3], y[3]),
+                (x[4], y[2]),
+                (x[5], y[1]),
+                (x[6], y[0]),
+                (x[5], y[4]),
+                (x[4], y[5]),
+                (x[3], y[6]),
+                (x[2], y[5]),
+                (x[1], y[4])
+            };
+
+            AddDrawColorCircle(group, points);
+            AddDrawColorCircle(group, points);
 
             return group;
         }
@@ -299,6 +300,69 @@ namespace testesSvg.Components
                 (x[3], y[6]),
                 (x[2], y[5]),
                 (x[1], y[4])
+            };
+
+            AddDrawColorCircle(group, points);
+            AddDrawColorCircle(group, points);
+
+            return group;
+        }
+
+        static XElement BaseCircleDownMaxSize(double[] x, double[] y, string name)
+        {
+            var group = new XElement("g", new XAttribute("name", name));
+
+            // ----- Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
+
+            // ----- Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[1], y[1], x[2], y[2], x[2], y[2], x[1], y[1]);
+
+            // ----- Terceiro Path -----
+            AddMinifixBaseQuadPath(group, x[2], y[2], x[3], y[3], x[3], y[3], x[2], y[2]);
+
+            // ----- Quarto Path -----
+            AddMinifixBaseQuadPath(group, x[3], y[3], x[4], y[4], x[4], y[4], x[3], y[3]);
+
+            // ----- Quinto Path -----
+            AddMinifixBaseQuadPath(group, x[4], y[4], x[5], y[1], x[5], y[1], x[4], y[4]);
+
+            // ----- Sexto Path -----
+            AddMinifixBaseQuadPath(group, x[5], y[1], x[6], y[0], x[6], y[0], x[5], y[1]);
+
+            // ----- Sétimo Path -----
+            AddMinifixBaseQuadPath(group, x[6], y[0], x[5], y[5], x[5], y[5], x[6], y[0]);
+
+            // ----- Oitavo Path -----
+            AddMinifixBaseQuadPath(group, x[5], y[5], x[4], y[6], x[4], y[6], x[5], y[5]);
+
+            // ----- Nono Path -----
+            AddMinifixBaseQuadPath(group, x[4], y[6], x[3], y[7], x[3], y[7], x[4], y[6]);
+
+            // ----- Décimo Path -----
+            AddMinifixBaseQuadPath(group, x[3], y[7], x[2], y[6], x[2], y[6], x[3], y[7]);
+
+            // ----- Décimo Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[2], y[6], x[1], y[5], x[1], y[5], x[2], y[6]);
+
+            // ----- Décimo Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[1], y[5], x[0], y[0], x[0], y[0], x[1], y[5]);
+
+            // ----- Decimo Terceiro background Path -----
+            var points = new (double X, double Y)[]
+            {
+                (x[0], y[0]),
+                (x[1], y[1]),
+                (x[2], y[2]),
+                (x[3], y[3]),
+                (x[4], y[2]),
+                (x[5], y[1]),
+                (x[6], y[0]),
+                (x[5], y[5]),
+                (x[4], y[6]),
+                (x[3], y[7]),
+                (x[2], y[6]),
+                (x[1], y[5])
             };
 
             AddDrawColorCircle(group, points);
@@ -391,67 +455,65 @@ namespace testesSvg.Components
 
         #endregion
 
-
         #region Side (Parafuso)
         public static IEnumerable<XElement> GenerateSide(int width, int height)
         {
 
             // ----- Formula -----
-            double[] x1 = 
+            double[] x1 =
             [
-                0.5 * width - 50,
-                0.5 * width - 53.34937, 
-                0.5 * width - 62.5, 
-                0.5 * width - 75, 
-                0.5 * width - 87.5,
-                0.5 * width - 96.65063, 
-                0.5 * width - 100
+                0.5 * width - 45,
+                0.5 * width - 48.34937,
+                0.5 * width - 57.5,
+                0.5 * width - 70,
+                0.5 * width - 82.5,
+                0.5 * width - 91.65063,
+                0.5 * width - 95
              ];
 
             double[] x2 =
             [
-                -0.5 * width + 100,    
-                -0.5 * width + 96.65063,  
-                -0.5 * width + 87.5, 
-                -0.5 * width + 75,  
-                -0.5 * width + 62.5,  
-                -0.5 * width + 53.34937,  
-                -0.5 * width + 50, 
+                -0.5 * width + 95,
+                -0.5 * width + 91.65063,
+                -0.5 * width + 82.5,
+                -0.5 * width + 70,
+                -0.5 * width + 57.5,
+                -0.5 * width + 48.34937,
+                -0.5 * width + 45,
             ];
 
             double[] y1 =
            [
             -(0.5 * height - 280),
-            -(0.5 * height - 267.5),  
-            -(0.5 * height - 258.34937),   
-            -(0.5 * height - 255),   
-            -(0.5 * height - 292.5),   
-            -(0.5 * height - 301.65063),   
-            -(0.5 * height - 305)  
+            -(0.5 * height - 267.5),
+            -(0.5 * height - 258.34937),
+            -(0.5 * height - 255),
+            -(0.5 * height - 292.5),
+            -(0.5 * height - 301.65063),
+            -(0.5 * height - 305)
            ];
 
             double[] y2 =
            [
             0.5 * height - 460,
-            0.5 * height - 472.5,  
-            0.5 * height - 481.65063,   
-            0.5 * height - 485,   
-            0.5 * height - 447.5,   
-            0.5 * height - 438.34937,   
-            0.5 * height - 435,   
-           
+            0.5 * height - 472.5,
+            0.5 * height - 481.65063,
+            0.5 * height - 485,
+            0.5 * height - 447.5,
+            0.5 * height - 438.34937,
+            0.5 * height - 435,
+
            ];
-     
+
 
             return
               [
-                Side(x1, y1, "minifix-side-up-right"),
+                Side(x1, y1, "vbone-side-up-right"),
 
                 //VALIDAR OS AddMinifixBaseQuadPath dos 3 comparando com o svg no vscode
-                //finalizado testar o min e max
-                Side(x1, y2, "minifix-side-down-right"),
-                Side(x2, y1, "minifix-side-up-left"),
-                Side(x2, y2, "minifix-side-up-left")
+                Side(x1, y2, "vbone-side-down-right"),
+                Side(x2, y1, "vbone-side-up-left"),
+                Side(x2, y2, "vbone-side-up-left")
 
               ];
         }
@@ -564,6 +626,5 @@ namespace testesSvg.Components
             ));
 
         }
-       
     }
 }

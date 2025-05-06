@@ -113,57 +113,73 @@ namespace testesSvg.Components
         public static IEnumerable<XElement> GenerateSide(int width, int height)
         {
             // ----- Formula -----
-            double[] x1 =
-            [
-                0.5 * width - 35,     // x1
-                0.5 * width - 40.359,  // x2
-                0.5 * width - 55,     // x3
-                0.5 * width -75,        // x4
-                0.5 * width -95,      // x5
-                0.5 * width -109.641,   // x6
-                0.5 * width -115,     // x7
-            ];
+            var x1 = new List<double>
+            {
+                0.5 * width - 35,     
+                0.5 * width - 40.35895, 
+                0.5 * width - 55,     
+                0.5 * width -75,       
+                0.5 * width -95,      
+                0.5 * width -109.64102,   
+                0.5 * width -115,    
+            };
+
+            if (width > 4999)
+            {
+                x1.Add(0.5 * width - 109.641);
+                x1.Add(0.5 * width - 40.358);
+            }
 
 
-            var a = Math.Sqrt(x1[0] * 1309.6);
-            var b = Math.Sqrt(x1[1] * 1309.6);
+            //ERRADA
+            var y1 = new List<double>
+            {
+              -0.5 * height + 280,
+              -0.5 * height + 260,
+              -0.5 * height + 245.359,
+              -0.5 * height + 240,
+              -0.5 * height + 300,
+              -0.5 * height + 314.641,
+              -0.5 * height + 320
+            };
+
+            if (width > 4999)
+            {
+                y1.Add(0.5 * height + 354.641);
+                y1.Add(0.5 * height + 360);
+            }
 
 
-            double[] y1 =
-            [
-              -(-0.01399 * height + 1261.97), // y1
-              -(-0.01705 * height + 1291.15),  // y2
-              -(-0.01932 * height + 1312.56),   // y3
-              -(-0.02016 * height + 1320.48),   // y4
-              -(-0.00617 * height + 1218.52),    // y5
-              -(-0.00359 * height + 1196.13),   // y6
-              -(-0.00278 * height + 1188.33)   // y7
-            ];
 
+            var x2 = new List<double>
+            {
+                -0.5 * width + 115,
+                -0.5 * width + 109.64102,
+                -0.5 * width + 95,
+                -0.5 * width + 75,
+                -0.5 * width + 55,
+                -0.5 * width + 40.35895,
+                -0.5 * width + 35,
+            };
 
-            //PENDENTE CORRIGIR
-            double[] x2 =
-            [
-                0.5 * width - 115,     // x1
-                -(0.5 * width - 40.359),  // x2
-                -(0.5 * width - 55),     // x3
-                -(0.5 * width -75),        // x4
-                -(0.5 * width -95),      // x5
-                -(0.5 * width -109.641),   // x6
-                -(0.5 * width -115),     // x7
-            ];
+            if (width > 4999)
+            {
+                x2.Add(0.5 * width + 40.35895);
+                x2.Add(0.5 * width + 109.64102);
+            }
 
+            //ERRADA
             double[] y2 =
             [
-               -0.01399 * height + 1261.97, // y1
-              -0.01705 * height + 1291.15,  // y2
-              -0.01932 * height + 1312.56,   // y3
-              -0.02016 * height + 1320.48,   // y4
-              -0.00617 * height + 1218.52,    // y5
-              -0.00359 * height + 1196.13,   // y6
-              -0.00278 * height + 1188.33   // y7
+               -0.01399 * height + 1261.97,
+              -0.01705 * height + 1291.15, 
+              -0.01932 * height + 1312.56, 
+              -0.02016 * height + 1320.48, 
+              -0.00617 * height + 1218.52, 
+              -0.00359 * height + 1196.13, 
+              -0.00278 * height + 1188.33  
             ];
-         //---------------------------------------------------------------------------------
+            //---------------------------------------------------------------------------------
             var referenceArea = 1200 * 1200;
             var currentArea = width * height;
 
@@ -185,11 +201,17 @@ namespace testesSvg.Components
             //{
             return
                 [
-                   Side(x1, y1, "dowel-side-up-right"),
-                   Side(x1, y2, "dowel-side-down-right"),
-                   Side(x2, y1, "dowel-side-up-left"),
-                   Side(x2, y2, "dowel-side-down-left")
+                   Side([.. x1], [.. y1], "dowel-side-up-right"),
+                   Side([.. x1], y2, "dowel-side-down-right"),
+                   Side([.. x2], y1.ToArray(), "dowel-side-up-left"),
+                   Side([.. x2], [..y2], "dowel-side-down-left")
                 ];
+            //}
+
+
+            //if (width > 5000)
+            //{
+            //    //add 3 furos
             //}
 
 

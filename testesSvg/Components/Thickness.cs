@@ -4,6 +4,52 @@ namespace testesSvg.Components
 {
     public static class Thickness
     {
+        #region testes
+        ////PecaRebaixoSemOffset --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "20000",
+        //    Thickness = "700"
+        //};
+
+        ////PecaRebaixoMinimo --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "20000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //};
+
+        ////PecaRebaixoMaximo--OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "219000",
+        //    Height = "100000",
+        //    Thickness = "700",
+        //    Offset = "0"
+        //};
+
+        ////PecaCanalMinimo --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "30000",
+        //    Height = "30000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //};
+
+        ////PecaCanalMaximo --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "219000",
+        //    Height = "159000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //};
+        #endregion 
+
         public static XElement CreateThickness(int w, int h, int x, int? offsetFromEnd, int dadoThickness)
         {
             var group = new XElement("g", new XAttribute("name", "thickness"));
