@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.Intrinsics.Arm;
 using System.Xml.Linq;
 using testesSvg.Components;
 
@@ -9,38 +8,16 @@ public static class SvgComponentSide
 {
     public static string GenerateComponent()
     {
-        ////PecaCanalCavilhaMinParafuso-- 
-        //var payload = new SvgRequest
-        //{
-        //    Width = "30000",
-        //    Height = "30000",
-        //    Thickness = "700",
-        //    Offset = "1500",
-        //    JoinSystemType = "dowels",
-        //    Type = "Side"
-        //};
-
-        ////PecaCanalCavilhaMinUmFuroParafuso -- Errado a proporcao do centro do furo
-        //var payload = new SvgRequest
-        //{
-        //    Width = "12000",
-        //    Height = "12000",
-        //    Thickness = "700",
-        //    Offset = "1500",
-        //    JoinSystemType = "dowels"
-        //};
-
-        //PecaCanalCavilhaMaxParafuso --
+        //PecaCanalCavilhaMinParafuso-- 
         var payload = new SvgRequest
         {
-            Width = "219000",
-            Height = "159000",
+            Width = "100000",
+            Height = "100000",
             Thickness = "700",
-            Offset = "1500",
+            Offset = "0",
             JoinSystemType = "dowels",
-            Type = "Side"
+            Type = "Base"
         };
-
 
 
         string svgXml = GenerateSvgFromJson(payload);
@@ -100,7 +77,10 @@ public static class SvgComponentSide
             }
             if (json.JoinSystemType.Contains("dowels"))
             {
-                svg.Add(Dowels.GenerateSide(viewBoxWidth, viewBoxHeight));
+                if (json.Type.Equals("Base"))
+                    svg.Add(Dowels.GenerateBase(viewBoxWidth, viewBoxHeight));
+                else
+                    svg.Add(Dowels.GenerateSide(viewBoxWidth, viewBoxHeight));
             }
 
             if (json.JoinSystemType.Contains("minifix"))
@@ -158,9 +138,9 @@ public static class SvgComponentSide
 
         //side (parafuso)
         //testar peças com rebaixo + minifix - ok
-        //testar peças com rebaixo + cavilha - pulei por causa dos 3 furos
-        //testar peças com rebaixo + vb 1 furo -
-        //testar peças com rebaixo + vb 2 furos -
+        //testar peças com rebaixo + cavilha - ok
+        //testar peças com rebaixo + vb 1 furo - ok
+        //testar peças com rebaixo + vb 2 furos - ok
         //testar peças com rebaixo + minifix + cavilha -
 
         //side (parafuso)
@@ -187,8 +167,6 @@ public static class SvgComponentSide
         //se receber dowels (cavilha), tem que criar 3 dowels, top, center e down
 
         //pendente component type door
-        //pendente component type base (salvei um exemplo top)
-        //avaliar rotação das peças e se afeta furação e usinagem
         //criar um mapeamento das peças que gerei no exporter, gerei no meu codigo e validei que estão iguais, se a config da peça já estiver no mapeamento gerar pelo meu servico e dar update na flag do banco
         //se estiver salvar uma flag no banco GInter
 
@@ -818,5 +796,47 @@ public static class SvgComponentSide
         ));
     }
 
+    static string ResizeSvg(string svgContent, double targetWidthMm, double targetHeightMm)
+    {
+        XDocument svgDoc = XDocument.Parse(svgContent);
+        var svgElement = svgDoc.Root;
 
+        // Atualiza dimensões físicas
+        svgElement.SetAttributeValue("width", $"{targetWidthMm.ToString(CultureInfo.InvariantCulture)}mm");
+        svgElement.SetAttributeValue("height", $"{targetHeightMm.ToString(CultureInfo.InvariantCulture)}mm");
+
+        // Garante que viewBox existe (se já existe, mantém)
+        var viewBoxAttr = svgElement.Attribute("viewBox");
+        if (viewBoxAttr == null)
+        {
+            // Se não tiver viewBox, calcula a partir de width/height originais (em px)
+            var widthAttr = svgElement.Attribute("width")?.Value.Replace("mm", "");
+            var heightAttr = svgElement.Attribute("height")?.Value.Replace("mm", "");
+            double width = double.Parse(widthAttr, CultureInfo.InvariantCulture);
+            double height = double.Parse(heightAttr, CultureInfo.InvariantCulture);
+            svgElement.SetAttributeValue("viewBox", $"0 0 {width} {height}");
+        }
+
+        // Define o modo de ajuste e centralização
+        svgElement.SetAttributeValue("preserveAspectRatio", "xMidYMid meet");
+
+        // Aplica rotate(-90) em todos os elementos<g>
+        var gElements = svgElement.Descendants().Where(el => el.Name.LocalName == "g");
+        foreach (var g in gElements)
+        {
+            var existingTransform = g.Attribute("transform")?.Value;
+            string newTransform = "rotate(-90)";
+
+            if (!string.IsNullOrWhiteSpace(existingTransform))
+            {
+                newTransform = existingTransform + " " + newTransform;
+            }
+
+            g.SetAttributeValue("transform", newTransform);
+        }
+        // Remove qualquer transform herdado (opcional)
+        svgElement.SetAttributeValue("transform", null);
+
+        return svgDoc.Declaration + svgDoc.ToString();
+    }
 }

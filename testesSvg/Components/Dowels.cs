@@ -5,180 +5,450 @@ namespace testesSvg.Components
 {
     public static class Dowels
     {
-        #region min
-        //X1 min (width 3000)
-        //1465
-        //1.459.641
-        //1445
-        //1425
-        //1405
-        //1.390.359
-        //1385
-
-        //y1 min (height 30000)
-        //-1220
-        //-1240
-        //-1.254.641
-        //-1260
-        //-1200
-        //-1.185.359
-        //-1180
-
-        //x2 min
-        //-1385
-        //-1.390.359
-        //-1405
-        //-1425
-        //-1445
-        //-1.459.641
-        //-1465
-
-        //y2 min
-        //1040
-        //1020
-        //1.005.359
-        //1000
-        //1060
-        //1.074.641
-        //1080
+        #region parafuso
+        //PecaCanalCavilhaMinParafuso UM FURO-- 
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "13999",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
+        //PecaCanalCavilhaMinParafuso UM FURO-- 
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "12000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
+        //PecaCanalCavilhaMinParafuso-- DOIS FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "14000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
+        //PecaCanalCavilhaMinParafuso-- DOIS FUROS 
+        //var payload = new SvgRequest 
+        //{
+        //    Width = "32000",
+        //    Height = "49999",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
+        //PecaCanalCavilhaMinParafuso-- TRES FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "50000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
+        //PecaCanalCavilhaMinParafuso-- TRES FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "102000",
+        //    Height = "90000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Side"
+        //};
 
         #endregion
 
-        #region max
-        //x1 max (width 21900)
-        //10915
-        //10.909.641
-        //10895
-        //10875
-        //10855
-        //10.840.358
-        //10835
-        //10.840.359
-        //10.909.642
+        #region base (tambor)
+        //PecaCanalCavilhaMinTambor-- DOIS FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "20000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Base"
+        //};
+        //PecaCanalCavilhaMAXTambor-- DOIS FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "52000",
+        //    Height = "49999",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Base"
+        //};
+        //PecaCanalCavilhaMAXTambor-- TRES FUROS
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "50000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Base"
+        //};
 
-        //y1 max (height 15900)
-        //-7630
-        //-7650
-        //-76.646.416
-        //-76.646.406
-        //-7670
-        //-7610
-        //-75.953.594
-        //-7.595.359
-        //-7590
-
-        //x2 max
-        //-10835
-        //-10840.359
-        //-10855
-        //-10875
-        //-10895
-        //-10909.642
-        //-10915
-        //-10909.641
-        //-10840.358
-
-        //y2 max
-        //-2.4041262E-06
-        //-20.000004
-        //-19.999998
-        //-34.64102
-        //-34.641018
-        //-40.000004
-        //-39.999996
-        //-34.641014
-        //-19.999996
-        //-19.99999
-        //1.0927848E-06
-        //5.9010376E-06
-        //20.000006
-        //20.000011
-        //34.641006
-        //19.999989
-        //19.999994
-
-        //y3 max 
-        //7470
-        //7450
-        //7435.359
-        //7430
-        //7490
-        //7504.6406
-        //7504.6416
-        //7510
         #endregion
 
+        #region Base (Tambor) -- TESTAR PARTE DE TAMBOR
+        public static IEnumerable<XElement> GenerateBase(int width, int height)
+        {
 
+            if (height <= 4999)
+                return BaseDouble(width, height);
 
-        public static IEnumerable<XElement> GenerateSide(int width, int height)
+            // ----- Formula -----
+            var x1 = new List<double>
+            {
+                0.5 * width - 219.5,
+                0.5 * width + 0.5
+            };
+
+            var y1 = new List<double>
+            {
+              -0.5 * height + 360,
+              -0.5 * height + 354.6409,
+              -0.5 * height + 340,
+              -0.5 * height + 320,
+              -0.5 * height + 300,
+              -0.5 * height + 285.359,
+              -0.5 * height + 280
+            };
+
+            var x2 = new List<double>
+            {
+                -0.5 * width - 0.5,
+                -0.5 * width + 219.5,
+            };
+
+            var y2 = new List<double>
+            {
+               39.999996,
+               34.64101,
+               34.64102,
+               40.000008,
+               19.999994,
+               20.000004,
+               -6.5567083E-06,
+               3.059797E-06,
+               -20.000008,
+               -19.999998,
+               -34.64103,
+               -34.641018,
+               -40.000008,
+               -39.999996,
+               -34.641003,
+               -20.000002,
+               -19.999992,
+               -4.3312575E-06,
+               5.285248E-06,
+               20.00001,
+               20.00002,
+               34.641018,
+               34.64103
+            };
+
+            var y3 = new List<double>
+            {
+                 0.5 * height - 440,
+                 0.5 * height - 445.359,
+                 0.5 * height - 460,
+                 0.5 * height - 480,
+                 0.5 * height - 500,
+                 0.5 * height - 514.641,
+                 0.5 * height - 520
+            };
+
+            return
+                [
+                   Base([.. x1], [.. y1], "dowel-side-up-right"),
+                   BaseSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right"),
+                   Base([.. x1], y3.ToArray(), "dowel-side-down-right"),
+
+                   Base([.. x2], y1.ToArray(), "dowel-side-up-left"),
+                   BaseSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
+                   Base([.. x2], [..y3], "dowel-side-down-left")
+                ];
+        }
+
+        static IEnumerable<XElement> BaseDouble(int width, int height)
         {
             // ----- Formula -----
             var x1 = new List<double>
             {
-                0.5 * width - 35,     
-                0.5 * width - 40.35895, 
-                0.5 * width - 55,     
-                0.5 * width -75,       
-                0.5 * width -95,      
-                0.5 * width -109.64102,   
-                0.5 * width -115,    
+              0.5 * width - 219.5,
+              0.5 * width - 0.5
             };
 
-            if (width > 4999)
-            {
-                x1.Add(0.5 * width - 109.641);
-                x1.Add(0.5 * width - 40.358);
-            }
-
-
-            //ERRADA
             var y1 = new List<double>
             {
-              -0.5 * height + 280,
-              -0.5 * height + 260,
-              -0.5 * height + 245.359,
-              -0.5 * height + 240,
-              -0.5 * height + 300,
-              -0.5 * height + 314.641,
-              -0.5 * height + 320
+                -0.5 * height + 320,
+                -0.5 * height + 314.641,
+                -0.5 * height + 300,
+                -0.5 * height + 280,
+                -0.5 * height + 260,
+                -0.5 * height + 245.35895,
+                -0.5 * height + 240,
             };
-
-            if (width > 4999)
-            {
-                y1.Add(0.5 * height + 354.641);
-                y1.Add(0.5 * height + 360);
-            }
-
-
 
             var x2 = new List<double>
             {
-                -0.5 * width + 115,
-                -0.5 * width + 109.64102,
-                -0.5 * width + 95,
-                -0.5 * width + 75,
-                -0.5 * width + 55,
-                -0.5 * width + 40.35895,
-                -0.5 * width + 35,
+                -0.5 * width - 0.5,
+                -0.5 * width + 219.5
             };
 
-            if (width > 4999)
+            var y2 = new List<double>
             {
-                x2.Add(0.5 * width + 40.35895);
-                x2.Add(0.5 * width + 109.64102);
-            }
+               0.5 * height - 420,
+               0.5 * height - 425.35895,
+               0.5 * height - 440,
+               0.5 * height - 460,
+               0.5 * height - 480,
+               0.5 * height - 494.64102,
+               0.5 * height - 500,
+            };
 
-            //ERRADA
-            double[] y2 =
-            [
-               -0.01399 * height + 1261.97,
-              -0.01705 * height + 1291.15, 
-              -0.01932 * height + 1312.56, 
-              -0.02016 * height + 1320.48, 
-              -0.00617 * height + 1218.52, 
-              -0.00359 * height + 1196.13, 
-              -0.00278 * height + 1188.33  
-            ];
+            return
+              [
+                   Base([.. x1], [.. y1], "dowel-base-up-right"),
+                   Base([.. x1], [.. y2], "dowel-base-down-right"),
+                   Base([.. x2], [.. y1], "dowel-base-up-right"),
+                   Base([.. x2], [..y2], "dowel-base-down-left"),
+              ];
+        }
+
+
+        static XElement Base(double[] x, double[] y, string name)
+        {
+            var group = new XElement("g", new XAttribute("name", name));
+
+            // ----- Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[0], x[0], y[1], x[1], y[1], x[1], y[0]);
+
+            // ----- Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[1], x[0], y[2], x[1], y[2], x[1], y[1]);
+
+            // ----- Terceiro Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[2], x[0], y[3], x[1], y[3], x[1], y[2]);
+
+            // ----- Quarto Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[3], x[0], y[4], x[1], y[4], x[1], y[3]);
+
+            // ----- Quinto Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[4], x[0], y[5], x[1], y[5], x[1], y[4]);
+
+            // ----- Sexto Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[5], x[0], y[6], x[1], y[6], x[1], y[5]);
+
+            // ----- Sétimo Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[6], x[0], y[5], x[1], y[5], x[1], y[6]);
+
+            // ----- Oitavo Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[5], x[0], y[4], x[1], y[4], x[1], y[5]);
+
+            // ----- Nono Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[4], x[0], y[3], x[1], y[3], x[1], y[4]);
+
+            // ----- Décimo Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[3], x[0], y[2], x[1], y[2], x[1], y[3]);
+
+            // ----- Décimo Primeiro Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[2], x[0], y[1], x[1], y[1], x[1], y[2]);
+
+            // ----- Décimo Segundo Path -----
+            AddMinifixBaseQuadPath(group, x[0], y[1], x[0], y[0], x[1], y[0], x[1], y[1]);
+
+            // ----- Décimo Terceiro Path -----
+            var points = new[] { y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[5], y[4], y[3], y[2], y[1] };
+            AddDrawColor(group, points, x[1]);
+
+            // ----- Décimo Quarto Path -----
+            AddDrawColor(group, points, x[1]);
+
+            return group;
+        }
+
+        static XElement BaseSinglePath(double[] x1, double[] y1, string name)
+        {
+
+            var group = new XElement("g", new XAttribute("name", name));
+
+            AddSinglePath(group, x1[0], y1[0], x1[0], y1[2], x1[1], y1[2], x1[1], y1[0]); // 39.999996 → 34.64102
+            AddSinglePath(group, x1[0], y1[1], x1[0], y1[5], x1[1], y1[5], x1[1], y1[1]); // 34.64101 → 20.000004
+            AddSinglePath(group, x1[0], y1[4], x1[0], y1[7], x1[1], y1[7], x1[1], y1[4]); // 19.999994 → 3.059797E-06
+            AddSinglePath(group, x1[0], y1[6], x1[0], y1[9], x1[1], y1[9], x1[1], y1[6]); // -6.5567083E-06 → -19.999998
+            AddSinglePath(group, x1[0], y1[8], x1[0], y1[11], x1[1], y1[11], x1[1], y1[8]); // -20.000008 → -34.641018
+            AddSinglePath(group, x1[0], y1[10], x1[0], y1[13], x1[1], y1[13], x1[1], y1[10]); // -34.64103 → -39.999996
+            AddSinglePath(group, x1[0], y1[12], x1[0], y1[14], x1[1], y1[14], x1[1], y1[12]); // -40.000008 → -34.641003
+            AddSinglePath(group, x1[0], y1[11], x1[0], y1[16], x1[1], y1[16], x1[1], y1[11]); // -34.641018 → -19.999992
+            AddSinglePath(group, x1[0], y1[15], x1[0], y1[18], x1[1], y1[18], x1[1], y1[15]); // -20.000002 → 5.285248E-06
+            AddSinglePath(group, x1[0], y1[17], x1[0], y1[20], x1[1], y1[20], x1[1], y1[17]); // -4.3312575E-06 → 20.00002
+            AddSinglePath(group, x1[0], y1[19], x1[0], y1[22], x1[1], y1[22], x1[1], y1[19]); // 20.00001 → 34.64103
+            AddSinglePath(group, x1[0], y1[21], x1[0], y1[3], x1[1], y1[3], x1[1], y1[21]);  // 34.641018 → 40.000008
+
+            // ----- Décimo Terceiro Path -----
+            //var points = new[]
+            //{
+            //    (x[0], y[0]),
+            //    (x[1], y[1]),
+            //    (x[2], y[3]),
+            //    (x[3], y[5]),
+            //    (x[4], y[3]),
+            //    (x[5], y[8]),
+            //    (x[6], y[10]),
+            //    (x[5], y[12]),
+            //    (x[4], y[14]),
+            //    (x[3], y[16]),
+            //    (x[2], y[14]),
+            //    (x[1], y[20])
+            //};
+
+            //AddSingleCircle(group, points);
+
+            //// ----- Décimo Quarto Path -----
+            //AddSingleCircle(group, points);
+            return group;
+        }
+
+        static XElement BaseCircle(double[] x1, double[] y1, string name)
+        {
+            var group = new XElement("g", new XAttribute("name", name));
+
+            AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[1], x1[1], y1[2], x1[1], y1[2], x1[0], y1[1]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[2], x1[1], y1[3], x1[1], y1[3], x1[0], y1[2]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[3], x1[1], y1[4], x1[1], y1[4], x1[0], y1[3]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[4], x1[1], y1[5], x1[1], y1[5], x1[0], y1[4]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[5], x1[1], y1[6], x1[1], y1[6], x1[0], y1[5]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[6], x1[1], y1[5], x1[1], y1[5], x1[0], y1[6]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[5], x1[1], y1[4], x1[1], y1[4], x1[0], y1[5]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[4], x1[1], y1[3], x1[1], y1[3], x1[0], y1[4]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[3], x1[1], y1[2], x1[1], y1[2], x1[0], y1[3]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[2], x1[1], y1[1], x1[1], y1[1], x1[0], y1[2]);
+            AddMinifixBaseQuadPath(group, x1[0], y1[1], x1[1], y1[0], x1[1], y1[0], x1[0], y1[1]);
+
+
+            // ----- Decimo Terceiro background Path -----
+            //var points = new (double X, double Y)[]
+            //{
+            //    (x1[0], y1[0]),
+            //    (x1[1], y1[1]),
+            //    (x1[2], y1[2]),
+            //    (x1[3], y1[3]),
+            //    (x1[4], y1[2]),
+            //    (x1[5], y1[1]),
+            //    (x1[6], y1[0]),
+            //    (x1[5], y1[4]),
+            //    (x1[4], y1[5]),
+            //    (x1[3], y1[6]),
+            //    (x1[2], y1[5]),
+            //    (x1[1], y1[4])
+            //};
+
+            //AddCircleColor(group, points);
+            //AddCircleColor(group, points);
+
+            return group;
+        }
+
+        #endregion
+
+
+
+        #region Side
+        public static IEnumerable<XElement> GenerateSide(int width, int height)
+        {
+            if (height <= 1399)
+                return SideSingle(width, height);
+
+            if (height <= 4999)
+                return SideDouble(width, height);
+
+            // ----- Formula -----
+            var x1 = new List<double>
+            {
+                0.5 * width - 50,
+                0.5 * width - 55.35895,
+                0.5 * width - 70,
+                0.5 * width - 90,
+                0.5 * width - 110,
+                0.5 * width - 124.64102,
+                0.5 * width - 130,
+            };
+
+            var y1 = new List<double>
+            {
+              -0.5 * height + 320,
+              -0.5 * height + 300,
+              -0.5 * height + 285.359,
+              -0.5 * height + 280,
+              -0.5 * height + 340,
+              -0.5 * height + 354.6409,
+              -0.5 * height + 360
+            };
+
+            var x2 = new List<double>
+            {
+                -0.5 * width + 130,
+                -0.5 * width + 124.64102,
+                -0.5 * width + 110,
+                -0.5 * width + 90,
+                -0.5 * width + 70,
+                -0.5 * width + 55.35895,
+                -0.5 * width + 50,
+            };
+
+            var y2 = new List<double>
+            {
+                -2.4041262E-06,
+                -20.000004,
+                -19.999998,
+                -34.64102,
+                -34.641018,
+                -40.000004,
+                -39.999996,
+                -34.641014,
+                -19.999996,
+                -19.99999,
+                1.0927848E-06,
+                5.9010376E-06,
+                20.000006,
+                20.000011,
+                34.641018,
+                34.64102,
+                39.999996,
+                40.000004,
+                34.641006,
+                34.641014,
+                19.999989,
+                19.999994,
+                2.4041262E-06,
+            };
+
+            var y3 = new List<double>
+            {
+                 0.5 * height - 480,
+                 0.5 * height - 500,
+                 0.5 * height - 514.641,
+                 0.5 * height - 520,
+                 0.5 * height - 460,
+                 0.5 * height - 445.359,
+                 0.5 * height - 440
+            };
+
             //---------------------------------------------------------------------------------
             var referenceArea = 1200 * 1200;
             var currentArea = width * height;
@@ -202,41 +472,133 @@ namespace testesSvg.Components
             return
                 [
                    Side([.. x1], [.. y1], "dowel-side-up-right"),
-                   Side([.. x1], y2, "dowel-side-down-right"),
+                   SideSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right"),
+                   Side([.. x1], y3.ToArray(), "dowel-side-down-right"),
+
                    Side([.. x2], y1.ToArray(), "dowel-side-up-left"),
-                   Side([.. x2], [..y2], "dowel-side-down-left")
+                   SideSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
+                   Side([.. x2], [..y3], "dowel-side-down-left")
                 ];
             //}
-
-
-            //if (width > 5000)
-            //{
-            //    //add 3 furos
-            //}
-
-
-            //return null;
-
-            //double[] yLeft1 = new double[yRight.Length];
-
-            //for (int i = 0; i < yRight.Length; i++)
-            //{
-            //    double rightValue = yRight[i];
-
-            //    // Passo 1: Extrair o coeficiente da fórmula original
-            //    double coefficientRight = Math.Abs(rightValue / height);
-
-            //    // Passo 2: Aplicar uma regra para espelhar o coeficiente
-            //    double coefficientLeft = 1.0 - coefficientRight;
-
-            //    // Ajuste fino opcional (se quiser maior controle visual):
-            //    coefficientLeft *= 0.85; // reduz um pouco para compensar proporção visual
-
-            //    // Passo 3: Recalcular com o novo coeficiente e inverter o sinal
-            //    yLeft1[i] = coefficientLeft * height + ((rightValue % 1) != 0 ? 0.359 : -0.5);
-            //}
-
         }
+
+        static IEnumerable<XElement> SideSingle(int width, int height)
+        {
+            // ----- Formula -----
+            var x1 = new List<double>
+            {
+                0.5 * width - 35,
+                0.5 * width - 40.35895,
+                0.5 * width - 55,
+                0.5 * width - 75,
+                0.5 * width - 95,
+                0.5 * width - 109.64102,
+                0.5 * width -115,
+            };
+
+            var y1 = new List<double>
+            {
+              0.5 * height - 600.0000024041262,
+              0.5 * height - 620.000004,
+              0.5 * height - 619.999998,
+              0.5 * height - 634.64102,
+              0.5 * height - 634.641018,
+              0.5 * height - 640.000004,
+              0.5 * height - 639.999996,
+              0.5 * height - 634.641014,
+              0.5 * height - 619.999996,
+              0.5 * height - 619.99999,
+              0.5 * height - 599.9999989,
+              0.5 * height - 599.9999940989624,
+              0.5 * height - 579.999994,
+              0.5 * height - 579.999989,
+              0.5 * height - 565.358994,
+              0.5 * height - 565.35898,
+              0.5 * height - 560.000004,
+              0.5 * height - 559.999996,
+              0.5 * height - 565.358994,
+              0.5 * height - 565.358986,
+              0.5 * height - 580.000011,
+              0.5 * height - 580.000006,
+            };
+
+            var x2 = new List<double>
+            {
+                -0.5 * width + 115,
+                -0.5 * width + 109.64102,
+                -0.5 * width + 95,
+                -0.5 * width + 75,
+                -0.5 * width + 55,
+                -0.5 * width + 40.35895,
+                -0.5 * width + 35,
+            };
+
+
+            return
+              [
+                 SideSinglePath([.. x1], [.. y1], "dowel-right"),
+                   SideSinglePath([.. x2], [..y1], "dowel-left"),
+              ];
+        }
+
+        static IEnumerable<XElement> SideDouble(int width, int height)
+        {
+            // ----- Formula -----
+            var x1 = new List<double>
+            {
+              0.5 * width - 50,
+              0.5 * width - 55.35895,
+              0.5 * width - 70,
+              0.5 * width - 90,
+              0.5 * width - 110,
+              0.5 * width - 124.64102,
+              0.5 * width - 130,
+
+            };
+
+            var y1 = new List<double>
+            {
+                -0.5 * height + 280,
+                -0.5 * height + 260,
+                -0.5 * height + 245.35898,
+                -0.5 * height + 240,
+                -0.5 * height + 300,
+                -0.5 * height + 314.64102,
+                -0.5 * height + 320,
+            };
+
+            var x2 = new List<double>
+            {
+                -0.5 * width + 130,
+                -0.5 * width + 124.64102,
+                -0.5 * width + 110,
+                -0.5 * width + 90,
+                -0.5 * width + 70,
+                -0.5 * width + 55.35895,
+                -0.5 * width + 50,
+            };
+
+            var y2 = new List<double>
+            {
+               0.5 * height - 460,
+               0.5 * height - 480,
+               0.5 * height - 494.641,
+               0.5 * height - 500,
+               0.5 * height - 440,
+               0.5 * height - 425.35898,
+               0.5 * height - 420,
+            };
+
+            return
+              [
+                   Side([.. x1], [.. y1], "dowel-up-right"),
+                   Side([.. x1], [..y2], "dowel-down-right"),
+                   Side([.. x2], [..y1], "dowel-up-left"),
+                   Side([.. x2], [..y2], "dowel-down-left"),
+              ];
+        }
+
+        #endregion
 
         static XElement Side(double[] x, double[] y, string name)
         {
@@ -303,6 +665,72 @@ namespace testesSvg.Components
             return group;
         }
 
+        static XElement SideSinglePath(double[] x, double[] y, string name)
+        {
+
+            var group = new XElement("g", new XAttribute("name", name));
+
+            // ----- Primeiro Path -----
+            AddSinglePath(group, x[0], y[0], x[1], y[1], x[1], y[2], x[0], y[0]);
+
+            // ----- Segundo Path -----
+            AddSinglePath(group, x[1], y[1], x[2], y[3], x[2], y[3], x[1], y[2]);
+
+            // ----- Terceiro Path -----
+            AddSinglePath(group, x[2], y[3], x[3], y[5], x[3], y[6], x[2], y[4]);
+
+            // ----- Quarto Path -----
+            AddSinglePath(group, x[3], y[5], x[4], y[7], x[4], y[7], x[3], y[6]);
+
+            // ----- Quinto Path -----
+            AddSinglePath(group, x[4], y[7], x[5], y[8], x[5], y[9], x[4], y[7]);
+
+            // ----- Sexto Path -----
+            AddSinglePath(group, x[5], y[8], x[6], y[10], x[6], y[11], x[5], y[9]);
+
+            // ----- Sétimo Path -----
+            AddSinglePath(group, x[6], y[10], x[5], y[12], x[5], y[13], x[6], y[11]);
+
+            // ----- Oitavo Path -----
+            AddSinglePath(group, x[5], y[12], x[4], y[14], x[4], y[15], x[5], y[13]);
+
+            // ----- Nono Path -----
+            AddSinglePath(group, x[4], y[14], x[3], y[16], x[3], y[17], x[4], y[15]);
+
+            // ----- Décimo Path -----
+            AddSinglePath(group, x[3], y[16], x[2], y[18], x[2], y[19], x[3], y[17]);
+
+            // ----- Décimo Primeiro Path -----
+            AddSinglePath(group, x[2], y[18], x[1], y[20], x[1], y[21], x[2], y[19]);
+
+            // ----- Décimo Segundo Path -----
+            AddSinglePath(group, x[1], y[20], x[0], y[0], x[0], y[0], x[1], y[21]);
+
+            // ----- Décimo Terceiro Path -----
+            var points = new[]
+            {
+                (x[0], y[0]),
+                (x[1], y[1]),
+                (x[2], y[3]),
+                (x[3], y[5]),
+                (x[4], y[3]),
+                (x[5], y[8]),
+                (x[6], y[10]),
+                (x[5], y[12]),
+                (x[4], y[14]),
+                (x[3], y[16]),
+                (x[2], y[14]),
+                (x[1], y[20])
+            };
+
+            AddSingleCircle(group, points);
+
+            // ----- Décimo Quarto Path -----
+            AddSingleCircle(group, points);
+            return group;
+        }
+
+
         static void AddMinifixBaseQuadPath(XElement group, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
         {
             var ci = CultureInfo.InvariantCulture;
@@ -310,6 +738,21 @@ namespace testesSvg.Components
                       $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
                       $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
                       $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} Z";
+
+            group.Add(new XElement("path",
+                new XAttribute("d", d),
+                new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
+                new XAttribute("stroke", "black")
+            ));
+        }
+
+        static void AddSinglePath(XElement group, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            string d = $"M {x1.ToString("0.####", ci)} {y1.ToString().Replace(',', '.')} " +
+                      $"L {x2.ToString("0.####", ci)} {y2.ToString().Replace(',', '.')} " +
+                      $"L {x3.ToString("0.####", ci)} {y3.ToString().Replace(',', '.')} " +
+                      $"L {x4.ToString("0.####", ci)} {y4.ToString().Replace(',', '.')} Z";
 
             group.Add(new XElement("path",
                 new XAttribute("d", d),
@@ -326,6 +769,33 @@ namespace testesSvg.Components
 
             group.Add(new XElement("path",
                 new XAttribute("d", d13),
+                new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
+                new XAttribute("stroke", "black")
+            ));
+        }
+
+        static void AddSingleCircle(XElement group, (double, double)[] points)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            string d13 = "M " + string.Join(" L ", points.Select(p =>
+              $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString().Replace(',', '.')}")) + " Z";
+
+            group.Add(new XElement("path",
+                new XAttribute("d", d13),
+                new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
+                new XAttribute("stroke", "black")
+            ));
+        }
+
+        static void AddDrawColor(XElement group, double[] points, double x)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            string d14 = "M " + string.Join(" L ", points.Select(y =>
+                 $"{x.ToString("0.####", ci)} {y.ToString("0.####", ci)}"
+             )) + " Z";
+
+            group.Add(new XElement("path",
+                new XAttribute("d", d14),
                 new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
                 new XAttribute("stroke", "black")
             ));
