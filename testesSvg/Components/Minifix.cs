@@ -87,6 +87,94 @@ namespace testesSvg.Components
     //    JoinSystemType = "minifix"
     //};
 
+    //MinifixAndDowelsParafuso-- MIN TRES FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "25000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Side"
+    //};
+
+    //MinifixAndDowelsParafuso-- MAX TRES FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "102000",
+    //    Height = "55000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Side"
+    //};
+
+    //MinifixAndDowelsParafuso-- MIN DOIS FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "14999",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Side"
+    //};
+
+    //MinifixAndDowelsParafuso-- MAX DOIS FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "102000",
+    //    Height = "24999",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Side"
+    //};
+
+    //MinifixAndDowelsTambor-- MAX DOIS FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "102000",
+    //    Height = "24999",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Base"
+    //};
+
+    //MinifixAndDowelsTambor-- MIN DOIS FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "20000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Base"
+    //};
+
+    //MinifixAndDowelsTambor-- MIN TRES FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "25000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Base"
+    //};
+
+    //MinifixAndDowelsTambor-- MAX TRES FUROS
+    //var payload = new SvgRequest
+    //{
+    //    Width = "102000",
+    //    Height = "55000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifixanddowels",
+    //    Type = "Base"
+    //};
+
     #endregion
 
     public static class Minifix
@@ -95,90 +183,16 @@ namespace testesSvg.Components
         public static IEnumerable<XElement> GenerateBase(int width, int height)
         {
             // ----- Formula -----
-            double[] x1 =
-            [
-                0.5 * width - 239.5,     // x1
-                0.5 * width + 0.5,  // x2
-            ];
+            double[] x1 = CalculateBaseX1(width);
+            double[] x2 = CalculateBaseX2(width);
+            double[] y1 = CalculateBaseY1(height);
+            double[] y2 = CalculateBaseY2(height);
 
-            double[] x2 =
-            [
-                -(0.5 * width + 0.5),     // x1
-                -(0.5 * width - 239.5),  // x2
-            ];
-
-            double[] y1 =
-           [
-            -(0.5 * height - 320),// y1
-            -(0.5 * height - 314.641),  // y2
-            -(0.5 * height - 300),   // y3
-            -(0.5 * height - 280),   // y4
-            -(0.5 * height - 260),    // y5
-            -(0.5 * height - 245.359),   // y6
-            -(0.5 * height - 240)  // y7
-           ];
-
-            double[] y2 =
-           [
-            0.5 * height - 420,// y1
-            0.5 * height - 425.359,  // y2
-            0.5 * height - 425.358,   // y3
-            0.5 * height - 440,   // y4
-            0.5 * height - 460,    // y5
-            0.5 * height - 480,   // y6
-            0.5 * height - 494.642,  // y7
-            0.5 * height - 494.641,  // y8
-            0.5 * height - 500  // y9
-           ];
-
-
-            #region Formula Circle
             // ----- Formula Circle-----
-            double[] circleX1 =
-            [
-                0.5 * width - 165,     // x1
-                0.5 * width - 175.0481,  // x2
-                0.5 * width - 202.5,  // x3
-                0.5 * width - 240,  // x4
-                0.5 * width - 277.5,  // x5
-                0.5 * width - 304.9517,  // x6
-                0.5 * width - 315  // x7
-            ];
-
-            double[] circleX2 =
-           [
-                -(0.5 * width - 315),     // x1
-                -(0.5 * width - 304.9517),  // x2
-                -(0.5 * width - 277.5),  // x3
-                -(0.5 * width - 240),  // x4
-                -(0.5 * width - 202.5),  // x5
-                -(0.5 * width - 175.0483),  // x6
-                -(0.5 * width - 165)  // x7
-           ];
-
-            double[] circleY1 =
-            [
-                -(0.5 * height - 280), //y1
-                -(0.5 * height - 242.5), //y2
-                -(0.5 * height - 215.048), //y3
-                -(0.5 * height - 205), //y4
-                -(0.5 * height - 318), //y5
-                -(0.5 * height - 344.951), //y6
-                -(0.5 * height - 355)//y7
-            ];
-
-            double[] circleY2 =
-            [
-                0.5 * height - 460, //y1
-                0.5 * height - 497.5, //y2
-                0.5 * height - 524.951, //y3
-                0.5 * height - 535, //y4
-                0.5 * height - 422.5, //y5
-                0.5 * height - 395.048, //y6
-                0.5 * height - 385//y7
-            ];
-
-            #endregion
+            double[] circleX1 = CalculateBaseCircleX1(width);
+            double[] circleX2 = CalculateBaseCircleX2(width);
+            double[] circleY1 = CalculateBaseCircleY1(height);
+            double[] circleY2 = CalculateBaseCircleY2(height);
 
             return
               [
@@ -192,6 +206,102 @@ namespace testesSvg.Components
                  BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left"),
 
               ];
+        }
+
+        static double[] CalculateBaseX1(int width)
+        {
+            return [
+                0.5 * width - 239.5,
+                0.5 * width + 0.5,
+            ];
+        }
+
+        static double[] CalculateBaseX2(int width)
+        {
+            return [
+                -(0.5 * width + 0.5),
+                -(0.5 * width - 239.5),
+            ];
+        }
+
+        static double[] CalculateBaseY1(int height)
+        {
+            return [
+             -(0.5 * height - 320),// y1
+            -(0.5 * height - 314.641),  // y2
+            -(0.5 * height - 300),   // y3
+            -(0.5 * height - 280),   // y4
+            -(0.5 * height - 260),    // y5
+            -(0.5 * height - 245.359),   // y6
+            -(0.5 * height - 240)  // y7
+            ];
+        }
+
+        static double[] CalculateBaseY2(int height)
+        {
+            return [
+            0.5 * height - 420,// y1
+            0.5 * height - 425.359,  // y2
+            0.5 * height - 425.358,   // y3
+            0.5 * height - 440,   // y4
+            0.5 * height - 460,    // y5
+            0.5 * height - 480,   // y6
+            0.5 * height - 494.642,  // y7
+            0.5 * height - 494.641,  // y8
+            0.5 * height - 500  // y9
+           ];
+        }
+
+        static double[] CalculateBaseCircleX1(int width)
+        {
+            return [
+                0.5 * width - 165,
+                0.5 * width - 175.0481,
+                0.5 * width - 202.5,
+                0.5 * width - 240,
+                0.5 * width - 277.5,
+                0.5 * width - 304.9517,
+                0.5 * width - 315
+            ];
+        }
+
+        static double[] CalculateBaseCircleX2(int width)
+        {
+            return [
+                -(0.5 * width - 315),     // x1
+                -(0.5 * width - 304.9517),  // x2
+                -(0.5 * width - 277.5),  // x3
+                -(0.5 * width - 240),  // x4
+                -(0.5 * width - 202.5),  // x5
+                -(0.5 * width - 175.0483),  // x6
+                -(0.5 * width - 165)  // x7
+           ];
+        }
+
+        static double[] CalculateBaseCircleY1(int height)
+        {
+            return [
+                -(0.5 * height - 280), //y1
+                -(0.5 * height - 242.5), //y2
+                -(0.5 * height - 215.048), //y3
+                -(0.5 * height - 205), //y4
+                -(0.5 * height - 318), //y5
+                -(0.5 * height - 344.951), //y6
+                -(0.5 * height - 355)//y7
+            ];
+        }
+
+        static double[] CalculateBaseCircleY2(int height)
+        {
+            return [
+                0.5 * height - 460, //y1
+                0.5 * height - 497.5, //y2
+                0.5 * height - 524.951, //y3
+                0.5 * height - 535, //y4
+                0.5 * height - 422.5, //y5
+                0.5 * height - 395.048, //y6
+                0.5 * height - 385//y7
+            ];
         }
 
         static XElement Base(double[] x, double[] y, string name)
@@ -397,51 +507,10 @@ namespace testesSvg.Components
         {
 
             // ----- Formula -----
-            double[] x1 = 
-            [
-                0.5 * width - 50,
-                0.5 * width - 53.34937, 
-                0.5 * width - 62.5, 
-                0.5 * width - 75, 
-                0.5 * width - 87.5,
-                0.5 * width - 96.65063, 
-                0.5 * width - 100
-             ];
-
-            double[] x2 =
-            [
-                -0.5 * width + 100,    
-                -0.5 * width + 96.65063,  
-                -0.5 * width + 87.5, 
-                -0.5 * width + 75,  
-                -0.5 * width + 62.5,  
-                -0.5 * width + 53.34937,  
-                -0.5 * width + 50, 
-            ];
-
-            double[] y1 =
-           [
-            -(0.5 * height - 280),
-            -(0.5 * height - 267.5),  
-            -(0.5 * height - 258.34937),   
-            -(0.5 * height - 255),   
-            -(0.5 * height - 292.5),   
-            -(0.5 * height - 301.65063),   
-            -(0.5 * height - 305)  
-           ];
-
-            double[] y2 =
-           [
-            0.5 * height - 460,
-            0.5 * height - 472.5,  
-            0.5 * height - 481.65063,   
-            0.5 * height - 485,   
-            0.5 * height - 447.5,   
-            0.5 * height - 438.34937,   
-            0.5 * height - 435,   
-           
-           ];
-     
+            double[] x1 = CalculateSideX1(width);
+            double[] x2 = CalculateSideX2(width);
+            double[] y1 = CalculateSideY1(height);
+            double[] y2 = CalculateSideY2(height);
 
             return
               [
@@ -455,6 +524,59 @@ namespace testesSvg.Components
 
               ];
         }
+
+        static double[] CalculateSideX1(int width)
+        {
+            return [
+                0.5 * width - 50,
+                0.5 * width - 53.34937,
+                0.5 * width - 62.5,
+                0.5 * width - 75,
+                0.5 * width - 87.5,
+                0.5 * width - 96.65063,
+                0.5 * width - 100
+             ];
+        }
+
+        static double[] CalculateSideX2(int width)
+        {
+            return [
+                -0.5 * width + 100,
+                -0.5 * width + 96.65063,
+                -0.5 * width + 87.5,
+                -0.5 * width + 75,
+                -0.5 * width + 62.5,
+                -0.5 * width + 53.34937,
+                -0.5 * width + 50,
+            ];
+        }
+
+        static double[] CalculateSideY1(int height)
+        {
+            return [
+            -(0.5 * height - 280),
+            -(0.5 * height - 267.5),
+            -(0.5 * height - 258.34937),
+            -(0.5 * height - 255),
+            -(0.5 * height - 292.5),
+            -(0.5 * height - 301.65063),
+            -(0.5 * height - 305)
+           ];
+        }
+
+        static double[] CalculateSideY2(int height)
+        {
+            return [
+            0.5 * height - 460,
+            0.5 * height - 472.5,
+            0.5 * height - 481.65063,
+            0.5 * height - 485,
+            0.5 * height - 447.5,
+            0.5 * height - 438.34937,
+            0.5 * height - 435,
+           ];
+        }
+
 
         static XElement Side(double[] x, double[] y, string name)
         {
@@ -564,6 +686,119 @@ namespace testesSvg.Components
             ));
 
         }
-       
+
+
+
+        #region MinifixAndDowels
+        public static IEnumerable<XElement> GenerateMinifixDowelsSide(int width, int height)
+        {
+            var x1 = CalculateSideX1(width);
+            var x2 = CalculateSideX2(width);
+            var y1 = CalculateSideY1(height);
+            var y3 = CalculateSideY2(height);
+            var y2 = new List<double>
+            {
+                -2.4041262E-06,
+                -20.000004,
+                -19.999998,
+                -34.64102,
+                -34.641018,
+                -40.000004,
+                -39.999996,
+                -34.641014,
+                -19.999996,
+                -19.99999,
+                1.0927848E-06,
+                5.9010376E-06,
+                20.000006,
+                20.000011,
+                34.641018,
+                34.64102,
+                39.999996,
+                40.000004,
+                34.641006,
+                34.641014,
+                19.999989,
+                19.999994,
+                2.4041262E-06,
+            };
+            var dowelX1 = Dowels.CalculateSideX1(width);
+            var dowelX2 = Dowels.CalculateSideX2(width);
+
+            return
+             [
+                Side(x1, y1, "minifix-side-up-right"),
+                Dowels.SideSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right"),
+                Side(x1, y3, "minifix-side-down-right"),
+
+                Side(x2, y1, "minifix-side-up-left"),
+                Dowels.SideSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left"),
+                Side(x2, y3, "minifix-side-up-left")
+             ];
+        }
+
+        public static IEnumerable<XElement> GenerateMinifixDowelsBase(int width, int height)
+        {
+            var x1 = CalculateBaseX1(width);
+            var x2 = CalculateBaseX2(width);
+            var y1 = CalculateBaseY1(height);
+            var y3 = CalculateBaseY2(height);
+
+            var circleX1 = CalculateBaseCircleX1(width);
+            var circleX2 = CalculateBaseCircleX2(width);
+            var circleY1 = CalculateBaseCircleY1(height);
+            var circleY2 = CalculateBaseCircleY2(height);
+
+            var y2 = new List<double>
+            {
+                  39.999996,
+               34.64101,
+               34.64102,
+               40.000008,
+               19.999994,
+               20.000004,
+               -6.5567083E-06,
+               3.059797E-06,
+               -20.000008,
+               -19.999998,
+               -34.64103,
+               -34.641018,
+               -40.000008,
+               -39.999996,
+               -34.641003,
+               -20.000002,
+               -19.999992,
+               -4.3312575E-06,
+               5.285248E-06,
+               20.00001,
+               20.00002,
+               34.641018,
+               34.64103
+            };
+            var dowelX1 = Dowels.CalculateBaseX1(width);
+            var dowelX2 = Dowels.CalculateBaseX2(width);
+
+            return
+             [
+                 Base(x1, y1, "minifix-base-up-right"),
+                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right"),
+
+                 Dowels.BaseSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right"),
+
+                 BaseDown(x1, y3, "minifix-base-down-right"),
+                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right"),
+
+                 Base(x2, y1, "minifix-base-up-left"),
+                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left"),
+
+                 Dowels.BaseSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left"),
+                 BaseDown(x2, y3, "minifix-base-down-left"),
+                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left"),
+
+             ];
+        }
+
+        #endregion
+
     }
 }

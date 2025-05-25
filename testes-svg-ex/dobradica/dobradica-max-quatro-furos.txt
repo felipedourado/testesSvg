@@ -1,0 +1,213 @@
+ {
+            "componentType": "door",
+            "name": "19692w375",
+            "props": {
+                "Board": "board15",
+                "Width": "100000",
+                "Height": "200000",
+                "HingeSku": "hinge"
+            }
+        }
+
+  <svg viewBox="-5000 -10000 10000 20000" width="10000" height="20000">
+      <g>
+        <path d="M -5000 -10000 L 5000 -10000 L 5000 10000 L -5000 10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+        <path d="M -5000 -10000 L 5000 -10000 L 5000 10000 L -5000 10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+        <path d="M -5000 -10000 L 5000 -10000 L 5000 -10000 L -5000 -10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+        <path d="M -5000 10000 L 5000 10000 L 5000 10000 L -5000 10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+        <path d="M 5000 -10000 L 5000 10000 L 5000 10000 L 5000 -10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+        <path d="M -5000 -10000 L -5000 10000 L -5000 10000 L -5000 -10000 Z" style="fill:#00004d;fill-opacity:0.2;stroke-linejoin:round;stroke-width:10;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4650 -9040 L -4673.446 -9127.5 L -4673.446 -9127.5 L -4650 -9040 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 -9127.5 L -4737.5 -9191.555 L -4737.5 -9191.555 L -4673.446 -9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 -9191.555 L -4825 -9215 L -4825 -9215 L -4737.5 -9191.555 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 -9215 L -4912.5 -9191.555 L -4912.5 -9191.555 L -4825 -9215 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 -9191.555 L -4976.554 -9127.5 L -4976.554 -9127.5 L -4912.5 -9191.555 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 -9127.5 L -5000 -9040 L -5000 -9040 L -4976.554 -9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -5000 -9040 L -4976.554 -8952.5 L -4976.554 -8952.5 L -5000 -9040 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 -8952.5 L -4912.5 -8888.445 L -4912.5 -8888.445 L -4976.554 -8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 -8888.445 L -4825 -8865 L -4825 -8865 L -4912.5 -8888.445 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 -8865 L -4737.5 -8888.445 L -4737.5 -8888.445 L -4825 -8865 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 -8888.445 L -4673.446 -8952.5 L -4673.446 -8952.5 L -4737.5 -8888.445 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 -8952.5 L -4650 -9040 L -4650 -9040 L -4673.446 -8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 -9040 L -4673.446 -9127.5 L -4737.5 -9191.555 L -4825 -9215 L -4912.5 -9191.555 L -4976.554 -9127.5 L -5000 -9040 L -4976.554 -8952.5 L -4912.5 -8888.445 L -4825 -8865 L -4737.5 -8888.445 L -4673.446 -8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 -9040 L -4673.446 -9127.5 L -4737.5 -9191.555 L -4825 -9215 L -4912.5 -9191.555 L -4976.554 -9127.5 L -5000 -9040 L -4976.554 -8952.5 L -4912.5 -8888.445 L -4825 -8865 L -4737.5 -8888.445 L -4673.446 -8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 -9280 L -4742.9165 -9292.75 L -4742.9165 -9292.75 L -4739.5 -9280 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -9292.75 L -4752.25 -9302.084 L -4752.25 -9302.084 L -4742.9165 -9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -9302.084 L -4765 -9305.5 L -4765 -9305.5 L -4752.25 -9302.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -9305.5 L -4777.75 -9302.084 L -4777.75 -9302.084 L -4765 -9305.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -9302.084 L -4787.0835 -9292.75 L -4787.0835 -9292.75 L -4777.75 -9302.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -9292.75 L -4790.5 -9280 L -4790.5 -9280 L -4787.0835 -9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 -9280 L -4787.0835 -9267.25 L -4787.0835 -9267.25 L -4790.5 -9280 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -9267.25 L -4777.75 -9257.917 L -4777.75 -9257.917 L -4787.0835 -9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -9257.917 L -4765 -9254.5 L -4765 -9254.5 L -4777.75 -9257.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -9254.5 L -4752.25 -9257.917 L -4752.25 -9257.917 L -4765 -9254.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -9257.917 L -4742.9165 -9267.25 L -4742.9165 -9267.25 L -4752.25 -9257.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -9267.25 L -4739.5 -9280 L -4739.5 -9280 L -4742.9165 -9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -9280 L -4742.9165 -9292.75 L -4752.25 -9302.084 L -4765 -9305.5 L -4777.75 -9302.084 L -4787.0835 -9292.75 L -4790.5 -9280 L -4787.0835 -9267.25 L -4777.75 -9257.917 L -4765 -9254.5 L -4752.25 -9257.917 L -4742.9165 -9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -9280 L -4742.9165 -9292.75 L -4752.25 -9302.084 L -4765 -9305.5 L -4777.75 -9302.084 L -4787.0835 -9292.75 L -4790.5 -9280 L -4787.0835 -9267.25 L -4777.75 -9257.917 L -4765 -9254.5 L -4752.25 -9257.917 L -4742.9165 -9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 -8800 L -4742.9165 -8812.75 L -4742.9165 -8812.75 L -4739.5 -8800 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -8812.75 L -4752.25 -8822.084 L -4752.25 -8822.084 L -4742.9165 -8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -8822.084 L -4765 -8825.5 L -4765 -8825.5 L -4752.25 -8822.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -8825.5 L -4777.75 -8822.084 L -4777.75 -8822.084 L -4765 -8825.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -8822.084 L -4787.0835 -8812.75 L -4787.0835 -8812.75 L -4777.75 -8822.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -8812.75 L -4790.5 -8800 L -4790.5 -8800 L -4787.0835 -8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 -8800 L -4787.0835 -8787.25 L -4787.0835 -8787.25 L -4790.5 -8800 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -8787.25 L -4777.75 -8777.917 L -4777.75 -8777.917 L -4787.0835 -8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -8777.917 L -4765 -8774.5 L -4765 -8774.5 L -4777.75 -8777.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -8774.5 L -4752.25 -8777.917 L -4752.25 -8777.917 L -4765 -8774.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -8777.917 L -4742.9165 -8787.25 L -4742.9165 -8787.25 L -4752.25 -8777.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -8787.25 L -4739.5 -8800 L -4739.5 -8800 L -4742.9165 -8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -8800 L -4742.9165 -8812.75 L -4752.25 -8822.084 L -4765 -8825.5 L -4777.75 -8822.084 L -4787.0835 -8812.75 L -4790.5 -8800 L -4787.0835 -8787.25 L -4777.75 -8777.917 L -4765 -8774.5 L -4752.25 -8777.917 L -4742.9165 -8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -8800 L -4742.9165 -8812.75 L -4752.25 -8822.084 L -4765 -8825.5 L -4777.75 -8822.084 L -4787.0835 -8812.75 L -4790.5 -8800 L -4787.0835 -8787.25 L -4777.75 -8777.917 L -4765 -8774.5 L -4752.25 -8777.917 L -4742.9165 -8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4650 -3333.4001 L -4673.446 -3420.9001 L -4673.446 -3420.9001 L -4650 -3333.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 -3420.9001 L -4737.5 -3484.9543 L -4737.5 -3484.9543 L -4673.446 -3420.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 -3484.9543 L -4825 -3508.4001 L -4825 -3508.4001 L -4737.5 -3484.9543 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 -3508.4001 L -4912.5 -3484.9543 L -4912.5 -3484.9543 L -4825 -3508.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 -3484.9543 L -4976.554 -3420.9001 L -4976.554 -3420.9001 L -4912.5 -3484.9543 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 -3420.9001 L -5000 -3333.4001 L -5000 -3333.4001 L -4976.554 -3420.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -5000 -3333.4001 L -4976.554 -3245.9001 L -4976.554 -3245.9001 L -5000 -3333.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 -3245.9001 L -4912.5 -3181.8455 L -4912.5 -3181.8455 L -4976.554 -3245.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 -3181.8455 L -4825 -3158.4001 L -4825 -3158.4001 L -4912.5 -3181.8455 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 -3158.4001 L -4737.5 -3181.8455 L -4737.5 -3181.8455 L -4825 -3158.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 -3181.8455 L -4673.446 -3245.9001 L -4673.446 -3245.9001 L -4737.5 -3181.8455 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 -3245.9001 L -4650 -3333.4001 L -4650 -3333.4001 L -4673.446 -3245.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 -3333.4001 L -4673.446 -3420.9001 L -4737.5 -3484.9543 L -4825 -3508.4001 L -4912.5 -3484.9543 L -4976.554 -3420.9001 L -5000 -3333.4001 L -4976.554 -3245.9001 L -4912.5 -3181.8455 L -4825 -3158.4001 L -4737.5 -3181.8455 L -4673.446 -3245.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 -3333.4001 L -4673.446 -3420.9001 L -4737.5 -3484.9543 L -4825 -3508.4001 L -4912.5 -3484.9543 L -4976.554 -3420.9001 L -5000 -3333.4001 L -4976.554 -3245.9001 L -4912.5 -3181.8455 L -4825 -3158.4001 L -4737.5 -3181.8455 L -4673.446 -3245.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 -3573.4001 L -4742.9165 -3586.1501 L -4742.9165 -3586.1501 L -4739.5 -3573.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -3586.1501 L -4752.25 -3595.4836 L -4752.25 -3595.4836 L -4742.9165 -3586.1501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -3595.4836 L -4765 -3598.9001 L -4765 -3598.9001 L -4752.25 -3595.4836 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -3598.9001 L -4777.75 -3595.4836 L -4777.75 -3595.4836 L -4765 -3598.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -3595.4836 L -4787.0835 -3586.1501 L -4787.0835 -3586.1501 L -4777.75 -3595.4836 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -3586.1501 L -4790.5 -3573.4001 L -4790.5 -3573.4001 L -4787.0835 -3586.1501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 -3573.4001 L -4787.0835 -3560.6501 L -4787.0835 -3560.6501 L -4790.5 -3573.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -3560.6501 L -4777.75 -3551.3164 L -4777.75 -3551.3164 L -4787.0835 -3560.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -3551.3164 L -4765 -3547.9001 L -4765 -3547.9001 L -4777.75 -3551.3164 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -3547.9001 L -4752.25 -3551.3164 L -4752.25 -3551.3164 L -4765 -3547.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -3551.3164 L -4742.9165 -3560.6501 L -4742.9165 -3560.6501 L -4752.25 -3551.3164 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -3560.6501 L -4739.5 -3573.4001 L -4739.5 -3573.4001 L -4742.9165 -3560.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -3573.4001 L -4742.9165 -3586.1501 L -4752.25 -3595.4836 L -4765 -3598.9001 L -4777.75 -3595.4836 L -4787.0835 -3586.1501 L -4790.5 -3573.4001 L -4787.0835 -3560.6501 L -4777.75 -3551.3164 L -4765 -3547.9001 L -4752.25 -3551.3164 L -4742.9165 -3560.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -3573.4001 L -4742.9165 -3586.1501 L -4752.25 -3595.4836 L -4765 -3598.9001 L -4777.75 -3595.4836 L -4787.0835 -3586.1501 L -4790.5 -3573.4001 L -4787.0835 -3560.6501 L -4777.75 -3551.3164 L -4765 -3547.9001 L -4752.25 -3551.3164 L -4742.9165 -3560.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 -3093.4001 L -4742.9165 -3106.1501 L -4742.9165 -3106.1501 L -4739.5 -3093.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -3106.1501 L -4752.25 -3115.4836 L -4752.25 -3115.4836 L -4742.9165 -3106.1501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -3115.4836 L -4765 -3118.9001 L -4765 -3118.9001 L -4752.25 -3115.4836 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -3118.9001 L -4777.75 -3115.4836 L -4777.75 -3115.4836 L -4765 -3118.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -3115.4836 L -4787.0835 -3106.1501 L -4787.0835 -3106.1501 L -4777.75 -3115.4836 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -3106.1501 L -4790.5 -3093.4001 L -4790.5 -3093.4001 L -4787.0835 -3106.1501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 -3093.4001 L -4787.0835 -3080.6501 L -4787.0835 -3080.6501 L -4790.5 -3093.4001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 -3080.6501 L -4777.75 -3071.3164 L -4777.75 -3071.3164 L -4787.0835 -3080.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 -3071.3164 L -4765 -3067.9001 L -4765 -3067.9001 L -4777.75 -3071.3164 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 -3067.9001 L -4752.25 -3071.3164 L -4752.25 -3071.3164 L -4765 -3067.9001 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 -3071.3164 L -4742.9165 -3080.6501 L -4742.9165 -3080.6501 L -4752.25 -3071.3164 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 -3080.6501 L -4739.5 -3093.4001 L -4739.5 -3093.4001 L -4742.9165 -3080.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -3093.4001 L -4742.9165 -3106.1501 L -4752.25 -3115.4836 L -4765 -3118.9001 L -4777.75 -3115.4836 L -4787.0835 -3106.1501 L -4790.5 -3093.4001 L -4787.0835 -3080.6501 L -4777.75 -3071.3164 L -4765 -3067.9001 L -4752.25 -3071.3164 L -4742.9165 -3080.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 -3093.4001 L -4742.9165 -3106.1501 L -4752.25 -3115.4836 L -4765 -3118.9001 L -4777.75 -3115.4836 L -4787.0835 -3106.1501 L -4790.5 -3093.4001 L -4787.0835 -3080.6501 L -4777.75 -3071.3164 L -4765 -3067.9001 L -4752.25 -3071.3164 L -4742.9165 -3080.6501 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4650 3333.3 L -4673.446 3245.8 L -4673.446 3245.8 L -4650 3333.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 3245.8 L -4737.5 3181.7456 L -4737.5 3181.7456 L -4673.446 3245.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 3181.7456 L -4825 3158.3 L -4825 3158.3 L -4737.5 3181.7456 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 3158.3 L -4912.5 3181.7456 L -4912.5 3181.7456 L -4825 3158.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 3181.7456 L -4976.554 3245.8 L -4976.554 3245.8 L -4912.5 3181.7456 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 3245.8 L -5000 3333.3 L -5000 3333.3 L -4976.554 3245.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -5000 3333.3 L -4976.554 3420.8 L -4976.554 3420.8 L -5000 3333.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 3420.8 L -4912.5 3484.8542 L -4912.5 3484.8542 L -4976.554 3420.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 3484.8542 L -4825 3508.3 L -4825 3508.3 L -4912.5 3484.8542 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 3508.3 L -4737.5 3484.8542 L -4737.5 3484.8542 L -4825 3508.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 3484.8542 L -4673.446 3420.8 L -4673.446 3420.8 L -4737.5 3484.8542 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 3420.8 L -4650 3333.3 L -4650 3333.3 L -4673.446 3420.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 3333.3 L -4673.446 3245.8 L -4737.5 3181.7456 L -4825 3158.3 L -4912.5 3181.7456 L -4976.554 3245.8 L -5000 3333.3 L -4976.554 3420.8 L -4912.5 3484.8542 L -4825 3508.3 L -4737.5 3484.8542 L -4673.446 3420.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 3333.3 L -4673.446 3245.8 L -4737.5 3181.7456 L -4825 3158.3 L -4912.5 3181.7456 L -4976.554 3245.8 L -5000 3333.3 L -4976.554 3420.8 L -4912.5 3484.8542 L -4825 3508.3 L -4737.5 3484.8542 L -4673.446 3420.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 3093.3 L -4742.9165 3080.55 L -4742.9165 3080.55 L -4739.5 3093.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 3080.55 L -4752.25 3071.2166 L -4752.25 3071.2166 L -4742.9165 3080.55 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 3071.2166 L -4765 3067.8 L -4765 3067.8 L -4752.25 3071.2166 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 3067.8 L -4777.75 3071.2166 L -4777.75 3071.2166 L -4765 3067.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 3071.2166 L -4787.0835 3080.55 L -4787.0835 3080.55 L -4777.75 3071.2166 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 3080.55 L -4790.5 3093.3 L -4790.5 3093.3 L -4787.0835 3080.55 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 3093.3 L -4787.0835 3106.05 L -4787.0835 3106.05 L -4790.5 3093.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 3106.05 L -4777.75 3115.3835 L -4777.75 3115.3835 L -4787.0835 3106.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 3115.3835 L -4765 3118.8 L -4765 3118.8 L -4777.75 3115.3835 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 3118.8 L -4752.25 3115.3835 L -4752.25 3115.3835 L -4765 3118.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 3115.3835 L -4742.9165 3106.05 L -4742.9165 3106.05 L -4752.25 3115.3835 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 3106.05 L -4739.5 3093.3 L -4739.5 3093.3 L -4742.9165 3106.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 3093.3 L -4742.9165 3080.55 L -4752.25 3071.2166 L -4765 3067.8 L -4777.75 3071.2166 L -4787.0835 3080.55 L -4790.5 3093.3 L -4787.0835 3106.05 L -4777.75 3115.3835 L -4765 3118.8 L -4752.25 3115.3835 L -4742.9165 3106.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 3093.3 L -4742.9165 3080.55 L -4752.25 3071.2166 L -4765 3067.8 L -4777.75 3071.2166 L -4787.0835 3080.55 L -4790.5 3093.3 L -4787.0835 3106.05 L -4777.75 3115.3835 L -4765 3118.8 L -4752.25 3115.3835 L -4742.9165 3106.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 3573.3 L -4742.9165 3560.55 L -4742.9165 3560.55 L -4739.5 3573.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 3560.55 L -4752.25 3551.2166 L -4752.25 3551.2166 L -4742.9165 3560.55 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 3551.2166 L -4765 3547.8 L -4765 3547.8 L -4752.25 3551.2166 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 3547.8 L -4777.75 3551.2166 L -4777.75 3551.2166 L -4765 3547.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 3551.2166 L -4787.0835 3560.55 L -4787.0835 3560.55 L -4777.75 3551.2166 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 3560.55 L -4790.5 3573.3 L -4790.5 3573.3 L -4787.0835 3560.55 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 3573.3 L -4787.0835 3586.05 L -4787.0835 3586.05 L -4790.5 3573.3 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 3586.05 L -4777.75 3595.3835 L -4777.75 3595.3835 L -4787.0835 3586.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 3595.3835 L -4765 3598.8 L -4765 3598.8 L -4777.75 3595.3835 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 3598.8 L -4752.25 3595.3835 L -4752.25 3595.3835 L -4765 3598.8 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 3595.3835 L -4742.9165 3586.05 L -4742.9165 3586.05 L -4752.25 3595.3835 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 3586.05 L -4739.5 3573.3 L -4739.5 3573.3 L -4742.9165 3586.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 3573.3 L -4742.9165 3560.55 L -4752.25 3551.2166 L -4765 3547.8 L -4777.75 3551.2166 L -4787.0835 3560.55 L -4790.5 3573.3 L -4787.0835 3586.05 L -4777.75 3595.3835 L -4765 3598.8 L -4752.25 3595.3835 L -4742.9165 3586.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 3573.3 L -4742.9165 3560.55 L -4752.25 3551.2166 L -4765 3547.8 L -4777.75 3551.2166 L -4787.0835 3560.55 L -4790.5 3573.3 L -4787.0835 3586.05 L -4777.75 3595.3835 L -4765 3598.8 L -4752.25 3595.3835 L -4742.9165 3586.05 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4650 9040 L -4673.446 8952.5 L -4673.446 8952.5 L -4650 9040 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 8952.5 L -4737.5 8888.445 L -4737.5 8888.445 L -4673.446 8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 8888.445 L -4825 8865 L -4825 8865 L -4737.5 8888.445 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 8865 L -4912.5 8888.445 L -4912.5 8888.445 L -4825 8865 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 8888.445 L -4976.554 8952.5 L -4976.554 8952.5 L -4912.5 8888.445 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 8952.5 L -5000 9040 L -5000 9040 L -4976.554 8952.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -5000 9040 L -4976.554 9127.5 L -4976.554 9127.5 L -5000 9040 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4976.554 9127.5 L -4912.5 9191.555 L -4912.5 9191.555 L -4976.554 9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4912.5 9191.555 L -4825 9215 L -4825 9215 L -4912.5 9191.555 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4825 9215 L -4737.5 9191.555 L -4737.5 9191.555 L -4825 9215 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4737.5 9191.555 L -4673.446 9127.5 L -4673.446 9127.5 L -4737.5 9191.555 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4673.446 9127.5 L -4650 9040 L -4650 9040 L -4673.446 9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 9040 L -4673.446 8952.5 L -4737.5 8888.445 L -4825 8865 L -4912.5 8888.445 L -4976.554 8952.5 L -5000 9040 L -4976.554 9127.5 L -4912.5 9191.555 L -4825 9215 L -4737.5 9191.555 L -4673.446 9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4650 9040 L -4673.446 8952.5 L -4737.5 8888.445 L -4825 8865 L -4912.5 8888.445 L -4976.554 8952.5 L -5000 9040 L -4976.554 9127.5 L -4912.5 9191.555 L -4825 9215 L -4737.5 9191.555 L -4673.446 9127.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 8800 L -4742.9165 8787.25 L -4742.9165 8787.25 L -4739.5 8800 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 8787.25 L -4752.25 8777.917 L -4752.25 8777.917 L -4742.9165 8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 8777.917 L -4765 8774.5 L -4765 8774.5 L -4752.25 8777.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 8774.5 L -4777.75 8777.917 L -4777.75 8777.917 L -4765 8774.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 8777.917 L -4787.0835 8787.25 L -4787.0835 8787.25 L -4777.75 8777.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 8787.25 L -4790.5 8800 L -4790.5 8800 L -4787.0835 8787.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 8800 L -4787.0835 8812.75 L -4787.0835 8812.75 L -4790.5 8800 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 8812.75 L -4777.75 8822.084 L -4777.75 8822.084 L -4787.0835 8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 8822.084 L -4765 8825.5 L -4765 8825.5 L -4777.75 8822.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 8825.5 L -4752.25 8822.084 L -4752.25 8822.084 L -4765 8825.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 8822.084 L -4742.9165 8812.75 L -4742.9165 8812.75 L -4752.25 8822.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 8812.75 L -4739.5 8800 L -4739.5 8800 L -4742.9165 8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 8800 L -4742.9165 8787.25 L -4752.25 8777.917 L -4765 8774.5 L -4777.75 8777.917 L -4787.0835 8787.25 L -4790.5 8800 L -4787.0835 8812.75 L -4777.75 8822.084 L -4765 8825.5 L -4752.25 8822.084 L -4742.9165 8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 8800 L -4742.9165 8787.25 L -4752.25 8777.917 L -4765 8774.5 L -4777.75 8777.917 L -4787.0835 8787.25 L -4790.5 8800 L -4787.0835 8812.75 L -4777.75 8822.084 L -4765 8825.5 L -4752.25 8822.084 L -4742.9165 8812.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+      <g>
+        <path d="M -4739.5 9280 L -4742.9165 9267.25 L -4742.9165 9267.25 L -4739.5 9280 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 9267.25 L -4752.25 9257.917 L -4752.25 9257.917 L -4742.9165 9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 9257.917 L -4765 9254.5 L -4765 9254.5 L -4752.25 9257.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 9254.5 L -4777.75 9257.917 L -4777.75 9257.917 L -4765 9254.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 9257.917 L -4787.0835 9267.25 L -4787.0835 9267.25 L -4777.75 9257.917 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 9267.25 L -4790.5 9280 L -4790.5 9280 L -4787.0835 9267.25 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4790.5 9280 L -4787.0835 9292.75 L -4787.0835 9292.75 L -4790.5 9280 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4787.0835 9292.75 L -4777.75 9302.084 L -4777.75 9302.084 L -4787.0835 9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4777.75 9302.084 L -4765 9305.5 L -4765 9305.5 L -4777.75 9302.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4765 9305.5 L -4752.25 9302.084 L -4752.25 9302.084 L -4765 9305.5 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4752.25 9302.084 L -4742.9165 9292.75 L -4742.9165 9292.75 L -4752.25 9302.084 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4742.9165 9292.75 L -4739.5 9280 L -4739.5 9280 L -4742.9165 9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 9280 L -4742.9165 9267.25 L -4752.25 9257.917 L -4765 9254.5 L -4777.75 9257.917 L -4787.0835 9267.25 L -4790.5 9280 L -4787.0835 9292.75 L -4777.75 9302.084 L -4765 9305.5 L -4752.25 9302.084 L -4742.9165 9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+        <path d="M -4739.5 9280 L -4742.9165 9267.25 L -4752.25 9257.917 L -4765 9254.5 L -4777.75 9257.917 L -4787.0835 9267.25 L -4790.5 9280 L -4787.0835 9292.75 L -4777.75 9302.084 L -4765 9305.5 L -4752.25 9302.084 L -4742.9165 9292.75 Z" style="fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;" stroke="black" />
+      </g>
+    </svg>

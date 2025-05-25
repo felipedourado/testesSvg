@@ -90,7 +90,7 @@ namespace testesSvg.Components
         //    JoinSystemType = "dowels",
         //    Type = "Base"
         //};
-        //PecaCanalCavilhaMAXTambor-- TRES FUROS
+        //PecaCanalCavilhaMinTambor-- TRES FUROS
         //var payload = new SvgRequest
         //{
         //    Width = "12000",
@@ -100,10 +100,20 @@ namespace testesSvg.Components
         //    JoinSystemType = "dowels",
         //    Type = "Base"
         //};
+        //PecaCanalCavilhaMaxTambor-- TRES FUROS 
+        //var payload = new SvgRequest
+        //{
+        //    Width = "100000",
+        //    Height = "100000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "dowels",
+        //    Type = "Base"
+        //};
 
         #endregion
 
-        #region Base (Tambor) -- TESTAR PARTE DE TAMBOR
+        #region Base (Tambor)
         public static IEnumerable<XElement> GenerateBase(int width, int height)
         {
 
@@ -111,11 +121,7 @@ namespace testesSvg.Components
                 return BaseDouble(width, height);
 
             // ----- Formula -----
-            var x1 = new List<double>
-            {
-                0.5 * width - 219.5,
-                0.5 * width + 0.5
-            };
+            var x1 = CalculateBaseX1(width);
 
             var y1 = new List<double>
             {
@@ -128,11 +134,7 @@ namespace testesSvg.Components
               -0.5 * height + 280
             };
 
-            var x2 = new List<double>
-            {
-                -0.5 * width - 0.5,
-                -0.5 * width + 219.5,
-            };
+            var x2 = CalculateBaseX2(width);
 
             var y2 = new List<double>
             {
@@ -182,6 +184,24 @@ namespace testesSvg.Components
                    BaseSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
                    Base([.. x2], [..y3], "dowel-side-down-left")
                 ];
+        }
+
+        public static List<double> CalculateBaseX1(int width)
+        {
+            return new List<double>
+            {
+                0.5 * width - 219.5,
+                0.5 * width + 0.5
+            };
+        }
+
+        public static List<double> CalculateBaseX2(int width)
+        {
+            return new List<double>
+            {
+                -0.5 * width - 0.5,
+                -0.5 * width + 219.5,
+            };
         }
 
         static IEnumerable<XElement> BaseDouble(int width, int height)
@@ -281,7 +301,7 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseSinglePath(double[] x1, double[] y1, string name)
+        public static XElement BaseSinglePath(double[] x1, double[] y1, string name)
         {
 
             var group = new XElement("g", new XAttribute("name", name));
@@ -378,38 +398,11 @@ namespace testesSvg.Components
                 return SideDouble(width, height);
 
             // ----- Formula -----
-            var x1 = new List<double>
-            {
-                0.5 * width - 50,
-                0.5 * width - 55.35895,
-                0.5 * width - 70,
-                0.5 * width - 90,
-                0.5 * width - 110,
-                0.5 * width - 124.64102,
-                0.5 * width - 130,
-            };
+            var x1 = CalculateSideX1(width);
 
-            var y1 = new List<double>
-            {
-              -0.5 * height + 320,
-              -0.5 * height + 300,
-              -0.5 * height + 285.359,
-              -0.5 * height + 280,
-              -0.5 * height + 340,
-              -0.5 * height + 354.6409,
-              -0.5 * height + 360
-            };
+            var y1 = CalculateY1(height);
 
-            var x2 = new List<double>
-            {
-                -0.5 * width + 130,
-                -0.5 * width + 124.64102,
-                -0.5 * width + 110,
-                -0.5 * width + 90,
-                -0.5 * width + 70,
-                -0.5 * width + 55.35895,
-                -0.5 * width + 50,
-            };
+            var x2 = CalculateSideX2(width);
 
             var y2 = new List<double>
             {
@@ -438,16 +431,7 @@ namespace testesSvg.Components
                 2.4041262E-06,
             };
 
-            var y3 = new List<double>
-            {
-                 0.5 * height - 480,
-                 0.5 * height - 500,
-                 0.5 * height - 514.641,
-                 0.5 * height - 520,
-                 0.5 * height - 460,
-                 0.5 * height - 445.359,
-                 0.5 * height - 440
-            };
+            var y3 = CalculateY3(height);
 
             //---------------------------------------------------------------------------------
             var referenceArea = 1200 * 1200;
@@ -480,6 +464,62 @@ namespace testesSvg.Components
                    Side([.. x2], [..y3], "dowel-side-down-left")
                 ];
             //}
+        }
+
+        public static List<double> CalculateSideX1(int width)
+        {
+            return new List<double>
+            {
+                0.5 * width - 50,
+                0.5 * width - 55.35895,
+                0.5 * width - 70,
+                0.5 * width - 90,
+                0.5 * width - 110,
+                0.5 * width - 124.64102,
+                0.5 * width - 130,
+            };
+        }
+
+        public static List<double> CalculateSideX2(int width)
+        {
+            return new List<double>
+            {
+                -0.5 * width + 130,
+                -0.5 * width + 124.64102,
+                -0.5 * width + 110,
+                -0.5 * width + 90,
+                -0.5 * width + 70,
+                -0.5 * width + 55.35895,
+                -0.5 * width + 50,
+            };
+        }
+
+        static List<double> CalculateY1(int height)
+        {
+            return new List<double>
+            {
+              -0.5 * height + 320,
+              -0.5 * height + 300,
+              -0.5 * height + 285.359,
+              -0.5 * height + 280,
+              -0.5 * height + 340,
+              -0.5 * height + 354.6409,
+              -0.5 * height + 360
+            };
+        }
+
+        static List<double> CalculateY3(int height)
+        {
+            return new List<double>
+            {
+                 0.5 * height - 480,
+                 0.5 * height - 500,
+                 0.5 * height - 514.641,
+                 0.5 * height - 520,
+                 0.5 * height - 460,
+                 0.5 * height - 445.359,
+                 0.5 * height - 440
+            };
         }
 
         static IEnumerable<XElement> SideSingle(int width, int height)
@@ -665,7 +705,7 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement SideSinglePath(double[] x, double[] y, string name)
+        public static XElement SideSinglePath(double[] x, double[] y, string name)
         {
 
             var group = new XElement("g", new XAttribute("name", name));
