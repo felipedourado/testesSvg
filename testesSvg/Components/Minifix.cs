@@ -180,7 +180,7 @@ namespace testesSvg.Components
     public static class Minifix
     {
         #region Base (Tambor)
-        public static IEnumerable<XElement> GenerateBase(int width, int height)
+        public static IEnumerable<XElement> GenerateBase(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             double[] x1 = CalculateBaseX1(width);
@@ -196,14 +196,14 @@ namespace testesSvg.Components
 
             return
               [
-                 Base(x1, y1, "minifix-base-up-right"),
-                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right"),
-                 BaseDown(x1, y2, "minifix-base-down-right"),
-                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right"),
-                 Base(x2, y1, "minifix-base-up-left"),
-                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left"),
-                 BaseDown(x2, y2, "minifix-base-down-left"),
-                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left"),
+                 Base(x1, y1, "minifix-base-up-right", isLandscape),
+                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right", isLandscape),
+                 BaseDown(x1, y2, "minifix-base-down-right", isLandscape),
+                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right", isLandscape),
+                 Base(x2, y1, "minifix-base-up-left", isLandscape),
+                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left", isLandscape),
+                 BaseDown(x2, y2, "minifix-base-down-left", isLandscape),
+                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left", isLandscape),
 
               ];
         }
@@ -304,9 +304,9 @@ namespace testesSvg.Components
             ];
         }
 
-        static XElement Base(double[] x, double[] y, string name)
+        static XElement Base(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[0], y[1], x[1], y[1], x[1], y[0]);
@@ -354,9 +354,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircle(double[] x, double[] y, string name)
+        static XElement BaseCircle(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -417,9 +417,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseDown(double[] x, double[] y, string name)
+        static XElement BaseDown(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[0], y[1], x[1], y[3], x[1], y[0]);
@@ -503,7 +503,7 @@ namespace testesSvg.Components
 
 
         #region Side (Parafuso)
-        public static IEnumerable<XElement> GenerateSide(int width, int height)
+        public static IEnumerable<XElement> GenerateSide(int width, int height, bool isLandscape)
         {
 
             // ----- Formula -----
@@ -514,13 +514,13 @@ namespace testesSvg.Components
 
             return
               [
-                Side(x1, y1, "minifix-side-up-right"),
+                Side(x1, y1, "minifix-side-up-right", isLandscape),
 
                 //VALIDAR OS AddMinifixBaseQuadPath dos 3 comparando com o svg no vscode
                 //finalizado testar o min e max
-                Side(x1, y2, "minifix-side-down-right"),
-                Side(x2, y1, "minifix-side-up-left"),
-                Side(x2, y2, "minifix-side-up-left")
+                Side(x1, y2, "minifix-side-down-right", isLandscape),
+                Side(x2, y1, "minifix-side-up-left", isLandscape),
+                Side(x2, y2, "minifix-side-up-left", isLandscape)
 
               ];
         }
@@ -578,9 +578,9 @@ namespace testesSvg.Components
         }
 
 
-        static XElement Side(double[] x, double[] y, string name)
+        static XElement Side(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -690,7 +690,7 @@ namespace testesSvg.Components
 
 
         #region MinifixAndDowels
-        public static IEnumerable<XElement> GenerateMinifixDowelsSide(int width, int height)
+        public static IEnumerable<XElement> GenerateMinifixDowelsSide(int width, int height, bool isLandscape)
         {
             var x1 = CalculateSideX1(width);
             var x2 = CalculateSideX2(width);
@@ -727,17 +727,17 @@ namespace testesSvg.Components
 
             return
              [
-                Side(x1, y1, "minifix-side-up-right"),
-                Dowels.SideSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right"),
-                Side(x1, y3, "minifix-side-down-right"),
+                Side(x1, y1, "minifix-side-up-right", isLandscape),
+                Dowels.SideSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right", isLandscape),
+                Side(x1, y3, "minifix-side-down-right", isLandscape),
 
-                Side(x2, y1, "minifix-side-up-left"),
-                Dowels.SideSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left"),
-                Side(x2, y3, "minifix-side-up-left")
+                Side(x2, y1, "minifix-side-up-left", isLandscape),
+                Dowels.SideSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left", isLandscape),
+                Side(x2, y3, "minifix-side-up-left", isLandscape)
              ];
         }
 
-        public static IEnumerable<XElement> GenerateMinifixDowelsBase(int width, int height)
+        public static IEnumerable<XElement> GenerateMinifixDowelsBase(int width, int height, bool isLandscape)
         {
             var x1 = CalculateBaseX1(width);
             var x2 = CalculateBaseX2(width);
@@ -780,20 +780,20 @@ namespace testesSvg.Components
 
             return
              [
-                 Base(x1, y1, "minifix-base-up-right"),
-                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right"),
+                 Base(x1, y1, "minifix-base-up-right", isLandscape),
+                 BaseCircle(circleX1, circleY1, "minifix-base-circle-up-right", isLandscape),
 
-                 Dowels.BaseSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right"),
+                 Dowels.BaseSinglePath(dowelX1.ToArray(), y2.ToArray(), "dowel-side-middle-right", isLandscape),
 
-                 BaseDown(x1, y3, "minifix-base-down-right"),
-                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right"),
+                 BaseDown(x1, y3, "minifix-base-down-right", isLandscape),
+                 BaseCircle(circleX1, circleY2, "minifix-base-circle-down-right", isLandscape),
 
-                 Base(x2, y1, "minifix-base-up-left"),
-                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left"),
+                 Base(x2, y1, "minifix-base-up-left", isLandscape),
+                 BaseCircle(circleX2, circleY1, "minifix-base-circle-up-left", isLandscape),
 
-                 Dowels.BaseSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left"),
-                 BaseDown(x2, y3, "minifix-base-down-left"),
-                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left"),
+                 Dowels.BaseSinglePath(dowelX2.ToArray(), [..y2], "dowel-side-middle-left", isLandscape),
+                 BaseDown(x2, y3, "minifix-base-down-left", isLandscape),
+                 BaseCircle(circleX2, circleY2, "minifix-base-circle-down-left", isLandscape),
 
              ];
         }

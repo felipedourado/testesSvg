@@ -114,11 +114,10 @@ namespace testesSvg.Components
         #endregion
 
         #region Base (Tambor)
-        public static IEnumerable<XElement> GenerateBase(int width, int height)
+        public static IEnumerable<XElement> GenerateBase(int width, int height, bool isLandscape)
         {
-
             if (height <= 4999)
-                return BaseDouble(width, height);
+                return BaseDouble(width, height, isLandscape);
 
             // ----- Formula -----
             var x1 = CalculateBaseX1(width);
@@ -176,13 +175,13 @@ namespace testesSvg.Components
 
             return
                 [
-                   Base([.. x1], [.. y1], "dowel-side-up-right"),
-                   BaseSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right"),
-                   Base([.. x1], y3.ToArray(), "dowel-side-down-right"),
+                   Base([.. x1], [.. y1], "dowel-side-up-right", isLandscape),
+                   BaseSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right", isLandscape),
+                   Base([.. x1], y3.ToArray(), "dowel-side-down-right", isLandscape),
 
-                   Base([.. x2], y1.ToArray(), "dowel-side-up-left"),
-                   BaseSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
-                   Base([.. x2], [..y3], "dowel-side-down-left")
+                   Base([.. x2], y1.ToArray(), "dowel-side-up-left", isLandscape),
+                   BaseSinglePath([.. x2], [..y2], "dowel-side-middle-left", isLandscape),
+                   Base([.. x2], [..y3], "dowel-side-down-left", isLandscape)
                 ];
         }
 
@@ -204,7 +203,7 @@ namespace testesSvg.Components
             };
         }
 
-        static IEnumerable<XElement> BaseDouble(int width, int height)
+        static IEnumerable<XElement> BaseDouble(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             var x1 = new List<double>
@@ -243,17 +242,16 @@ namespace testesSvg.Components
 
             return
               [
-                   Base([.. x1], [.. y1], "dowel-base-up-right"),
-                   Base([.. x1], [.. y2], "dowel-base-down-right"),
-                   Base([.. x2], [.. y1], "dowel-base-up-right"),
-                   Base([.. x2], [..y2], "dowel-base-down-left"),
+                   Base([.. x1], [.. y1], "dowel-base-up-right", isLandscape),
+                   Base([.. x1], [.. y2], "dowel-base-down-right", isLandscape),
+                   Base([.. x2], [.. y1], "dowel-base-up-right", isLandscape),
+                   Base([.. x2], [..y2], "dowel-base-down-left", isLandscape ),
               ];
         }
 
-
-        static XElement Base(double[] x, double[] y, string name)
+        static XElement Base(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[0], y[1], x[1], y[1], x[1], y[0]);
@@ -301,10 +299,10 @@ namespace testesSvg.Components
             return group;
         }
 
-        public static XElement BaseSinglePath(double[] x1, double[] y1, string name)
+        public static XElement BaseSinglePath(double[] x1, double[] y1, string name, bool isLandscape)
         {
 
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             AddSinglePath(group, x1[0], y1[0], x1[0], y1[2], x1[1], y1[2], x1[1], y1[0]); // 39.999996 → 34.64102
             AddSinglePath(group, x1[0], y1[1], x1[0], y1[5], x1[1], y1[5], x1[1], y1[1]); // 34.64101 → 20.000004
@@ -343,7 +341,7 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircle(double[] x1, double[] y1, string name)
+        static XElement BaseCircle(double[] x1, double[] y1, string name, bool isLandscape)
         {
             var group = new XElement("g", new XAttribute("name", name));
 
@@ -389,13 +387,13 @@ namespace testesSvg.Components
 
 
         #region Side
-        public static IEnumerable<XElement> GenerateSide(int width, int height)
+        public static IEnumerable<XElement> GenerateSide(int width, int height, bool isLandscape)
         {
             if (height <= 1399)
-                return SideSingle(width, height);
+                return SideSingle(width, height, isLandscape);
 
             if (height <= 4999)
-                return SideDouble(width, height);
+                return SideDouble(width, height, isLandscape);
 
             // ----- Formula -----
             var x1 = CalculateSideX1(width);
@@ -455,13 +453,13 @@ namespace testesSvg.Components
             //{
             return
                 [
-                   Side([.. x1], [.. y1], "dowel-side-up-right"),
-                   SideSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right"),
-                   Side([.. x1], y3.ToArray(), "dowel-side-down-right"),
+                   Side([.. x1], [.. y1], "dowel-side-up-right", isLandscape),
+                   SideSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right", isLandscape),
+                   Side([.. x1], y3.ToArray(), "dowel-side-down-right", isLandscape),
 
-                   Side([.. x2], y1.ToArray(), "dowel-side-up-left"),
-                   SideSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
-                   Side([.. x2], [..y3], "dowel-side-down-left")
+                   Side([.. x2], y1.ToArray(), "dowel-side-up-left", isLandscape),
+                   SideSinglePath([.. x2], [..y2], "dowel-side-middle-left", isLandscape),
+                   Side([.. x2], [..y3], "dowel-side-down-left", isLandscape)
                 ];
             //}
         }
@@ -522,7 +520,7 @@ namespace testesSvg.Components
             };
         }
 
-        static IEnumerable<XElement> SideSingle(int width, int height)
+        static IEnumerable<XElement> SideSingle(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             var x1 = new List<double>
@@ -573,15 +571,14 @@ namespace testesSvg.Components
                 -0.5 * width + 35,
             };
 
-
             return
               [
-                 SideSinglePath([.. x1], [.. y1], "dowel-right"),
-                   SideSinglePath([.. x2], [..y1], "dowel-left"),
+                 SideSinglePath([.. x1], [.. y1], "dowel-right", isLandscape),
+                   SideSinglePath([.. x2], [..y1], "dowel-left", isLandscape),
               ];
         }
 
-        static IEnumerable<XElement> SideDouble(int width, int height)
+        static IEnumerable<XElement> SideDouble(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             var x1 = new List<double>
@@ -631,19 +628,18 @@ namespace testesSvg.Components
 
             return
               [
-                   Side([.. x1], [.. y1], "dowel-up-right"),
-                   Side([.. x1], [..y2], "dowel-down-right"),
-                   Side([.. x2], [..y1], "dowel-up-left"),
-                   Side([.. x2], [..y2], "dowel-down-left"),
+                   Side([.. x1], [.. y1], "dowel-up-right", isLandscape),
+                   Side([.. x1], [..y2], "dowel-down-right", isLandscape),
+                   Side([.. x2], [..y1], "dowel-up-left", isLandscape),
+                   Side([.. x2], [..y2], "dowel-down-left", isLandscape),
               ];
         }
 
         #endregion
 
-        static XElement Side(double[] x, double[] y, string name)
+        static XElement Side(double[] x, double[] y, string name, bool isLandscape)
         {
-
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -705,10 +701,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        public static XElement SideSinglePath(double[] x, double[] y, string name)
+        public static XElement SideSinglePath(double[] x, double[] y, string name, bool isLandscape)
         {
-
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddSinglePath(group, x[0], y[0], x[1], y[1], x[1], y[2], x[0], y[0]);

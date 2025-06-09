@@ -54,7 +54,7 @@ namespace testesSvg.Components
 
 
         #region Base (Tambor)
-        public static IEnumerable<XElement> GenerateBase(int width, int height)
+        public static IEnumerable<XElement> GenerateBase(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             double[] x1 =
@@ -68,7 +68,7 @@ namespace testesSvg.Components
                 0.5 * width - 195
             ];
 
-            if (width <=1500)
+            if (width <= 1500)
             {
                 //0.5x−44.99994
             }
@@ -163,7 +163,7 @@ namespace testesSvg.Components
                 circleX2.Add(-0.5 * width - 759.99998);
                 circleX2.Add(0.5 * width - 741.69872);
             }
-                
+
 
             double[] circleY1 =
            [
@@ -191,21 +191,21 @@ namespace testesSvg.Components
 
             return
               [
-                 BaseCircleUpper(x1, y1, "vbone-base-circle-up-right"),
-                 BaseCircle(x1, y2, "vbone-base-circle-down-right"),
-                 BaseSmallCircle([.. circleX1], circleY1, "vbtwo-base-circle-small-up-right"),
-                 BaseCircleUpper(x2, y1, "vbone-base-circle-up-left"),
-                 BaseCircle(x2, y2, "vbone-base-circle-down-left"),
-                BaseSmallCircle([.. circleX1], circleY2, "vbtwo-base-circle-small-down-right"),
-                BaseSmallCircle([.. circleX2], circleY1, "vbtwo-base-circle-small-down-left"),
-                BaseSmallCircle([.. circleX2], circleY2, "vbtwo-base-circle-small-down-right"),
+                 BaseCircleUpper(x1, y1, "vbone-base-circle-up-right", isLandscape),
+                 BaseCircle(x1, y2, "vbone-base-circle-down-right", isLandscape),
+                 BaseSmallCircle([.. circleX1], circleY1, "vbtwo-base-circle-small-up-right", isLandscape),
+                 BaseCircleUpper(x2, y1, "vbone-base-circle-up-left", isLandscape),
+                 BaseCircle(x2, y2, "vbone-base-circle-down-left", isLandscape),
+                BaseSmallCircle([.. circleX1], circleY2, "vbtwo-base-circle-small-down-right", isLandscape),
+                BaseSmallCircle([.. circleX2], circleY1, "vbtwo-base-circle-small-down-left", isLandscape),
+                BaseSmallCircle([.. circleX2], circleY2, "vbtwo-base-circle-small-down-right", isLandscape),
 
               ];
         }
 
-        static XElement BaseCircleUpper(double[] x, double[] y, string name)
+        static XElement BaseCircleUpper(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -266,9 +266,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircle(double[] x, double[] y, string name)
+        static XElement BaseCircle(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -329,36 +329,36 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseSmallCircle(double[] x, double[] y, string name)
+        static XElement BaseSmallCircle(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             var posValid = x.Length == 8 ? x[7] : x[2];
 
 
-            AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]); 
+            AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
 
-            AddMinifixBaseQuadPath(group, x[1], y[1], x[2], y[2], x[2], y[2], x[1], y[1]); 
+            AddMinifixBaseQuadPath(group, x[1], y[1], x[2], y[2], x[2], y[2], x[1], y[1]);
 
-            AddMinifixBaseQuadPath(group, x[2], y[2], x[3], y[3], x[3], y[3], x[2], y[2]); 
+            AddMinifixBaseQuadPath(group, x[2], y[2], x[3], y[3], x[3], y[3], x[2], y[2]);
 
-            AddMinifixBaseQuadPath(group, x[3], y[3], x[4], y[2], x[4], y[2], x[3], y[3]); 
+            AddMinifixBaseQuadPath(group, x[3], y[3], x[4], y[2], x[4], y[2], x[3], y[3]);
 
-            AddMinifixBaseQuadPath(group, x[4], y[2], x[5], y[1], x[5], y[1], x[4], y[2]); 
+            AddMinifixBaseQuadPath(group, x[4], y[2], x[5], y[1], x[5], y[1], x[4], y[2]);
 
-            AddMinifixBaseQuadPath(group, x[5], y[1], x[6], y[0], x[6], y[0], x[5], y[1]); 
+            AddMinifixBaseQuadPath(group, x[5], y[1], x[6], y[0], x[6], y[0], x[5], y[1]);
 
-            AddMinifixBaseQuadPath(group, x[6], y[0], x[5], y[4], x[5], y[4], x[6], y[0]); 
+            AddMinifixBaseQuadPath(group, x[6], y[0], x[5], y[4], x[5], y[4], x[6], y[0]);
 
-            AddMinifixBaseQuadPath(group, x[5], y[4], x[4], y[5], x[4], y[5], x[5], y[4]); 
+            AddMinifixBaseQuadPath(group, x[5], y[4], x[4], y[5], x[4], y[5], x[5], y[4]);
 
-            AddMinifixBaseQuadPath(group, x[4], y[5], x[3], y[6], x[3], y[6], x[4], y[5]); 
+            AddMinifixBaseQuadPath(group, x[4], y[5], x[3], y[6], x[3], y[6], x[4], y[5]);
 
-            AddMinifixBaseQuadPath(group, x[3], y[6], posValid, y[5], posValid, y[5], x[3], y[6]); 
+            AddMinifixBaseQuadPath(group, x[3], y[6], posValid, y[5], posValid, y[5], x[3], y[6]);
 
-            AddMinifixBaseQuadPath(group, posValid, y[5], x[1], y[4], x[1], y[4], posValid, y[5]); 
+            AddMinifixBaseQuadPath(group, posValid, y[5], x[1], y[4], x[1], y[4], posValid, y[5]);
 
-            AddMinifixBaseQuadPath(group, x[1], y[4], x[0], y[0], x[0], y[0], x[1], y[4]); 
+            AddMinifixBaseQuadPath(group, x[1], y[4], x[0], y[0], x[0], y[0], x[1], y[4]);
 
             // ----- Decimo Terceiro background Path -----
             var points = new (double X, double Y)[]
@@ -387,7 +387,7 @@ namespace testesSvg.Components
 
 
         #region Side (Parafuso)
-        public static IEnumerable<XElement> GenerateSide(int width, int height)
+        public static IEnumerable<XElement> GenerateSide(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             double[] x1 =
@@ -438,19 +438,19 @@ namespace testesSvg.Components
 
             return
               [
-                Side(x1, y1, "vbone-side-up-right"),
+                Side(x1, y1, "vbone-side-up-right", isLandscape),
 
                 //VALIDAR OS AddMinifixBaseQuadPath dos 3 comparando com o svg no vscode
-                Side(x1, y2, "vbone-side-down-right"),
-                Side(x2, y1, "vbone-side-up-left"),
-                Side(x2, y2, "vbone-side-up-left")
+                Side(x1, y2, "vbone-side-down-right", isLandscape),
+                Side(x2, y1, "vbone-side-up-left", isLandscape),
+                Side(x2, y2, "vbone-side-up-left", isLandscape)
 
               ];
         }
 
-        static XElement Side(double[] x, double[] y, string name)
+        static XElement Side(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);

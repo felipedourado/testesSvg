@@ -7,10 +7,6 @@ using System.Xml.Linq;
 using testesSvg;
 
 Console.WriteLine("Hello, World!");
-//Console.WriteLine(GenerateRetancle(700, 320, true, true, false, false));
-//Console.WriteLine(GenerateXml());
-//Console.WriteLine(GenerateComponent());
-
 
 Console.WriteLine(SvgComponentSide.GenerateComponent());
 

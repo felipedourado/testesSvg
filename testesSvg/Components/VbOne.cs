@@ -52,7 +52,7 @@ namespace testesSvg.Components
     public static class VbOne
     {
         #region Base (Tambor)
-        public static IEnumerable<XElement> GenerateBase(int width, int height)
+        public static IEnumerable<XElement> GenerateBase(int width, int height, bool isLandscape)
         {
             // ----- Formula -----
             var x1 = new List<double>
@@ -124,10 +124,10 @@ namespace testesSvg.Components
 
             return
               [
-                 BaseCircleUpper([.. x1], [.. y1], "vbone-base-circle-up-right"),
-                 BaseCircle([.. x1], [.. y2], "vbone-base-circle-down-right"),
-                 BaseCircleUpper([.. x2], [.. y1], "vbone-base-circle-up-left"),
-                 BaseCircle([.. x2], [..y2], "vbone-base-circle-down-left"),
+                 BaseCircleUpper([.. x1], [.. y1], "vbone-base-circle-up-right", isLandscape),
+                 BaseCircle([.. x1], [.. y2], "vbone-base-circle-down-right", isLandscape),
+                 BaseCircleUpper([.. x2], [.. y1], "vbone-base-circle-up-left", isLandscape),
+                 BaseCircle([.. x2], [..y2], "vbone-base-circle-down-left", isLandscape),
 
               ];
         }
@@ -182,9 +182,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircleUpper(double[] x, double[] y, string name)
+        static XElement BaseCircleUpper(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -245,9 +245,9 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircle(double[] x, double[] y, string name)
+        static XElement BaseCircle(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);
@@ -308,7 +308,7 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseCircleDownMaxSize(double[] x, double[] y, string name)
+        static XElement BaseCircleDownMaxSize(double[] x, double[] y, string name, bool isLandscape)
         {
             var group = new XElement("g", new XAttribute("name", name));
 
@@ -371,7 +371,7 @@ namespace testesSvg.Components
             return group;
         }
 
-        static XElement BaseDown(double[] x, double[] y, string name)
+        static XElement BaseDown(double[] x, double[] y, string name, bool isLandscape)
         {
             var group = new XElement("g", new XAttribute("name", name));
 
@@ -456,7 +456,7 @@ namespace testesSvg.Components
         #endregion
 
         #region Side (Parafuso)
-        public static IEnumerable<XElement> GenerateSide(int width, int height)
+        public static IEnumerable<XElement> GenerateSide(int width, int height, bool isLandscape)
         {
 
             // ----- Formula -----
@@ -508,19 +508,19 @@ namespace testesSvg.Components
 
             return
               [
-                Side(x1, y1, "vbone-side-up-right"),
+                Side(x1, y1, "vbone-side-up-right", isLandscape),
 
                 //VALIDAR OS AddMinifixBaseQuadPath dos 3 comparando com o svg no vscode
-                Side(x1, y2, "vbone-side-down-right"),
-                Side(x2, y1, "vbone-side-up-left"),
-                Side(x2, y2, "vbone-side-up-left")
+                Side(x1, y2, "vbone-side-down-right", isLandscape),
+                Side(x2, y1, "vbone-side-up-left", isLandscape),
+                Side(x2, y2, "vbone-side-up-left", isLandscape)
 
               ];
         }
 
-        static XElement Side(double[] x, double[] y, string name)
+        static XElement Side(double[] x, double[] y, string name, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", name));
+            var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             // ----- Primeiro Path -----
             AddMinifixBaseQuadPath(group, x[0], y[0], x[1], y[1], x[1], y[1], x[0], y[0]);

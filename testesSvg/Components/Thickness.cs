@@ -50,9 +50,9 @@ namespace testesSvg.Components
         //};
         #endregion 
 
-        public static XElement CreateThickness(int w, int h, int x, int? offsetFromEnd, int dadoThickness)
+        public static XElement CreateThickness(int w, int h, int x, int? offsetFromEnd, int dadoThickness, bool isLandscape)
         {
-            var group = new XElement("g", new XAttribute("name", "thickness"));
+            var group = new XElement("g", new XAttribute("name", "thickness"), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
             int highlightHeight = dadoThickness / 10;
             double highlightY;
