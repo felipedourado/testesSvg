@@ -42,7 +42,10 @@ public static class SvgComponentSide
             Width = "1000",
             Height = "2000",
             IsLandscape = true,
-            IsBorderBottom = true
+            IsBorderBottom = true,
+            IsBorderRight = false,
+            IsBorderLeft = false,
+            IsBorderTop = true
         };
 
         string svgXml = GenerateSvgFromJson(payload);
@@ -431,11 +434,8 @@ public static class SvgComponentSide
         svgTeste.Add(BackgroundCut(rectX, rectY, width, height, svg.IsLandscape, squareViewBoxSize));
         svgTeste.Add(BorderCut(rectX, rectY, rectX + width, rectY + height, svg, squareViewBoxSize));
 
-        int wH = svg.IsLandscape ? height : width;
-        int hW = svg.IsLandscape ? width : height;
-
-        svgTeste.Add(CreateTopWidthText(rectX, rectY, wH, viewBoxHeight, svg.IsLandscape ? height.ToString() : width.ToString()));
-        svgTeste.Add(CreateLeftHeightText(rectX, rectY, width, height, viewBoxHeight, svg.IsLandscape ? width.ToString() : height.ToString()));
+        svgTeste.Add(CreateTopWidthText(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+        svgTeste.Add(CreateLeftHeightText(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
 
 
         if (svg.IsLandscape)
@@ -443,20 +443,24 @@ public static class SvgComponentSide
             if (svg.IsBorderRight)
                 svgTeste.Add(CreateTopL1Label(rectX, rectY, width, height, viewBoxHeight));
             if (svg.IsBorderBottom)
-                svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxHeight));
+                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+                svgTeste.Add(CreateRightC2Label(viewBoxWidth, viewBoxHeight));
             if (svg.IsBorderLeft)
                 svgTeste.Add(CreateBottomL2Label(rectX, rectY, width, height, viewBoxHeight));
             if (svg.IsBorderTop)
-                svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                svgTeste.Add(CreateLeftC1Label(viewBoxWidth, viewBoxHeight));
         }
         else
         {
             if (svg.IsBorderRight)
-                svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxHeight));
+                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+                svgTeste.Add(CreateRightC2Label(viewBoxWidth, viewBoxHeight));
             if (svg.IsBorderBottom)
                 svgTeste.Add(CreateBottomL2Label(rectX, rectY, width, height, viewBoxHeight));
             if (svg.IsBorderLeft)
-                svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                svgTeste.Add(CreateLeftC1Label(viewBoxWidth, viewBoxHeight));
             if (svg.IsBorderTop)
                 svgTeste.Add(CreateTopL1Label(rectX, rectY, width, height, viewBoxHeight));
         }
@@ -579,77 +583,211 @@ public static class SvgComponentSide
         return footerGroup;
     }
 
-    static XElement CreateTopWidthText(int rectX, int rectY, int width, int viewBoxHeight, string text)
+    static XElement CreateTopWidthText(int rectX, int rectY, int width, int height, int viewBoxWidth, int viewBoxHeight, bool isLandscape)
     {
-        // Calculate positioning above the top line of the background
-        int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin above rectangle
-        int textX = rectX + (width / 2); // Center horizontally over the rectangle
-        int textY = rectY - textMargin; // Position above the rectangle
+        // Calculate the center point for rotation
+        int centerX = viewBoxWidth / 2;
+        int centerY = viewBoxHeight / 2;
+        string text = isLandscape ? height.ToString() : width.ToString();
 
         // Calculate font size based on viewBox height (responsive sizing)
         int fontSize = Math.Max(10, viewBoxHeight / 30); // Minimum 10px, scales with height
+        int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin from rectangle
+
+        int textX, textY;
+
+        if (isLandscape) // -90 degrees rotation
+        {
+            // Com rotação -90°, o retângulo gira em torno do centro do viewBox
+            // O centro do retângulo rotacionado fica no centro de rotação
+            textX = centerX; // Centro de rotação = centro do retângulo rotacionado
+            textY = centerY - (width / 2) - textMargin; // Acima do retângulo rotacionado
+        }
+        else // No rotation (0 degrees)
+        {
+            // Standard positioning for non-rotated rectangle
+            textX = rectX + (width / 2); // Center horizontally over the rectangle
+            textY = rectY - textMargin; // Position above the rectangle
+        }
 
         var topWidthGroup = new XElement("g",
             new XAttribute("name", "top-width-label")
         );
 
+        // Adjust text alignment based on rotation
+        string textAnchor = "middle"; // Sempre centralizado horizontalmente
+        string dominantBaseline = "bottom"; // Sempre alinhado na parte inferior (acima do retângulo)
+
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
-            new XAttribute("text-anchor", "middle"), // Center text horizontally
-            new XAttribute("dominant-baseline", "bottom"), // Align text to bottom (sits above rectangle)
+            new XAttribute("text-anchor", textAnchor),
+            new XAttribute("dominant-baseline", dominantBaseline),
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", fontSize),
             new XAttribute("fill", "#666666"),
-            text // Display the width value
+            text
         );
 
         topWidthGroup.Add(textElement);
-
         return topWidthGroup;
     }
 
-    static XElement CreateLeftHeightText(int rectX, int rectY, int width, int height, int viewBoxHeight, string text)
+    //static XElement CreateLeftHeightText(int rectX, int rectY, int width, int height, int viewBoxWidth, int viewBoxHeight, bool isLandscape)
+    //{
+    //    // Calculate the center point for rotation
+    //    int centerX = viewBoxWidth / 2;
+    //    int centerY = viewBoxHeight / 2;
+    //    string text = isLandscape ? width.ToString() : height.ToString();
+
+    //    // Calculate font size based on viewBox height (responsive sizing)
+    //    int fontSize = Math.Max(10, viewBoxHeight / 30); // Minimum 10px, scales with height
+    //    int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin from rectangle
+
+    //    int textX, textY;
+
+    //    if (isLandscape) // -90 degrees rotation
+    //    {
+    //        // Com rotação -90°, o lado esquerdo do retângulo original fica na parte de baixo
+    //        // O texto deve ficar à esquerda do retângulo visualmente rotacionado
+    //        // Isso significa posicionar à esquerda do centro de rotação menos metade da altura original
+    //        textX = centerX - (height / 2) - textMargin; // À esquerda do retângulo rotacionado
+    //        textY = centerY; // Centralizado verticalmente no viewBox
+    //    }
+    //    else // No rotation (0 degrees)
+    //    {
+    //        // Standard positioning for non-rotated rectangle
+    //        textX = rectX - textMargin; // Position to the left of the rectangle
+    //        textY = rectY + (height / 2); // Center vertically along the rectangle height
+    //    }
+
+    //    var leftHeightGroup = new XElement("g",
+    //        new XAttribute("name", "left-height-label")
+    //    );
+
+    //    // Adjust text alignment based on rotation
+    //    string textAnchor = "end"; // Sempre alinhado à direita (longe do retângulo)
+    //    string dominantBaseline = "middle"; // Sempre centralizado verticalmente
+
+    //    var textElement = new XElement("text",
+    //        new XAttribute("x", textX),
+    //        new XAttribute("y", textY),
+    //        new XAttribute("text-anchor", textAnchor),
+    //        new XAttribute("dominant-baseline", dominantBaseline),
+    //        new XAttribute("font-family", "Arial, sans-serif"),
+    //        new XAttribute("font-size", fontSize),
+    //        new XAttribute("fill", "#666666"),
+    //        text
+    //    );
+
+    //    leftHeightGroup.Add(textElement);
+    //    return leftHeightGroup;
+    //}
+
+
+    static XElement CreateLeftHeightText(int rectX, int rectY, int width, int height, int viewBoxWidth, int viewBoxHeight, bool isLandscape)
     {
-        // Calculate positioning to the left of the background rectangle
-        int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin from rectangle
-        int textX = rectX - textMargin; // Position to the left of the rectangle
-        int textY = rectY + (height / 2); // Center vertically along the rectangle height
+        // Calculate the center point for rotation
+        int centerX = viewBoxWidth / 2;
+        int centerY = viewBoxHeight / 2;
+        string text = isLandscape ? width.ToString() : height.ToString();
 
         // Calculate font size based on viewBox height (responsive sizing)
         int fontSize = Math.Max(10, viewBoxHeight / 30); // Minimum 10px, scales with height
+        int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin from rectangle
+
+        int textX, textY;
+        string transform = "";
+
+        if (isLandscape) // -90 degrees rotation
+        {
+            // Com rotação -90°, o lado esquerdo do retângulo original fica na parte de baixo
+            // O texto deve ficar à esquerda do retângulo visualmente rotacionado
+            // Posicionar à esquerda do centro de rotação menos metade da altura original
+            textX = centerX - (height / 2) - textMargin; // À esquerda do retângulo rotacionado
+            textY = centerY; // Centralizado verticalmente no viewBox
+
+            // Adicionar rotação de 90 graus ao texto para que fique legível na vertical
+            transform = $"rotate(-90 {textX} {textY})";
+        }
+        else // No rotation (0 degrees)
+        {
+            // Standard positioning for non-rotated rectangle
+            textX = rectX - textMargin; // Position to the left of the rectangle
+            textY = rectY + (height / 2); // Center vertically along the rectangle height
+
+            // Adicionar rotação de 90 graus ao texto para que fique na vertical
+            transform = $"rotate(-90 {textX} {textY})";
+        }
 
         var leftHeightGroup = new XElement("g",
             new XAttribute("name", "left-height-label")
         );
 
+        // Adjust text alignment based on rotation
+        string textAnchor = "middle"; // Centralizado para texto rotacionado
+        string dominantBaseline = "middle"; // Sempre centralizado verticalmente
+
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
-            new XAttribute("text-anchor", "end"), // Align text to the right (away from rectangle)
-            new XAttribute("dominant-baseline", "middle"), // Center text vertically
+            new XAttribute("text-anchor", textAnchor),
+            new XAttribute("dominant-baseline", dominantBaseline),
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", fontSize),
             new XAttribute("fill", "#666666"),
-            text // Display the height value
+            new XAttribute("transform", transform),
+            text
         );
 
         leftHeightGroup.Add(textElement);
-
         return leftHeightGroup;
     }
 
-    static XElement CreateLeftC1Label(int rectX, int rectY, int width, int height, int viewBoxHeight)
+
+    //static XElement CreateLeftC1Label(int rectX, int rectY, int width, int height, int viewBoxHeight)
+    //{
+    //    // Calculate positioning above the height text (to the left of the rectangle)
+    //    int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
+    //    int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
+
+    //    int textX = rectX - textMargin; // Same X position as height text
+    //    int heightTextY = rectY + (height / 2); // Y position of height text
+    //    int textY = heightTextY - labelSpacing; // Position above the height text
+
+    //    // Calculate font size based on viewBox height (slightly smaller than height text)
+    //    int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
+
+    //    var leftC1Group = new XElement("g",
+    //        new XAttribute("name", "left-c1-label")
+    //    );
+
+    //    var textElement = new XElement("text",
+    //        new XAttribute("x", textX),
+    //        new XAttribute("y", textY),
+    //        new XAttribute("text-anchor", "end"), // Align text to the right (same as height text)
+    //        new XAttribute("dominant-baseline", "bottom"), // Align to bottom so it sits above height text
+    //        new XAttribute("font-family", "Arial, sans-serif"),
+    //        new XAttribute("font-size", fontSize),
+    //        new XAttribute("fill", "#333333"), // Slightly darker than height text
+    //        new XAttribute("font-weight", "bold"), // Make label bold
+    //        "C1"
+    //    );
+
+    //    leftC1Group.Add(textElement);
+
+    //    return leftC1Group;
+    //}
+
+    static XElement CreateLeftC1Label(int viewBoxWidth, int viewBoxHeight)
     {
-        // Calculate positioning above the height text (to the left of the rectangle)
-        int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
-        int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
+        // Calculate positioning at 10% of viewBox width from left edge
+        int textX = (int)(viewBoxWidth * 0.05);
 
-        int textX = rectX - textMargin; // Same X position as height text
-        int heightTextY = rectY + (height / 2); // Y position of height text
-        int textY = heightTextY - labelSpacing; // Position above the height text
+        // Position vertically centered in the viewBox
+        int textY = viewBoxHeight / 2;
 
-        // Calculate font size based on viewBox height (slightly smaller than height text)
+        // Calculate font size based on viewBox height
         int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
 
         var leftC1Group = new XElement("g",
@@ -659,17 +797,16 @@ public static class SvgComponentSide
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
-            new XAttribute("text-anchor", "end"), // Align text to the right (same as height text)
-            new XAttribute("dominant-baseline", "bottom"), // Align to bottom so it sits above height text
+            new XAttribute("text-anchor", "start"), // Align text to the left
+            new XAttribute("dominant-baseline", "middle"), // Center the text vertically
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", fontSize),
-            new XAttribute("fill", "#333333"), // Slightly darker than height text
+            new XAttribute("fill", "#333333"), // Dark gray color
             new XAttribute("font-weight", "bold"), // Make label bold
             "C1"
         );
 
         leftC1Group.Add(textElement);
-
         return leftC1Group;
     }
 
@@ -707,16 +844,58 @@ public static class SvgComponentSide
         return topL1Group;
     }
 
-    static XElement CreateRightC2Label(int rectX, int rectY, int width, int height, int viewBoxHeight)
-    {
-        // Calculate positioning above the height text (to the right of the rectangle)
-        int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
-        int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
-        int textX = rectX + width + textMargin; // Position to the right of the rectangle
-        int heightTextY = rectY + (height / 2); // Y position of height text
-        int textY = heightTextY - labelSpacing; // Position above the height text (same height as C1)
+    //static XElement CreateRightC2Label(int rectX, int rectY, int width, int height, int viewBoxHeight, bool isLandscape)
+    //{
+    //    int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
+    //    int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
+    //    int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
 
-        // Calculate font size based on viewBox height (slightly smaller than height text)
+    //    int textX, textY;
+
+    //    if (isLandscape)
+    //    {
+    //        // When rotated -90° (landscape), the visual "right" side is the bottom edge of the original rectangle
+    //        // After rotation, this becomes the right side visually
+    //        textX = rectX + width + textMargin; // To the right of the rectangle
+    //        textY = rectY + height - labelSpacing; // Near the bottom edge (which becomes right side after rotation)
+    //    }
+    //    else
+    //    {
+    //        // Portrait orientation (original logic)
+    //        textX = rectX + width + textMargin; // Position to the right of the rectangle
+    //        int heightTextY = rectY + (height / 2); // Y position of height text
+    //        textY = heightTextY - labelSpacing; // Position above the height text
+    //    }
+
+    //    var rightC2Group = new XElement("g",
+    //        new XAttribute("name", "right-c2-label")
+    //    );
+
+    //    var textElement = new XElement("text",
+    //        new XAttribute("x", textX),
+    //        new XAttribute("y", textY),
+    //        new XAttribute("text-anchor", "start"), // Align text to the left
+    //        new XAttribute("dominant-baseline", "bottom"), // Always use bottom baseline
+    //        new XAttribute("font-family", "Arial, sans-serif"),
+    //        new XAttribute("font-size", fontSize),
+    //        new XAttribute("fill", "#333333"), // Slightly darker than height text
+    //        new XAttribute("font-weight", "bold"), // Make label bold
+    //        "C2"
+    //    );
+
+    //    rightC2Group.Add(textElement);
+    //    return rightC2Group;
+    //}
+
+    static XElement CreateRightC2Label(int viewBoxWidth, int viewBoxHeight)
+    {
+        // Calculate positioning at 80% of viewBox width (20% margin from right)
+        int textX = (int)(viewBoxWidth * 0.90);
+
+        // Position vertically centered in the viewBox
+        int textY = viewBoxHeight / 2;
+
+        // Calculate font size based on viewBox height
         int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
 
         var rightC2Group = new XElement("g",
@@ -726,11 +905,11 @@ public static class SvgComponentSide
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
-            new XAttribute("text-anchor", "start"), // Align text to the left (opposite of C1)
-            new XAttribute("dominant-baseline", "bottom"), // Align to bottom so it sits above height text
+            new XAttribute("text-anchor", "middle"), // Center the text horizontally
+            new XAttribute("dominant-baseline", "middle"), // Center the text vertically
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", fontSize),
-            new XAttribute("fill", "#333333"), // Slightly darker than height text
+            new XAttribute("fill", "#333333"), // Dark gray color
             new XAttribute("font-weight", "bold"), // Make label bold
             "C2"
         );
