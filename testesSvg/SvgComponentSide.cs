@@ -106,29 +106,24 @@ public static class SvgComponentSide
         if (json.IsAnyBorderValid())
             svg.Add(CreateBorderGroup(viewBox.Width, viewBox.Height, viewBox.X, viewBox.Y, json));
 
-        //FALTA AJUSTAR OS METODOS PARA QUANDO ROTACIONAR
         if (json.IsLandscape)
         {
             if (json.IsBorderRight)
-                svg.Add(CreateTopL1Label(viewBox.X, viewBox.Y, width, height, viewBoxHeight));
+                svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderBottom)
-                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
-                svg.Add(CreateRightC2LabelDrill(viewBox.X, viewBox.Y, viewBox.Width, viewBox.Height));
+                svg.Add(CreateRightC2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderLeft)
-                svg.Add(CreateBottomL2Label(viewBox.X, viewBox.Y, width, height, viewBoxHeight));
+                svg.Add(CreateBottomL2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderTop)
-                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
-                svg.Add(CreateLeftC1Label(viewBoxWidth, viewBoxHeight));
+                svg.Add(CreateLeftC1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
         }
         else
         {
             if (json.IsBorderRight)
-                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
                 svg.Add(CreateRightC2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderBottom)
                 svg.Add(CreateBottomL2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderLeft)
-                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
                 svg.Add(CreateLeftC1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
             if (json.IsBorderTop)
                 svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
@@ -204,8 +199,7 @@ public static class SvgComponentSide
 
         var ok = ResizeSvg(svg.ToString(), 48, 37.312);
 
-        //PRECISA AJUSTAR O FOOTER POR CAUSA DOS LABELS
-        svg.Add(Label.Footer(h));
+        svg.Add(Label.Footer(expandedViewBox.Height, expandedViewBox.Y));
 
         return svg.ToString();
 

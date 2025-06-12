@@ -62,19 +62,25 @@ namespace testesSvg
             return group;
         }
 
-        public static XElement Footer(int height)
+        public static XElement Footer(int viewBoxHeight, int y)
         {
             var group = new XElement("g", new XAttribute("name", "footer-label"));
 
+            int fontSize = Math.Max(8, viewBoxHeight / 30);
+
             // Posição centralizada horizontalmente e posicionada abaixo do conteúdo principal
-            double labelX = 0;           // Centralizado horizontalmente
-            double labelY = height / 10 - 100;        // Ajuste conforme necessário
+            double labelX = 0;
+
+            // Centralizado horizontalmente
+            int marginDistance = (int)(viewBoxHeight * 0.02);
+
+            double labelY = (y + viewBoxHeight) - marginDistance;
 
             // Cria o elemento <text>
             var textElement = new XElement("text",
                 new XAttribute("x", labelX),
                 new XAttribute("y", labelY),
-                new XAttribute("font-size", "120"),
+                new XAttribute("font-size", fontSize),
                 new XAttribute("fill", "black"),
                 new XAttribute("text-anchor", "middle"),
                 new XAttribute("dominant-baseline", "middle"),
