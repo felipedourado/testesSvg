@@ -11,7 +11,7 @@ public static class SvgComponentSide
 {
     private const double VIEWBOX_SCALE_FACTOR = 0.1; // 1/10
     private const double VIEWBOX_OFFSET_FACTOR = 0.05; // 1/20
-    private const double EXPAND_FACTOR = 2.0;
+    private const double EXPAND_FACTOR = 1.5;
 
     public static string GenerateComponent()
     {
@@ -25,28 +25,31 @@ public static class SvgComponentSide
         //};
 
         //PecaRebaixoMinifixMinParafuso --OK
-        //var payload = new SvgRequest
-        //{
-        //    Width = "12000",
-        //    Height = "20000",
-        //    Thickness = "700",
-        //    Offset = "0",
-        //    JoinSystemType = "minifix",
-        //    Type = "Side",
-        //    IsLandscape = true,
-        //    IsBorderBottom = true,
-        //};
-
         var payload = new SvgRequest
         {
-            Width = "1000",
-            Height = "2000",
+            Width = "12000",
+            Height = "20000",
+            Thickness = "700",
+            Offset = "0",
+            JoinSystemType = "minifix",
+            Type = "Side",
             IsLandscape = true,
-            IsBorderBottom = true,
-            IsBorderRight = false,
-            IsBorderLeft = false,
-            IsBorderTop = true
+            IsBorderRight = true,
+            IsBorderLeft = true,
+            IsBorderTop = true,
+            IsBorderBottom = true
         };
+
+        //var payload = new SvgRequest
+        //{
+        //    Width = "1000",
+        //    Height = "2000",
+        //    IsLandscape = true,
+        //    IsBorderBottom = true,
+        //    IsBorderRight = false,
+        //    IsBorderLeft = false,
+        //    IsBorderTop = true
+        //};
 
         string svgXml = GenerateSvgFromJson(payload);
         return svgXml;
@@ -102,6 +105,35 @@ public static class SvgComponentSide
 
         if (json.IsAnyBorderValid())
             svg.Add(CreateBorderGroup(viewBox.Width, viewBox.Height, viewBox.X, viewBox.Y, json));
+
+        //FALTA AJUSTAR OS METODOS PARA QUANDO ROTACIONAR
+        if (json.IsLandscape)
+        {
+            if (json.IsBorderRight)
+                svg.Add(CreateTopL1Label(viewBox.X, viewBox.Y, width, height, viewBoxHeight));
+            if (json.IsBorderBottom)
+                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+                svg.Add(CreateRightC2LabelDrill(viewBox.X, viewBox.Y, viewBox.Width, viewBox.Height));
+            if (json.IsBorderLeft)
+                svg.Add(CreateBottomL2Label(viewBox.X, viewBox.Y, width, height, viewBoxHeight));
+            if (json.IsBorderTop)
+                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                svg.Add(CreateLeftC1Label(viewBoxWidth, viewBoxHeight));
+        }
+        else
+        {
+            if (json.IsBorderRight)
+                //svgTeste.Add(CreateRightC2Label(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+                svg.Add(CreateRightC2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+            if (json.IsBorderBottom)
+                svg.Add(CreateBottomL2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+            if (json.IsBorderLeft)
+                //svgTeste.Add(CreateLeftC1Label(rectX, rectY, width, height, viewBoxHeight));
+                svg.Add(CreateLeftC1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+            if (json.IsBorderTop)
+                svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+        }
+
 
         int? dadoThickness = !string.IsNullOrEmpty(json.Thickness) ? Convert.ToInt32(json.Thickness) : null;
 
@@ -172,6 +204,7 @@ public static class SvgComponentSide
 
         var ok = ResizeSvg(svg.ToString(), 48, 37.312);
 
+        //PRECISA AJUSTAR O FOOTER POR CAUSA DOS LABELS
         svg.Add(Label.Footer(h));
 
         return svg.ToString();
@@ -364,8 +397,6 @@ public static class SvgComponentSide
     }
 
 
-
-
     static ViewBoxData CalculateViewBox(int width, int height, bool isLandscape)
     {
         return new ViewBoxData
@@ -397,6 +428,140 @@ public static class SvgComponentSide
     {
         return $"{viewBox.X} {viewBox.Y} {viewBox.Width} {viewBox.Height}";
     }
+
+    static XElement CreateRightC2LabelDrill(int x, int y, int viewBoxWidth, int viewBoxHeight)
+    {
+        // Calculate positioning at 20% of viewBox width from right edge
+        int marginDistance = (int)(viewBoxWidth * 0.02); // 80% from left = 20% from right
+        // Position vertically centered in the viewBox
+        //int textY = viewBoxHeight / 2;
+        int textX = (x + viewBoxWidth) - marginDistance;
+
+        int textY = y + (viewBoxHeight / 2);
+        // Calculate font size based on viewBox height
+        int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
+
+        var rightC2Group = new XElement("g",
+            new XAttribute("name", "right-c2-label")
+        );
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "end"), // Align text to the right
+            new XAttribute("dominant-baseline", "middle"), // Center the text vertically
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"), // Dark gray color
+            new XAttribute("font-weight", "bold"), // Make label bold
+            "C2"
+        );
+
+        rightC2Group.Add(textElement);
+        return rightC2Group;
+    }
+
+    static XElement CreateLeftC1LabelDrill(int x, int y, int viewBoxWidth, int viewBoxHeight)
+    {
+        // Valores padrão
+        // Calculate font size based on viewBox height
+        int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
+
+        // Calcular posição X: 20% de distância da margem esquerda
+        // margem esquerda do viewBox = viewBoxX
+        // 20% da largura do viewBox = viewBoxWidth * 0.2
+        int marginDistance = (int)(viewBoxWidth * 0.02);
+        int textX = x + marginDistance;
+
+        // Calcular posição Y: meio do eixo Y
+        int textY = y + (viewBoxHeight / 2);
+
+        // Criar o elemento text usando XElement
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "start"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            "C1"
+        );
+
+        // Criar o elemento group contendo o text
+        var groupElement = new XElement("g",
+            new XAttribute("name", "left-c1-label"),
+            textElement
+        );
+
+        return groupElement;
+    }
+
+    static XElement CreateTopL1LabelDrill(int viewBoxX, int viewBoxY, int viewBoxWidth, int viewBoxHeight)
+    {
+        int fontSize = Math.Max(8, viewBoxHeight / 30);
+
+        int textX = viewBoxX + (viewBoxWidth / 2);
+
+        int marginDistance = (int)(viewBoxHeight * 0.05);
+        int textY = viewBoxY + marginDistance;
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            "L1"
+        );
+
+        var groupElement = new XElement("g",
+            new XAttribute("name", "l1-label"),
+            textElement
+        );
+
+        return groupElement;
+    }
+
+    static XElement CreateBottomL2LabelDrill(int viewBoxX, int viewBoxY, int viewBoxWidth, int viewBoxHeight)
+    {
+        // Calcular posição X: meio do eixo X
+        int fontSize = Math.Max(8, viewBoxHeight / 30);
+
+        int textX = viewBoxX + (viewBoxWidth / 2);
+       
+        int marginDistance = (int)(viewBoxHeight * 0.08);
+        int textY = (viewBoxY + viewBoxHeight) - marginDistance;
+
+        // Criar o elemento text usando XElement
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            "L2"
+        );
+
+        // Criar o elemento group contendo o text
+        var groupElement = new XElement("g",
+            new XAttribute("name", "l2-label"),
+            textElement
+        );
+
+        return groupElement;
+    }
+
+
+    //-------------------------------------------------
+
 
     static string GenerateRectangleSvg(SvgRequest svg)
     {
