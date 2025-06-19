@@ -82,10 +82,10 @@ public static class Door
     {
         if (height <= 9000 && string.IsNullOrEmpty(doorItens))
             return Double(width, height);
-      
+
         if (doorItens.Equals("triple"))
             return Triple(width, height);
-       
+
         if (doorItens.Equals("quad"))
             return Quad(width, height);
 
@@ -437,10 +437,10 @@ public static class Door
         return new List<double>
             {
               -0.166675 * height + 0.1,
-              -0.166675 * height - 87.4, 
-              -0.166675 * height - 151.4546, 
+              -0.166675 * height - 87.4,
+              -0.166675 * height - 151.4546,
               -0.166675 * height - 174.9,
-              -0.166675 * height + 87.6, 
+              -0.166675 * height + 87.6,
               -0.166675 * height + 151.6545,
               -0.166675 * height + 175.1
             };
@@ -627,7 +627,7 @@ public static class Door
             ];
     }
 
-   
+
 
     static XElement Side(double[] x1, double[] y1, string name)
     {
@@ -678,16 +678,16 @@ public static class Door
 
         var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
-        AddSinglePath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[12]); 
-        AddSinglePath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]); 
+        AddSinglePath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[12]);
+        AddSinglePath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);
         AddSinglePath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
-        AddSinglePath(group, x1[3], y1[3], x1[4], y1[4], x1[4], y1[4], x1[3], y1[3]); 
-        AddSinglePath(group, x1[4], y1[4], x1[5], y1[5], x1[5], y1[5], x1[4], y1[4]); 
-        AddSinglePath(group, x1[5], y1[5], x1[6], y1[6], x1[6], y1[7], x1[5], y1[5]); 
-        AddSinglePath(group, x1[6], y1[6], x1[5], y1[8], x1[5], y1[8], x1[6], y1[7]); 
-        AddSinglePath(group, x1[5], y1[8], x1[4], y1[9], x1[4], y1[9], x1[5], y1[8]); 
-        AddSinglePath(group, x1[4], y1[9], x1[3], y1[13], x1[3], y1[13], x1[4], y1[9]); 
-        AddSinglePath(group, x1[3], y1[13], x1[2], y1[10], x1[2], y1[10], x1[3], y1[13]); 
+        AddSinglePath(group, x1[3], y1[3], x1[4], y1[4], x1[4], y1[4], x1[3], y1[3]);
+        AddSinglePath(group, x1[4], y1[4], x1[5], y1[5], x1[5], y1[5], x1[4], y1[4]);
+        AddSinglePath(group, x1[5], y1[5], x1[6], y1[6], x1[6], y1[7], x1[5], y1[5]);
+        AddSinglePath(group, x1[6], y1[6], x1[5], y1[8], x1[5], y1[8], x1[6], y1[7]);
+        AddSinglePath(group, x1[5], y1[8], x1[4], y1[9], x1[4], y1[9], x1[5], y1[8]);
+        AddSinglePath(group, x1[4], y1[9], x1[3], y1[13], x1[3], y1[13], x1[4], y1[9]);
+        AddSinglePath(group, x1[3], y1[13], x1[2], y1[10], x1[2], y1[10], x1[3], y1[13]);
         AddSinglePath(group, x1[2], y1[10], x1[1], y1[11], x1[1], y1[11], x1[2], y1[10]);
         AddSinglePath(group, x1[1], y1[11], x1[0], y1[0], x1[0], y1[12], x1[1], y1[11]);
 
@@ -706,10 +706,10 @@ public static class Door
             (x1[2], y1[10]),
             (x1[1], y1[11])
         };
-        
+
         AddCircleColor(group, points);
         AddCircleColor(group, points);
-        
+
         return group;
     }
 
@@ -768,53 +768,6 @@ public static class Door
         AddCircleColorQuin(group, points);
         AddCircleColorQuin(group, points1);
 
-        return group;
-    }
-
-    static XElement SideBig(double[] x1, double[] y1, string name)
-    {
-
-        var group = new XElement("g", new XAttribute("name", name));
-
-        AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]);
-        AddMinifixBaseQuadPath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);
-        AddMinifixBaseQuadPath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
-
-        AddMinifixBaseQuadPath(group, x1[3], y1[3], x1[4], y1[2], x1[4], y1[2], x1[3], y1[3]);
-        AddMinifixBaseQuadPath(group, x1[4], y1[2], x1[5], y1[1], x1[5], y1[1], x1[4], y1[2]);
-        AddMinifixBaseQuadPath(group, x1[5], y1[1], x1[6], y1[0], x1[6], y1[0], x1[5], y1[1]);
-
-        AddMinifixBaseQuadPath(group, x1[6], y1[0], x1[5], y1[5], x1[5], y1[5], x1[6], y1[0]);
-        AddMinifixBaseQuadPath(group, x1[5], y1[5], x1[4], y1[6], x1[4], y1[6], x1[5], y1[5]);
-        AddMinifixBaseQuadPath(group, x1[4], y1[6], x1[3], y1[6], x1[3], y1[6], x1[4], y1[6]);
-
-        AddMinifixBaseQuadPath(group, x1[3], y1[6], x1[2], y1[5], x1[2], y1[5], x1[3], y1[6]);
-
-        AddMinifixBaseQuadPath(group, x1[2], y1[5], x1[1], y1[4], x1[1], y1[4], x1[2], y1[5]);
-        AddMinifixBaseQuadPath(group, x1[1], y1[4], x1[0], y1[0], x1[0], y1[0], x1[1], y1[4]);
-
-
-        // ----- Décimo Terceiro Path -----
-        var points = new[]
-        {
-                (x1[0], y1[0]),
-                (x1[1], y1[1]),
-                (x1[2], y1[2]),
-                (x1[3], y1[3]),
-                (x1[4], y1[2]),
-                (x1[5], y1[1]),
-                (x1[6], y1[0]),
-                (x1[5], y1[4]),
-                (x1[4], y1[5]),
-                (x1[3], y1[6]),
-                (x1[2], y1[5]),
-                (x1[1], y1[4])
-            };
-
-        AddCircleColor(group, points);
-
-        // ----- Décimo Quarto Path -----
-        AddCircleColor(group, points);
         return group;
     }
 
