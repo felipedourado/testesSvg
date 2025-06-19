@@ -78,16 +78,16 @@ public static class Door
     //};
 
 
-    public static IEnumerable<XElement> Generate(int width, int height, string doorItens)
+    public static IEnumerable<XElement> Generate(int width, int height, string doorItens, bool isLandscape)
     {
         if (height <= 9000 && string.IsNullOrEmpty(doorItens))
-            return Double(width, height);
+            return Double(width, height, isLandscape);
 
         if (doorItens.Equals("triple"))
-            return Triple(width, height);
+            return Triple(width, height, isLandscape);
 
         if (doorItens.Equals("quad"))
-            return Quad(width, height);
+            return Quad(width, height, isLandscape);
 
 
         var bigX1 = CalculateBigCircleX1Quin(width);
@@ -111,21 +111,21 @@ public static class Door
 
         return
             [
-               Side([.. x], [.. y1], "door-small-circle-1"),
-               Side([.. x], [.. y2], "door-small-circle-2"),
-               Side([.. x], [.. y3], "door-small-circle-3"),
-               Side([.. x], [.. y4], "door-small-circle-4"),
-               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
-               BaseQuinPath([.. bigX1], [.. bigY3], "door-big-circle-3", false),
-               Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
-               Side([.. x], [.. y1Quin], "door-small-circle-4"),
-               Side([.. x], [.. y2Quin], "door-small-circle-4"),
-               Side([.. x], [.. y3Quin], "door-small-circle-4"),
-               Side([.. x], [.. y4Quin], "door-small-circle-4"),
-               Side([.. bigX1], [.. bigY5], "door-big-circle-5"),
-               Side([.. x], [.. y5Quin], "door-small-circle-5"),
-               Side([.. x], [.. y6Quin], "door-small-circle-6"),
+               Side([.. x], [.. y1], "door-small-circle-1", isLandscape),
+               Side([.. x], [.. y2], "door-small-circle-2", isLandscape),
+               Side([.. x], [.. y3], "door-small-circle-3", isLandscape),
+               Side([.. x], [.. y4], "door-small-circle-4", isLandscape),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1", isLandscape),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2", isLandscape),
+               BaseQuinPath([.. bigX1], [.. bigY3], "door-big-circle-3", isLandscape),
+               Side([.. bigX1], [.. bigY4], "door-big-circle-4", isLandscape),
+               Side([.. x], [.. y1Quin], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y2Quin], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y3Quin], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y4Quin], "door-small-circle-4", isLandscape),
+               Side([.. bigX1], [.. bigY5], "door-big-circle-5", isLandscape),
+               Side([.. x], [.. y5Quin], "door-small-circle-5", isLandscape),
+               Side([.. x], [.. y6Quin], "door-small-circle-6", isLandscape),
             ];
     }
 
@@ -538,7 +538,7 @@ public static class Door
     }
 
 
-    static IEnumerable<XElement> Double(int width, int height)
+    static IEnumerable<XElement> Double(int width, int height, bool isLandscape)
     {
         var x = CalculateSmallCircleX(width);
         var y1 = CalculateSmallCircleY1(height);
@@ -552,16 +552,16 @@ public static class Door
 
         return
             [
-               Side([.. x], [.. y1], "door-small-circle-1"),
-               Side([.. x], [.. y2], "door-small-circle-2"),
-               Side([.. x], [.. y3], "door-small-circle-3"),
-               Side([.. x], [.. y4], "door-small-circle-4"),
-               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+               Side([.. x], [.. y1], "door-small-circle-1", isLandscape),
+               Side([.. x], [.. y2], "door-small-circle-2", isLandscape),
+               Side([.. x], [.. y3], "door-small-circle-3", isLandscape),
+               Side([.. x], [.. y4], "door-small-circle-4", isLandscape),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1", isLandscape),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2", isLandscape),
             ];
     }
 
-    static IEnumerable<XElement> Triple(int width, int height)
+    static IEnumerable<XElement> Triple(int width, int height, bool isLandscape)
     {
         var x = CalculateSmallCircleX(width);
         var y1 = CalculateSmallCircleY1(height);
@@ -579,19 +579,19 @@ public static class Door
 
         return
             [
-               Side([.. x], [.. y1], "door-small-circle-1"),
-               Side([.. x], [.. y2], "door-small-circle-2"),
-               Side([.. x], [.. y3], "door-small-circle-3"),
-               Side([.. x], [.. y4], "door-small-circle-4"),
-               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
-               BaseSinglePath([.. bigX1], [.. bigY3], "door-big-circle-3", false),
-               Side([.. x], [.. y1Triple], "door-small-circle-4"),
-               Side([.. x], [.. y2Triple], "door-small-circle-4"),
+               Side([.. x], [.. y1], "door-small-circle-1", isLandscape),
+               Side([.. x], [.. y2], "door-small-circle-2", isLandscape),
+               Side([.. x], [.. y3], "door-small-circle-3", isLandscape),
+               Side([.. x], [.. y4], "door-small-circle-4", isLandscape),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1", isLandscape),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2", isLandscape),
+               BaseSinglePath([.. bigX1], [.. bigY3], "door-big-circle-3", isLandscape),
+               Side([.. x], [.. y1Triple], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y2Triple], "door-small-circle-4", isLandscape),
             ];
     }
 
-    static IEnumerable<XElement> Quad(int width, int height)
+    static IEnumerable<XElement> Quad(int width, int height, bool isLandscape)
     {
         var x = CalculateSmallCircleX(width);
         var y1 = CalculateSmallCircleY1(height);
@@ -612,27 +612,27 @@ public static class Door
 
         return
             [
-               Side([.. x], [.. y1], "door-small-circle-1"),
-               Side([.. x], [.. y2], "door-small-circle-2"),
-               Side([.. x], [.. y3], "door-small-circle-3"),
-               Side([.. x], [.. y4], "door-small-circle-4"),
-               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
-               Side([.. bigX1], [.. bigY3], "door-big-circle-3"),
-               Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
-               Side([.. x], [.. y1Quad], "door-small-circle-4"),
-               Side([.. x], [.. y2Quad], "door-small-circle-4"),
-               Side([.. x], [.. y3Quad], "door-small-circle-4"),
-               Side([.. x], [.. y4Quad], "door-small-circle-4"),
+               Side([.. x], [.. y1], "door-small-circle-1", isLandscape),
+               Side([.. x], [.. y2], "door-small-circle-2", isLandscape),
+               Side([.. x], [.. y3], "door-small-circle-3", isLandscape),
+               Side([.. x], [.. y4], "door-small-circle-4", isLandscape),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1", isLandscape),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2", isLandscape),
+               Side([.. bigX1], [.. bigY3], "door-big-circle-3", isLandscape),
+               Side([.. bigX1], [.. bigY4], "door-big-circle-4", isLandscape),
+               Side([.. x], [.. y1Quad], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y2Quad], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y3Quad], "door-small-circle-4", isLandscape),
+               Side([.. x], [.. y4Quad], "door-small-circle-4", isLandscape),
             ];
     }
 
 
 
-    static XElement Side(double[] x1, double[] y1, string name)
+    static XElement Side(double[] x1, double[] y1, string name, bool isLandscape)
     {
 
-        var group = new XElement("g", new XAttribute("name", name));
+        var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
 
         AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]);
         AddMinifixBaseQuadPath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);

@@ -16,22 +16,12 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
-        //DobradicaMax CINCO FUROS-- 
         var payload = new SvgRequest
         {
-            Width = "100000",
-            Height = "270000",
-            JoinSystemType = "door",
-            HingeSku = "hinge"
+            Width = "500",
+            Height = "500",
+            IsTicket = true
         };
-
-        //var payload = new SvgRequest
-        //{
-        //    Width = "20000",
-        //    Height = "160001",
-        //    JoinSystemType = "door",
-        //    HingeSku = "hinge"
-        //};
 
         ////PecaRebaixoMinifixMinParafuso --OK
         //var payload = new SvgRequest
@@ -81,8 +71,8 @@ public static class SvgComponentSide
     }
 
 
-    //TODO : testar landscape no door
     //criar a regra do isTicket true para criar viewbox nas dimensões da etiqueta
+    //validar espaço utilizado para ter mais margem no topo
     //criar regra para quadrado e retangulo (todas as peças deverão ter essa regras, criar um template de quadrado e retangulo fixo)
     //alterar logica de redimensionamento, se flag etiqueta estiver true criar o viewbox nas dimensões da etiqueta
     //validar logica da flag etiqueta com landscape para não perder a referencia
@@ -240,7 +230,7 @@ public static class SvgComponentSide
             }
             if (json.JoinSystemType.Equals("door"))
             {
-                svg.Add(Door.Generate(viewBoxWidth, viewBoxHeight, doorItens));
+                svg.Add(Door.Generate(viewBoxWidth, viewBoxHeight, doorItens, json.IsLandscape));
             }
 
         }
@@ -250,61 +240,7 @@ public static class SvgComponentSide
         svg.Add(Label.Footer(expandedViewBox.Height, expandedViewBox.Y));
 
         return svg.ToString();
-
-        #region testes
-        //rebaixo linha vermelha colada no canto da peça, canal um pouco acima
-
-
-        //testes
-        //testar peças com rebaixo, testar 2 tamanhos de chapas (board) e conferir --feito
-        //testar peças com canal, testar 2 tamanhos de chapas (board) e conferir --feito
-
-        //testar peças com minifix
-        //se receber rebaixo e minifix (por si so ja é parafuso ou seja component type side)
-
-        //criar component type door
-        //testar peças com dobradiças (door), testar 3 tamanhos de chapas (board) e conferir
-        //fazer teste criando uma peça com dobradiça com parafuso e uma com tambor e analisar
-
-
-        //---------------------------
-        //testes usinagem
-
-        //side (parafuso)
-        //testar peças com rebaixo + minifix - ok
-        //testar peças com rebaixo + cavilha - ok
-        //testar peças com rebaixo + vb 1 furo - ok
-        //testar peças com rebaixo + vb 2 furos - ok
-        //testar peças com rebaixo + minifix + cavilha -
-
-        //side (parafuso)
-        //testar peças com canal + minifix - ok
-        //testar peças com canal + cavilha -  (PecaCanalCavilhaMinParafuso final do arquivo exemplo de um furo para logica dobradiça)
-        //testar peças com canal + vb 1 furo -
-        //testar peças com canal + vb 2 furos - 
-        //testar peças com canal + minifix + cavilha -
-
-        //base (tambor)
-        //testar peças com rebaixo + minifix - ok
-        //testar peças com rebaixo + cavilha -
-        //testar peças com rebaixo + vb 1 furo -
-        //testar peças com rebaixo + vb 2 furos -
-        //testar peças com rebaixo + minifix + cavilha -
-
-        //side (tambor)
-        //testar peças com canal + minifix - ok
-        //testar peças com canal + cavilha -
-        //testar peças com canal + vb 1 furo -
-        //testar peças com canal + vb 2 furos -
-        //testar peças com canal + minifix + cavilha -
-
-        //se receber dowels (cavilha), tem que criar 3 dowels, top, center e down
-
-        //pendente component type door
-        //criar um mapeamento das peças que gerei no exporter, gerei no meu codigo e validei que estão iguais, se a config da peça já estiver no mapeamento gerar pelo meu servico e dar update na flag do banco
-        //se estiver salvar uma flag no banco GInter
-
-        #endregion
+    
     }
 
     static XElement CreateOuterBackgroundPath(int viewBoxX, int viewBoxY)
@@ -439,6 +375,7 @@ public static class SvgComponentSide
     }
 
 
+    //x 54, y 32, w 41, h 20
     static string RedimensionarSvg(string svgContent, double novoX, double novoY, double novaLargura, double novaAltura, string unidade = "mm")
     {
         try
@@ -658,6 +595,9 @@ public static class SvgComponentSide
 
     static string GenerateRectangleSvg(SvgRequest svg)
     {
+        if (svg.IsTicket)
+            TicketView1(svg);
+
         int width = Convert.ToInt32(svg.Width);
         int height = Convert.ToInt32(svg.Height);
         const int thickStrokeWidth = 4;
@@ -1206,6 +1146,148 @@ public static class SvgComponentSide
 
         bottomL2Group.Add(textElement);
         return bottomL2Group;
+    }
+
+    static XElement TicketView(SvgRequest svg)
+    {
+        //x 54, y 32, w 41, h 20
+        int viewBoxWidth = 41;
+        int viewBoxHeight = 20;
+        int viewBoxX = 54;
+        int viewBoxY = 32;
+
+        var svgTeste = new XElement("svg",
+          new XAttribute("viewBox", $"54 32 41 20"),
+          new XAttribute("width", 41),
+          new XAttribute("height", 20));
+
+        const int thickStrokeWidth = 1;
+        const int padding = 2;
+        const int textPadding = 3;
+
+        int availableWidth = viewBoxWidth - (2 * padding) - thickStrokeWidth - textPadding;
+        int availableHeight = viewBoxHeight - (2 * padding) - thickStrokeWidth - textPadding;
+
+        // Calculate viewBox as a square - use the larger dimension
+        int width = Math.Max(1, availableWidth - 5);
+        int height = Math.Max(1, availableHeight - 3);
+
+        // Calculate offset to center the background element
+        //int offsetX = (viewBoxWidth - originalSvgWidth) / 2;
+        //int offsetY = (viewBoxHeight - originalSvgHeight) / 2;
+
+        // Calculate rectangle position
+        int rectX = viewBoxX + padding + (thickStrokeWidth / 2);
+        int rectY = viewBoxY + padding + (thickStrokeWidth / 2);
+
+        var group = new XElement("g", new XAttribute("name", "background"));
+
+        int x1 = rectX;
+        int y1 = rectY;
+        int x2 = rectX + width;
+        int y2 = rectY;
+        int x3 = rectX + width;
+        int y3 = rectY + height;
+        int x4 = rectX;
+        int y4 = rectY + height;
+
+        string pathData = $"M {x1} {y1} L {x2} {y2} L {x3} {y3} L {x4} {y4} Z";
+
+        group.Add(new XElement("path",
+             new XAttribute("d", pathData),
+             new XAttribute("style", "fill:none;stroke-width:10;"),
+             new XAttribute("stroke", "black")
+         ));
+
+        svgTeste.Add(group);
+
+        var bordergroup = new XElement("g", new XAttribute("name", "border"));
+
+        // Estilo padrão
+        string defaultStyle = "fill:none;stroke:#666;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;";
+        // Estilo em destaque
+        string highlightStyle = "fill:none;stroke:#000000;stroke-width:30;";
+
+        var borders = new[]
+        {
+            new { Name = "top",     X1 = x1,     Y1 = y1,     X2 = x2, Y2 = y1,     Highlight = svg.IsBorderTop },
+            new { Name = "right",   X1 = x2, Y1 = y1,     X2 = x2, Y2 = y2, Highlight = svg.IsBorderRight },
+            new { Name = "bottom",  X1 = x2, Y1 = y2, X2 = x1,     Y2 = y2, Highlight = svg.IsBorderBottom },
+            new { Name = "left",    X1 = x1,     Y1 = y2, X2 = x1,     Y2 = y1,     Highlight = svg.IsBorderLeft }
+        };
+
+        //VALIDAR NO SOFTWARE DE ETIQUETA
+        foreach (var border in borders)
+        {
+            if (border.Highlight)
+                bordergroup.Add(new XElement("line",
+                    new XAttribute("x1", border.X1),
+                    new XAttribute("y1", border.Y1),
+                    new XAttribute("x2", border.X2),
+                    new XAttribute("y2", border.Y2),
+                    new XAttribute("style", border.Highlight ? highlightStyle : defaultStyle)
+                ));
+        }
+
+        svgTeste.Add(bordergroup);
+
+        return svgTeste;
+    }
+
+    static XElement TicketView1(SvgRequest svg)
+    {
+        //x 54, y 32, w 41, h 20
+        int viewBoxX = 54;
+        int viewBoxY = 32;
+        int viewBoxWidth = 41;
+        int viewBoxHeight = 20;
+
+        int originalWidth = Convert.ToInt32(svg.Width);
+        int originalHeight = Convert.ToInt32(svg.Height);
+        const int originalThickStrokeWidth = 4;
+        const int originalPadding = 10;
+        const int originalTextPadding = 15;
+
+        // Calculate original SVG dimensions
+        int originalSvgWidth = originalWidth + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 30;
+        int originalSvgHeight = originalHeight + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 20;
+
+        // Calcular escala para caber no viewBox (mantendo proporção)
+        double scaleX = (double)viewBoxWidth / originalSvgWidth;
+        double scaleY = (double)viewBoxHeight / originalSvgHeight;
+        double baseScale = Math.Min(scaleX, scaleY); // Usar a menor escala para manter proporção
+        double scale = baseScale * 0.7; // Diminuir 30% da proporção
+
+        // Aplicar escala em todas as dimensões
+        int scaledWidth = (int)(originalWidth * scale);
+        int scaledHeight = (int)(originalHeight * scale);
+        int scaledPadding = (int)(originalPadding * scale);
+        int scaledStrokeWidth = Math.Max(1, (int)(originalThickStrokeWidth * scale));
+        int scaledTextPadding = (int)(originalTextPadding * scale);
+
+        // Calcular dimensões totais escaladas
+        int scaledSvgWidth = scaledWidth + (2 * scaledPadding) + scaledStrokeWidth + scaledTextPadding + (int)(30 * scale);
+        int scaledSvgHeight = scaledHeight + (2 * scaledPadding) + scaledStrokeWidth + scaledTextPadding + (int)(20 * scale);
+
+        // Calcular posição para centralizar no viewBox
+        int offsetX = viewBoxX + (viewBoxWidth - scaledSvgWidth) / 2;
+        int offsetY = viewBoxY + (viewBoxHeight - scaledSvgHeight) / 2;
+
+        // Calcular posição final do retângulo (usando dimensões escaladas)
+        int rectX = offsetX + scaledPadding + (scaledStrokeWidth / 2);
+        int rectY = offsetY + scaledPadding + (scaledStrokeWidth / 2);
+
+        // Criar SVG com viewBox fixo
+        var svgTeste = new XElement("svg",
+            new XAttribute("viewBox", $"{viewBoxX} {viewBoxY} {viewBoxWidth} {viewBoxHeight}"),
+            new XAttribute("width", viewBoxWidth),
+            new XAttribute("height", viewBoxHeight));
+
+        // Adicionar elementos usando as dimensões e posições escaladas
+        svgTeste.Add(BackgroundCut(rectX, rectY, scaledWidth, scaledHeight, svg.IsLandscape, Convert.ToInt32(scale)));
+        svgTeste.Add(BorderCut(rectX, rectY, rectX + scaledWidth, rectY + scaledHeight, svg, Convert.ToInt32(scale)));
+
+        return svgTeste;
     }
 }
 
