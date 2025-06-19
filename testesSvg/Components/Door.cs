@@ -59,6 +59,24 @@ public static class Door
     //    HingeSku = "hinge"
     //};
 
+    //DobradicaMin CINCO FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "20000",
+    //    Height = "200001",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMax CINCO FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "100000",
+    //    Height = "270000",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
 
     public static IEnumerable<XElement> Generate(int width, int height, string doorItens)
     {
@@ -74,39 +92,40 @@ public static class Door
 
         var bigX1 = CalculateBigCircleX1Quin(width);
         var bigY1 = CalculateBigCircleY1(height);
-
+        var bigY2 = CalculateBigCircleY2Quin(height);
+        var bigY3 = CalculateBigCircleY3Quin();
+        var bigY4 = CalculateBigCircleY4Quin(height);
+        var bigY5 = CalculateBigCircleY5Quin(height);
 
         var x = CalculateSmallCircleX(width);
         var y1 = CalculateSmallCircleY1(height);
         var y2 = CalculateSmallCircleY2(height);
-        //var y3 = CalculateSmallCircleY3(height);
-        //var y4 = CalculateSmallCircleY4(height);
-
-        
-       
-        //var bigY2 = CalculateBigCircleY2(height);
-        //var bigY3 = CalculateBigCircleY3Quad(height);
-        //var bigY4 = CalculateBigCircleY4Quad(height);
-
-        //var y1Quad = CalculateSmallCircleY3Quad(height);
-        //var y2Quad = CalculateSmallCircleY4Quad(height);
-        //var y3Quad = CalculateSmallCircleY5Quad(height);
-        //var y4Quad = CalculateSmallCircleY6Quad(height);
+        var y3 = CalculateSmallCircleY7Quin(height);
+        var y4 = CalculateSmallCircleY8Quin(height);
+        var y1Quin = CalculateSmallCircleY3Triple();
+        var y2Quin = CalculateSmallCircleY4Triple();
+        var y3Quin = CalculateSmallCircleY10Quin(height);
+        var y4Quin = CalculateSmallCircleY9Quin(height);
+        var y5Quin = CalculateSmallCircleY11Quin(height);
+        var y6Quin = CalculateSmallCircleY12Quin(height);
 
         return
             [
                Side([.. x], [.. y1], "door-small-circle-1"),
                Side([.. x], [.. y2], "door-small-circle-2"),
-               //Side([.. x], [.. y3], "door-small-circle-3"),
-               //Side([.. x], [.. y4], "door-small-circle-4"),
+               Side([.. x], [.. y3], "door-small-circle-3"),
+               Side([.. x], [.. y4], "door-small-circle-4"),
                Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               //Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
-               //Side([.. bigX1], [.. bigY3], "door-big-circle-3"),
-               //Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
-               //Side([.. x], [.. y1Quad], "door-small-circle-4"),
-               //Side([.. x], [.. y2Quad], "door-small-circle-4"),
-               //Side([.. x], [.. y3Quad], "door-small-circle-4"),
-               //Side([.. x], [.. y4Quad], "door-small-circle-4"),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+               BaseQuinPath([.. bigX1], [.. bigY3], "door-big-circle-3", false),
+               Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
+               Side([.. x], [.. y1Quin], "door-small-circle-4"),
+               Side([.. x], [.. y2Quin], "door-small-circle-4"),
+               Side([.. x], [.. y3Quin], "door-small-circle-4"),
+               Side([.. x], [.. y4Quin], "door-small-circle-4"),
+               Side([.. bigX1], [.. bigY5], "door-big-circle-5"),
+               Side([.. x], [.. y5Quin], "door-small-circle-5"),
+               Side([.. x], [.. y6Quin], "door-small-circle-6"),
             ];
     }
 
@@ -264,7 +283,89 @@ public static class Door
             };
     }
 
+    static List<double> CalculateSmallCircleY7Quin(int height)
+    {
+        return new List<double>
+            {
+              -0.25 * height - 240,
+              -0.25 * height - 252.75,
+              -0.25 * height - 262.0835,
+              -0.25 * height - 265.5,
+              -0.25 * height - 227.25,
+              -0.25 * height - 217.9165,
+              -0.25 * height - 214.5
+            };
+    }
 
+    static List<double> CalculateSmallCircleY8Quin(int height)
+    {
+        return new List<double>
+            {
+              -0.25 * height + 240,
+              -0.25 * height + 227.25,
+              -0.25 * height + 217.9165,
+              -0.25 * height + 214.5,
+              -0.25 * height + 252.75,
+              -0.25 * height + 262.0835,
+              -0.25 * height + 265.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY9Quin(int height)
+    {
+        return new List<double>
+            {
+              0.25 * height + 240,
+              0.25 * height + 227.25,
+              0.25 * height + 217.9165,
+              0.25 * height + 214.5,
+              0.25 * height + 252.75,
+              0.25 * height + 262.0835,
+              0.25 * height + 265.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY10Quin(int height)
+    {
+        return new List<double>
+            {
+              0.25* height - 240,
+              0.25* height - 252.75,
+              0.25* height - 262.0835,
+              0.25* height - 265.5,
+              0.25* height - 227.25,
+              0.25* height - 217.9165,
+              0.25* height - 214.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY11Quin(int height)
+    {
+        return new List<double>
+            {
+              0.5 * height - 1199.611,
+              0.5 * height - 1212.361,
+              0.5 * height - 1221.697,
+              0.5 * height - 1225.111,
+              0.5 * height - 1186.861,
+              0.5 * height - 1177.53,
+              0.5 * height - 1174.111
+            };
+    }
+
+    static List<double> CalculateSmallCircleY12Quin(int height)
+    {
+        return new List<double>
+            {
+              0.5 * height - 719.611,
+              0.5 * height - 732.361,
+              0.5 * height - 741.697,
+              0.5 * height - 745.111,
+              0.5 * height - 706.861,
+              0.5 * height - 697.53,
+              0.5 * height - 694.111
+            };
+    }
 
 
     static List<double> CalculateBigCircleX1(int width)
@@ -370,6 +471,69 @@ public static class Door
               -0.494375 * width + 76.25,
               -0.494375 * width + 12.1955,
               -0.494375 * width - 11.25
+            };
+    }
+
+    static List<double> CalculateBigCircleY2Quin(int height)
+    {
+        return new List<double>
+            {
+              -0.25 * height,
+              -0.25 * height - 87.5,
+              -0.25 * height - 151.554,
+              -0.25 * height - 175,
+              -0.25 * height + 87.5,
+              -0.25 * height + 151.554,
+              -0.25 * height + 175
+            };
+    }
+
+    static List<double> CalculateBigCircleY3Quin()
+    {
+        return new List<double>
+            {
+              -2.8412403E-06,
+              -87.5,
+              -151.55446,
+              -175,
+              -151.55444,
+              -87.49997,
+              1.2457746E-05,
+              1.8140227E-05,
+              87.50003,
+              151.55446,
+              175,
+              151.55441,
+              87.49996,
+              2.8412403E-06
+            };
+    }
+
+    static List<double> CalculateBigCircleY4Quin(int height)
+    {
+        return new List<double>
+            {
+              0.25 * height,
+              0.25 * height - 87.5,
+              0.25 * height - 151.554,
+              0.25 * height - 175,
+              0.25 * height + 87.5,
+              0.25 * height + 151.554,
+              0.25 * height + 175
+            };
+    }
+
+    static List<double> CalculateBigCircleY5Quin(int height)
+    {
+        return new List<double>
+            {
+              0.5 * height - 959.611,
+              0.5 * height - 1047.111,
+              0.5 * height - 1111.166,
+              0.5 * height - 1134.611,
+              0.5 * height - 872.111,
+              0.5 * height - 808.059,
+              0.5 * height - 784.611
             };
     }
 
@@ -549,6 +713,64 @@ public static class Door
         return group;
     }
 
+    public static XElement BaseQuinPath(double[] x1, double[] y1, string name, bool isLandscape)
+    {
+
+        var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
+
+        AddSinglePath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[13]);
+        AddSinglePath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);
+        AddSinglePath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
+        AddSinglePath(group, x1[3], y1[3], x1[4], y1[4], x1[4], y1[4], x1[3], y1[3]);
+        AddSinglePath(group, x1[4], y1[4], x1[5], y1[5], x1[5], y1[5], x1[4], y1[4]);
+        AddSinglePath(group, x1[5], y1[5], x1[6], y1[6], x1[6], y1[7], x1[5], y1[5]);
+        AddSinglePath(group, x1[6], y1[6], x1[5], y1[8], x1[5], y1[8], x1[6], y1[7]);
+        AddSinglePath(group, x1[5], y1[8], x1[4], y1[9], x1[4], y1[9], x1[5], y1[8]);
+
+        AddSinglePath(group, x1[4], y1[9], x1[3], y1[10], x1[3], y1[10], x1[4], y1[9]);
+
+        AddSinglePath(group, x1[3], y1[10], x1[2], y1[11], x1[2], y1[11], x1[3], y1[10]);
+        AddSinglePath(group, x1[2], y1[11], x1[1], y1[12], x1[1], y1[12], x1[2], y1[11]);
+        AddSinglePath(group, x1[1], y1[12], x1[0], y1[0], x1[0], y1[13], x1[1], y1[12]);
+
+        var points = new[]
+        {
+            (x1[0], y1[0]),
+            (x1[1], y1[1]),
+            (x1[2], y1[2]),
+            (x1[3], y1[3]),
+            (x1[4], y1[4]),
+            (x1[5], y1[5]),
+            (x1[6], y1[6]),
+            (x1[5], y1[8]),
+            (x1[4], y1[9]),
+            (x1[3], y1[10]),
+            (x1[2], y1[11]),
+            (x1[1], y1[12])
+        };
+
+        var points1 = new[]
+        {
+            (x1[0], y1[13]),
+            (x1[1], y1[1]),
+            (x1[2], y1[2]),
+            (x1[3], y1[3]),
+            (x1[4], y1[4]),
+            (x1[5], y1[5]),
+            (x1[6], y1[7]),
+            (x1[5], y1[8]),
+            (x1[4], y1[9]),
+            (x1[3], y1[10]),
+            (x1[2], y1[11]),
+            (x1[1], y1[12])
+        };
+
+        AddCircleColorQuin(group, points);
+        AddCircleColorQuin(group, points1);
+
+        return group;
+    }
+
     static XElement SideBig(double[] x1, double[] y1, string name)
     {
 
@@ -631,6 +853,19 @@ public static class Door
         var ci = CultureInfo.InvariantCulture;
         string d13 = "M " + string.Join(" L ", points.Select(p =>
           $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString("0.####", ci)}")) + " Z";
+
+        group.Add(new XElement("path",
+            new XAttribute("d", d13),
+            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
+            new XAttribute("stroke", "black")
+        ));
+    }
+
+    static void AddCircleColorQuin(XElement group, (double, double)[] points)
+    {
+        var ci = CultureInfo.InvariantCulture;
+        string d13 = "M " + string.Join(" L ", points.Select(p =>
+          $"{p.Item1.ToString("0.####", ci)} {p.Item2.ToString().Replace(',', '.')}")) + " Z";
 
         group.Add(new XElement("path",
             new XAttribute("d", d13),

@@ -16,11 +16,11 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
-        //DobradicaMax TRES FUROS-- 
+        //DobradicaMax CINCO FUROS-- 
         var payload = new SvgRequest
         {
-            Width = "20000",
-            Height = "200001",
+            Width = "100000",
+            Height = "270000",
             JoinSystemType = "door",
             HingeSku = "hinge"
         };
@@ -81,10 +81,9 @@ public static class SvgComponentSide
     }
 
 
-    //TODO : terminar o SinglePath do door tres furos, testar circulos pequenos e grandes
-    //iniciar door com quatro furos
-    //iniciar door com 5 furos
-    //criar regra para quadrado e retangulo (todas as peças deverão ter essa regras)
+    //TODO : testar landscape no door
+    //criar a regra do isTicket true para criar viewbox nas dimensões da etiqueta
+    //criar regra para quadrado e retangulo (todas as peças deverão ter essa regras, criar um template de quadrado e retangulo fixo)
     //alterar logica de redimensionamento, se flag etiqueta estiver true criar o viewbox nas dimensões da etiqueta
     //validar logica da flag etiqueta com landscape para não perder a referencia
     //criar legenda para aparecer o codigo e nome da borda (alterar L1, L2 para B1, B2)
