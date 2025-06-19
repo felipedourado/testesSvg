@@ -1,131 +1,116 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Xml.Linq;
 
 namespace testesSvg.Components;
 
 public static class Door
 {
-    public static IEnumerable<XElement> Generate(int width, int height)
+    //DobradicaMin DOIS FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "20000",
+    //    Height = "30000",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMax DOIS FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "50000",
+    //    Height = "90000",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMin TRES FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "20000",
+    //    Height = "90001",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMax TRES FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "90000",
+    //    Height = "160000",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMin QUATRO FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "20000",
+    //    Height = "160001",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+    //DobradicaMax QUATRO FUROS-- ok
+    //var payload = new SvgRequest
+    //{
+    //    Width = "100000",
+    //    Height = "200000",
+    //    JoinSystemType = "door",
+    //    HingeSku = "hinge"
+    //};
+
+
+    public static IEnumerable<XElement> Generate(int width, int height, string doorItens)
     {
-        //if (height <= 1399)
-        //    return SideSingle(width, height);
+        if (height <= 9000 && string.IsNullOrEmpty(doorItens))
+            return Double(width, height);
+      
+        if (doorItens.Equals("triple"))
+            return Triple(width, height);
+       
+        if (doorItens.Equals("quad"))
+            return Quad(width, height);
 
-        //if (height <= 4999)
-        //    return SideDouble(width, height);
 
-        //// ----- Formula -----
-        //var x1 = CalculateSideX1(width);
+        var bigX1 = CalculateBigCircleX1Quin(width);
+        var bigY1 = CalculateBigCircleY1(height);
 
-        //var y1 = CalculateY1(height);
 
-        //var x2 = CalculateSideX2(width);
-
-        //var y2 = new List<double>
-        //    {
-        //        -2.4041262E-06,
-        //        -20.000004,
-        //        -19.999998,
-        //        -34.64102,
-        //        -34.641018,
-        //        -40.000004,
-        //        -39.999996,
-        //        -34.641014,
-        //        -19.999996,
-        //        -19.99999,
-        //        1.0927848E-06,
-        //        5.9010376E-06,
-        //        20.000006,
-        //        20.000011,
-        //        34.641018,
-        //        34.64102,
-        //        39.999996,
-        //        40.000004,
-        //        34.641006,
-        //        34.641014,
-        //        19.999989,
-        //        19.999994,
-        //        2.4041262E-06,
-        //    };
-
-        //var y3 = CalculateY3(height);
-
-        var x = CalculateSmallCircleX1(width);
+        var x = CalculateSmallCircleX(width);
         var y1 = CalculateSmallCircleY1(height);
         var y2 = CalculateSmallCircleY2(height);
-        var bigX1 = CalculateBigCircleX1(width);
-        var bigY1 = CalculateBigCircleY1(height);
-        var bigY2 = CalculateBigCircleY2(height);
+        //var y3 = CalculateSmallCircleY3(height);
+        //var y4 = CalculateSmallCircleY4(height);
 
-        //---------------------------------------------------------------------------------
-        var referenceArea = 1200 * 1200;
-        var currentArea = width * height;
+        
+       
+        //var bigY2 = CalculateBigCircleY2(height);
+        //var bigY3 = CalculateBigCircleY3Quad(height);
+        //var bigY4 = CalculateBigCircleY4Quad(height);
 
-        // Determina quantos grupos criar baseado na proporção de áreas
-        int groupCount = (int)Math.Floor(Math.Sqrt(currentArea / referenceArea));
+        //var y1Quad = CalculateSmallCircleY3Quad(height);
+        //var y2Quad = CalculateSmallCircleY4Quad(height);
+        //var y3Quad = CalculateSmallCircleY5Quad(height);
+        //var y4Quad = CalculateSmallCircleY6Quad(height);
 
-        // Garante no mínimo 1 grupo e no máximo 3 (como nos exemplos)
-        groupCount = Math.Min(Math.Max(groupCount, 1), 3);
-
-        //if (groupCount == 1)
-        //{
-        //    return
-        //        [
-        //            Side(xRight, yRight, "dowel-side-up-right"),
-        //            Side(xLeft, yRight, "dowel-side-up-left")
-        //        ];
-        //}
-        //else if (groupCount == 2)
-        //{
         return
             [
                Side([.. x], [.. y1], "door-small-circle-1"),
                Side([.. x], [.. y2], "door-small-circle-2"),
+               //Side([.. x], [.. y3], "door-small-circle-3"),
+               //Side([.. x], [.. y4], "door-small-circle-4"),
                Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
-               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
-                   //SideSinglePath([.. x1], y2.ToArray(), "dowel-side-middle-right"),
-                   //Side([.. x1], y3.ToArray(), "dowel-side-down-right"),
-
-                   //Side([.. x2], y1.ToArray(), "dowel-side-up-left"),
-                   //SideSinglePath([.. x2], [..y2], "dowel-side-middle-left"),
-                   //Side([.. x2], [..y3], "dowel-side-down-left")
+               //Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+               //Side([.. bigX1], [.. bigY3], "door-big-circle-3"),
+               //Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
+               //Side([.. x], [.. y1Quad], "door-small-circle-4"),
+               //Side([.. x], [.. y2Quad], "door-small-circle-4"),
+               //Side([.. x], [.. y3Quad], "door-small-circle-4"),
+               //Side([.. x], [.. y4Quad], "door-small-circle-4"),
             ];
-        //}
     }
 
-    public static List<double> CalculateSideX1(int width)
-    {
-        return new List<double>
-            {
-                0.5 * width - 50,
-                0.5 * width - 55.35895,
-                0.5 * width - 70,
-                0.5 * width - 90,
-                0.5 * width - 110,
-                0.5 * width - 124.64102,
-                0.5 * width - 130,
-            };
-    }
-
-    public static List<double> CalculateSideX2(int width)
-    {
-        return new List<double>
-            {
-                -0.5 * width + 130,
-                -0.5 * width + 124.64102,
-                -0.5 * width + 110,
-                -0.5 * width + 90,
-                -0.5 * width + 70,
-                -0.5 * width + 55.35895,
-                -0.5 * width + 50,
-            };
-    }
-
-    static List<double> CalculateSmallCircleX1(int width)
+    static List<double> CalculateSmallCircleX(int width)
     {
         return new List<double>
             {
@@ -166,6 +151,121 @@ public static class Door
               -0.5 * height + 1225.5
             };
     }
+
+    static List<double> CalculateSmallCircleY3(int height)
+    {
+        return new List<double>
+            {
+              0.5 * height - 1200,
+              0.5 * height - 1212.75,
+              0.5 * height - 1222.08365,
+              0.5 * height - 1225.5,
+              0.5 * height - 1187.25,
+              0.5 * height - 1177.91635,
+              0.5 * height - 1174.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY4(int height)
+    {
+        return new List<double>
+            {
+              0.5 * height - 720,
+              0.5 * height - 732.75,
+              0.5 * height - 742.08365,
+              0.5 * height - 745.5,
+              0.5 * height - 707.25,
+              0.5 * height - 697.9163,
+              0.5 * height - 694.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY3Triple()
+    {
+        return new List<double>
+            {
+              -240,
+              -252.75,
+              -262.08365,
+              -265.5,
+              -227.25,
+              -217.91637,
+              -214.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY4Triple()
+    {
+        return new List<double>
+            {
+              240,
+              227.25,
+              217.91637,
+              214.5,
+              252.75,
+              262.08365,
+              265.5
+            };
+    }
+
+    static List<double> CalculateSmallCircleY3Quad(int height)
+    {
+        return new List<double>
+            {
+              -0.166675 * height - 239.9,
+              -0.166675 * height - 252.65,
+              -0.166675 * height - 261.9837,
+              -0.166675 * height - 265.4,
+              -0.166675 * height - 227.15,
+              -0.166675 * height - 217.8165,
+              -0.166675 * height - 214.4
+            };
+    }
+
+    static List<double> CalculateSmallCircleY4Quad(int height)
+    {
+        return new List<double>
+            {
+              -0.166675 * height + 240.1,
+              -0.166675 * height + 227.35,
+              -0.166675 * height + 218.0163,
+              -0.166675 * height + 214.6,
+              -0.166675 * height + 252.85,
+              -0.166675 * height + 262.1835,
+              -0.166675 * height + 265.6
+            };
+    }
+
+    static List<double> CalculateSmallCircleY5Quad(int height)
+    {
+        return new List<double>
+            {
+              0.16665 * height - 239.7,
+              0.16665 * height - 252.45,
+              0.16665 * height - 261.7835,
+              0.16665 * height - 265.2,
+              0.16665 * height - 226.95,
+              0.16665 * height - 217.6163,
+              0.16665 * height - 214.2
+            };
+    }
+
+    static List<double> CalculateSmallCircleY6Quad(int height)
+    {
+        return new List<double>
+            {
+              0.16665 * height + 240.3,
+              0.16665 * height + 227.55,
+              0.16665 * height + 218.2165,
+              0.16665 * height + 214.8,
+              0.16665 * height + 253.05,
+              0.16665 * height + 262.3837,
+              0.16665 * height + 265.8
+            };
+    }
+
+
+
 
     static List<double> CalculateBigCircleX1(int width)
     {
@@ -210,196 +310,162 @@ public static class Door
             };
     }
 
-    static List<double> CalculateY1(int height)
+    static List<double> CalculateBigCircleTriple()
     {
         return new List<double>
             {
-              -0.5 * height + 320,
-              -0.5 * height + 300,
-              -0.5 * height + 285.359,
-              -0.5 * height + 280,
-              -0.5 * height + 340,
-              -0.5 * height + 354.6409,
-              -0.5 * height + 360
+              -2.8412403E-06,
+              -87.5,
+              -151.55446,
+              -175,
+              -151.55444,
+              -87.49997,
+              1.2457746E-05,
+              1.8140227E-05,
+              87.50003,
+              151.55446,
+              151.55441,
+              87.49996,
+              2.8412403E-06,
+              175
             };
     }
 
-    static List<double> CalculateY3(int height)
+    static List<double> CalculateBigCircleY3Quad(int height)
     {
         return new List<double>
             {
-                 0.5 * height - 480,
-                 0.5 * height - 500,
-                 0.5 * height - 514.641,
-                 0.5 * height - 520,
-                 0.5 * height - 460,
-                 0.5 * height - 445.359,
-                 0.5 * height - 440
+              -0.166675 * height + 0.1,
+              -0.166675 * height - 87.4, 
+              -0.166675 * height - 151.4546, 
+              -0.166675 * height - 174.9,
+              -0.166675 * height + 87.6, 
+              -0.166675 * height + 151.6545,
+              -0.166675 * height + 175.1
             };
     }
 
-    //static IEnumerable<XElement> SideSingle(int width, int height)
-    //{
-    //    // ----- Formula -----
-    //    var x1 = new List<double>
-    //        {
-    //            0.5 * width - 35,
-    //            0.5 * width - 40.35895,
-    //            0.5 * width - 55,
-    //            0.5 * width - 75,
-    //            0.5 * width - 95,
-    //            0.5 * width - 109.64102,
-    //            0.5 * width -115,
-    //        };
-
-    //    var y1 = new List<double>
-    //        {
-    //          0.5 * height - 600.0000024041262,
-    //          0.5 * height - 620.000004,
-    //          0.5 * height - 619.999998,
-    //          0.5 * height - 634.64102,
-    //          0.5 * height - 634.641018,
-    //          0.5 * height - 640.000004,
-    //          0.5 * height - 639.999996,
-    //          0.5 * height - 634.641014,
-    //          0.5 * height - 619.999996,
-    //          0.5 * height - 619.99999,
-    //          0.5 * height - 599.9999989,
-    //          0.5 * height - 599.9999940989624,
-    //          0.5 * height - 579.999994,
-    //          0.5 * height - 579.999989,
-    //          0.5 * height - 565.358994,
-    //          0.5 * height - 565.35898,
-    //          0.5 * height - 560.000004,
-    //          0.5 * height - 559.999996,
-    //          0.5 * height - 565.358994,
-    //          0.5 * height - 565.358986,
-    //          0.5 * height - 580.000011,
-    //          0.5 * height - 580.000006,
-    //        };
-
-    //    var x2 = new List<double>
-    //        {
-    //            -0.5 * width + 115,
-    //            -0.5 * width + 109.64102,
-    //            -0.5 * width + 95,
-    //            -0.5 * width + 75,
-    //            -0.5 * width + 55,
-    //            -0.5 * width + 40.35895,
-    //            -0.5 * width + 35,
-    //        };
-
-
-    //    return
-    //      [
-    //         SideSinglePath([.. x1], [.. y1], "dowel-right"),
-    //               SideSinglePath([.. x2], [..y1], "dowel-left"),
-    //          ];
-    //}
-
-    static IEnumerable<XElement> SideDouble(int width, int height)
+    static List<double> CalculateBigCircleY4Quad(int height)
     {
-        // ----- Formula -----
-        var x1 = new List<double>
+        return new List<double>
             {
-              0.5 * width - 50,
-              0.5 * width - 55.35895,
-              0.5 * width - 70,
-              0.5 * width - 90,
-              0.5 * width - 110,
-              0.5 * width - 124.64102,
-              0.5 * width - 130,
-
+              0.16665 * height + 0.3,
+              0.16665 * height - 87.2,
+              0.16665 * height - 151.2545,
+              0.16665 * height - 174.7,
+              0.16665 * height + 87.8,
+              0.16665 * height + 151.8546,
+              0.16665 * height + 175.3
             };
+    }
 
-        var y1 = new List<double>
+    static List<double> CalculateBigCircleX1Quin(int width)
+    {
+        return new List<double>
             {
-                -0.5 * height + 280,
-                -0.5 * height + 260,
-                -0.5 * height + 245.35898,
-                -0.5 * height + 240,
-                -0.5 * height + 300,
-                -0.5 * height + 314.64102,
-                -0.5 * height + 320,
+              -0.494375 * width + 338.75,
+              -0.494375 * width + 315.3044,
+              -0.494375 * width + 251.25,
+              -0.494375 * width + 163.75,
+              -0.494375 * width + 76.25,
+              -0.494375 * width + 12.1955,
+              -0.494375 * width - 11.25
             };
+    }
 
-        var x2 = new List<double>
-            {
-                -0.5 * width + 130,
-                -0.5 * width + 124.64102,
-                -0.5 * width + 110,
-                -0.5 * width + 90,
-                -0.5 * width + 70,
-                -0.5 * width + 55.35895,
-                -0.5 * width + 50,
-            };
 
-        var y2 = new List<double>
-            {
-               0.5 * height - 460,
-               0.5 * height - 480,
-               0.5 * height - 494.641,
-               0.5 * height - 500,
-               0.5 * height - 440,
-               0.5 * height - 425.35898,
-               0.5 * height - 420,
-            };
+    static IEnumerable<XElement> Double(int width, int height)
+    {
+        var x = CalculateSmallCircleX(width);
+        var y1 = CalculateSmallCircleY1(height);
+        var y2 = CalculateSmallCircleY2(height);
+        var y3 = CalculateSmallCircleY3(height);
+        var y4 = CalculateSmallCircleY4(height);
+
+        var bigX1 = CalculateBigCircleX1(width);
+        var bigY1 = CalculateBigCircleY1(height);
+        var bigY2 = CalculateBigCircleY2(height);
 
         return
-          [
-               Side([.. x1], [.. y1], "dowel-up-right"),
-                   Side([.. x1], [..y2], "dowel-down-right"),
-                   Side([.. x2], [..y1], "dowel-up-left"),
-                   Side([.. x2], [..y2], "dowel-down-left"),
-              ];
+            [
+               Side([.. x], [.. y1], "door-small-circle-1"),
+               Side([.. x], [.. y2], "door-small-circle-2"),
+               Side([.. x], [.. y3], "door-small-circle-3"),
+               Side([.. x], [.. y4], "door-small-circle-4"),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+            ];
     }
 
+    static IEnumerable<XElement> Triple(int width, int height)
+    {
+        var x = CalculateSmallCircleX(width);
+        var y1 = CalculateSmallCircleY1(height);
+        var y2 = CalculateSmallCircleY2(height);
+        var y3 = CalculateSmallCircleY3(height);
+        var y4 = CalculateSmallCircleY4(height);
+
+        var bigX1 = CalculateBigCircleX1(width);
+        var bigY1 = CalculateBigCircleY1(height);
+        var bigY2 = CalculateBigCircleY2(height);
+        var bigY3 = CalculateBigCircleTriple();
+
+        var y1Triple = CalculateSmallCircleY3Triple();
+        var y2Triple = CalculateSmallCircleY4Triple();
+
+        return
+            [
+               Side([.. x], [.. y1], "door-small-circle-1"),
+               Side([.. x], [.. y2], "door-small-circle-2"),
+               Side([.. x], [.. y3], "door-small-circle-3"),
+               Side([.. x], [.. y4], "door-small-circle-4"),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+               BaseSinglePath([.. bigX1], [.. bigY3], "door-big-circle-3", false),
+               Side([.. x], [.. y1Triple], "door-small-circle-4"),
+               Side([.. x], [.. y2Triple], "door-small-circle-4"),
+            ];
+    }
+
+    static IEnumerable<XElement> Quad(int width, int height)
+    {
+        var x = CalculateSmallCircleX(width);
+        var y1 = CalculateSmallCircleY1(height);
+        var y2 = CalculateSmallCircleY2(height);
+        var y3 = CalculateSmallCircleY3(height);
+        var y4 = CalculateSmallCircleY4(height);
+
+        var bigX1 = CalculateBigCircleX1(width);
+        var bigY1 = CalculateBigCircleY1(height);
+        var bigY2 = CalculateBigCircleY2(height);
+        var bigY3 = CalculateBigCircleY3Quad(height);
+        var bigY4 = CalculateBigCircleY4Quad(height);
+
+        var y1Quad = CalculateSmallCircleY3Quad(height);
+        var y2Quad = CalculateSmallCircleY4Quad(height);
+        var y3Quad = CalculateSmallCircleY5Quad(height);
+        var y4Quad = CalculateSmallCircleY6Quad(height);
+
+        return
+            [
+               Side([.. x], [.. y1], "door-small-circle-1"),
+               Side([.. x], [.. y2], "door-small-circle-2"),
+               Side([.. x], [.. y3], "door-small-circle-3"),
+               Side([.. x], [.. y4], "door-small-circle-4"),
+               Side([.. bigX1], [.. bigY1], "door-big-circle-1"),
+               Side([.. bigX1], [.. bigY2], "door-big-circle-2"),
+               Side([.. bigX1], [.. bigY3], "door-big-circle-3"),
+               Side([.. bigX1], [.. bigY4], "door-big-circle-4"),
+               Side([.. x], [.. y1Quad], "door-small-circle-4"),
+               Side([.. x], [.. y2Quad], "door-small-circle-4"),
+               Side([.. x], [.. y3Quad], "door-small-circle-4"),
+               Side([.. x], [.. y4Quad], "door-small-circle-4"),
+            ];
+    }
+
+   
 
     static XElement Side(double[] x1, double[] y1, string name)
-    {
-
-        var group = new XElement("g", new XAttribute("name", name));
-
-        AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]); 
-        AddMinifixBaseQuadPath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]); 
-        AddMinifixBaseQuadPath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]); 
-        AddMinifixBaseQuadPath(group, x1[3], y1[3], x1[4], y1[2], x1[4], y1[2], x1[3], y1[3]); 
-        AddMinifixBaseQuadPath(group, x1[4], y1[2], x1[5], y1[1], x1[5], y1[1], x1[4], y1[2]); 
-        AddMinifixBaseQuadPath(group, x1[5], y1[1], x1[6], y1[0], x1[6], y1[0], x1[5], y1[1]); 
-
-        AddMinifixBaseQuadPath(group, x1[6], y1[0], x1[5], y1[4], x1[5], y1[4], x1[6], y1[0]); 
-        AddMinifixBaseQuadPath(group, x1[5], y1[4], x1[4], y1[5], x1[4], y1[5], x1[5], y1[4]); 
-        AddMinifixBaseQuadPath(group, x1[4], y1[5], x1[3], y1[6], x1[3], y1[6], x1[4], y1[5]); 
-        AddMinifixBaseQuadPath(group, x1[3], y1[6], x1[2], y1[5], x1[2], y1[5], x1[3], y1[6]); 
-        AddMinifixBaseQuadPath(group, x1[2], y1[5], x1[1], y1[4], x1[1], y1[4], x1[2], y1[5]); 
-        AddMinifixBaseQuadPath(group, x1[1], y1[4], x1[0], y1[0], x1[0], y1[0], x1[1], y1[4]); 
-
-
-        // ----- Décimo Terceiro Path -----
-        var points = new[]
-        {
-                (x1[0], y1[0]),
-                (x1[1], y1[1]),
-                (x1[2], y1[2]),
-                (x1[3], y1[3]),
-                (x1[4], y1[2]),
-                (x1[5], y1[1]),
-                (x1[6], y1[0]),
-                (x1[5], y1[4]),
-                (x1[4], y1[5]),
-                (x1[3], y1[6]),
-                (x1[2], y1[5]),
-                (x1[1], y1[4])
-            };
-
-        AddCircleColor(group, points);
-
-        // ----- Décimo Quarto Path -----
-        AddCircleColor(group, points);
-        return group;
-    }
-
-    static XElement SideBig(double[] x1, double[] y1, string name)
     {
 
         var group = new XElement("g", new XAttribute("name", name));
@@ -407,17 +473,14 @@ public static class Door
         AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]);
         AddMinifixBaseQuadPath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);
         AddMinifixBaseQuadPath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
-       
         AddMinifixBaseQuadPath(group, x1[3], y1[3], x1[4], y1[2], x1[4], y1[2], x1[3], y1[3]);
         AddMinifixBaseQuadPath(group, x1[4], y1[2], x1[5], y1[1], x1[5], y1[1], x1[4], y1[2]);
         AddMinifixBaseQuadPath(group, x1[5], y1[1], x1[6], y1[0], x1[6], y1[0], x1[5], y1[1]);
 
-        AddMinifixBaseQuadPath(group, x1[6], y1[0], x1[5], y1[5], x1[5], y1[5], x1[6], y1[0]);
-        AddMinifixBaseQuadPath(group, x1[5], y1[5], x1[4], y1[6], x1[4], y1[6], x1[5], y1[5]);
-        AddMinifixBaseQuadPath(group, x1[4], y1[6], x1[3], y1[6], x1[3], y1[6], x1[4], y1[6]);
-        
+        AddMinifixBaseQuadPath(group, x1[6], y1[0], x1[5], y1[4], x1[5], y1[4], x1[6], y1[0]);
+        AddMinifixBaseQuadPath(group, x1[5], y1[4], x1[4], y1[5], x1[4], y1[5], x1[5], y1[4]);
+        AddMinifixBaseQuadPath(group, x1[4], y1[5], x1[3], y1[6], x1[3], y1[6], x1[4], y1[5]);
         AddMinifixBaseQuadPath(group, x1[3], y1[6], x1[2], y1[5], x1[2], y1[5], x1[3], y1[6]);
-        
         AddMinifixBaseQuadPath(group, x1[2], y1[5], x1[1], y1[4], x1[1], y1[4], x1[2], y1[5]);
         AddMinifixBaseQuadPath(group, x1[1], y1[4], x1[0], y1[0], x1[0], y1[0], x1[1], y1[4]);
 
@@ -445,6 +508,94 @@ public static class Door
         AddCircleColor(group, points);
         return group;
     }
+
+    public static XElement BaseSinglePath(double[] x1, double[] y1, string name, bool isLandscape)
+    {
+
+        var group = new XElement("g", new XAttribute("name", name), isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
+
+        AddSinglePath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[12]); 
+        AddSinglePath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]); 
+        AddSinglePath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
+        AddSinglePath(group, x1[3], y1[3], x1[4], y1[4], x1[4], y1[4], x1[3], y1[3]); 
+        AddSinglePath(group, x1[4], y1[4], x1[5], y1[5], x1[5], y1[5], x1[4], y1[4]); 
+        AddSinglePath(group, x1[5], y1[5], x1[6], y1[6], x1[6], y1[7], x1[5], y1[5]); 
+        AddSinglePath(group, x1[6], y1[6], x1[5], y1[8], x1[5], y1[8], x1[6], y1[7]); 
+        AddSinglePath(group, x1[5], y1[8], x1[4], y1[9], x1[4], y1[9], x1[5], y1[8]); 
+        AddSinglePath(group, x1[4], y1[9], x1[3], y1[13], x1[3], y1[13], x1[4], y1[9]); 
+        AddSinglePath(group, x1[3], y1[13], x1[2], y1[10], x1[2], y1[10], x1[3], y1[13]); 
+        AddSinglePath(group, x1[2], y1[10], x1[1], y1[11], x1[1], y1[11], x1[2], y1[10]);
+        AddSinglePath(group, x1[1], y1[11], x1[0], y1[0], x1[0], y1[12], x1[1], y1[11]);
+
+        var points = new[]
+        {
+            (x1[0], y1[0]),
+            (x1[1], y1[1]),
+            (x1[2], y1[2]),
+            (x1[3], y1[3]),
+            (x1[4], y1[4]),
+            (x1[5], y1[5]),
+            (x1[6], y1[6]),
+            (x1[5], y1[8]),
+            (x1[4], y1[9]),
+            (x1[3], y1[13]),
+            (x1[2], y1[10]),
+            (x1[1], y1[11])
+        };
+        
+        AddCircleColor(group, points);
+        AddCircleColor(group, points);
+        
+        return group;
+    }
+
+    static XElement SideBig(double[] x1, double[] y1, string name)
+    {
+
+        var group = new XElement("g", new XAttribute("name", name));
+
+        AddMinifixBaseQuadPath(group, x1[0], y1[0], x1[1], y1[1], x1[1], y1[1], x1[0], y1[0]);
+        AddMinifixBaseQuadPath(group, x1[1], y1[1], x1[2], y1[2], x1[2], y1[2], x1[1], y1[1]);
+        AddMinifixBaseQuadPath(group, x1[2], y1[2], x1[3], y1[3], x1[3], y1[3], x1[2], y1[2]);
+
+        AddMinifixBaseQuadPath(group, x1[3], y1[3], x1[4], y1[2], x1[4], y1[2], x1[3], y1[3]);
+        AddMinifixBaseQuadPath(group, x1[4], y1[2], x1[5], y1[1], x1[5], y1[1], x1[4], y1[2]);
+        AddMinifixBaseQuadPath(group, x1[5], y1[1], x1[6], y1[0], x1[6], y1[0], x1[5], y1[1]);
+
+        AddMinifixBaseQuadPath(group, x1[6], y1[0], x1[5], y1[5], x1[5], y1[5], x1[6], y1[0]);
+        AddMinifixBaseQuadPath(group, x1[5], y1[5], x1[4], y1[6], x1[4], y1[6], x1[5], y1[5]);
+        AddMinifixBaseQuadPath(group, x1[4], y1[6], x1[3], y1[6], x1[3], y1[6], x1[4], y1[6]);
+
+        AddMinifixBaseQuadPath(group, x1[3], y1[6], x1[2], y1[5], x1[2], y1[5], x1[3], y1[6]);
+
+        AddMinifixBaseQuadPath(group, x1[2], y1[5], x1[1], y1[4], x1[1], y1[4], x1[2], y1[5]);
+        AddMinifixBaseQuadPath(group, x1[1], y1[4], x1[0], y1[0], x1[0], y1[0], x1[1], y1[4]);
+
+
+        // ----- Décimo Terceiro Path -----
+        var points = new[]
+        {
+                (x1[0], y1[0]),
+                (x1[1], y1[1]),
+                (x1[2], y1[2]),
+                (x1[3], y1[3]),
+                (x1[4], y1[2]),
+                (x1[5], y1[1]),
+                (x1[6], y1[0]),
+                (x1[5], y1[4]),
+                (x1[4], y1[5]),
+                (x1[3], y1[6]),
+                (x1[2], y1[5]),
+                (x1[1], y1[4])
+            };
+
+        AddCircleColor(group, points);
+
+        // ----- Décimo Quarto Path -----
+        AddCircleColor(group, points);
+        return group;
+    }
+
     static void AddMinifixBaseQuadPath(XElement group, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
     {
         var ci = CultureInfo.InvariantCulture;
@@ -452,6 +603,21 @@ public static class Door
                   $"L {x2.ToString("0.####", ci)} {y2.ToString("0.####", ci)} " +
                   $"L {x3.ToString("0.####", ci)} {y3.ToString("0.####", ci)} " +
                   $"L {x4.ToString("0.####", ci)} {y4.ToString("0.####", ci)} Z";
+
+        group.Add(new XElement("path",
+            new XAttribute("d", d),
+            new XAttribute("style", "fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:4;"),
+            new XAttribute("stroke", "black")
+        ));
+    }
+
+    static void AddSinglePath(XElement group, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+    {
+        var ci = CultureInfo.InvariantCulture;
+        string d = $"M {x1.ToString("0.####", ci)} {y1.ToString().Replace(',', '.')} " +
+                  $"L {x2.ToString("0.####", ci)} {y2.ToString().Replace(',', '.')} " +
+                  $"L {x3.ToString("0.####", ci)} {y3.ToString().Replace(',', '.')} " +
+                  $"L {x4.ToString("0.####", ci)} {y4.ToString().Replace(',', '.')} Z";
 
         group.Add(new XElement("path",
             new XAttribute("d", d),

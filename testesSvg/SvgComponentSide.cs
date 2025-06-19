@@ -2,6 +2,7 @@
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 using testesSvg.Components;
 
@@ -15,30 +16,38 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
-        ////DobradicaMin DOIS FUROS-- 
+        //DobradicaMax TRES FUROS-- 
+        var payload = new SvgRequest
+        {
+            Width = "20000",
+            Height = "200001",
+            JoinSystemType = "door",
+            HingeSku = "hinge"
+        };
+
         //var payload = new SvgRequest
         //{
         //    Width = "20000",
-        //    Height = "30000",
+        //    Height = "160001",
         //    JoinSystemType = "door",
         //    HingeSku = "hinge"
         //};
 
-        //PecaRebaixoMinifixMinParafuso --OK
-        var payload = new SvgRequest
-        {
-            Width = "12000",
-            Height = "20000",
-            Thickness = "700",
-            Offset = "0",
-            JoinSystemType = "minifix",
-            Type = "Side",
-            IsLandscape = true,
-            IsBorderRight = true,
-            IsBorderLeft = true,
-            IsBorderTop = true,
-            IsBorderBottom = true
-        };
+        ////PecaRebaixoMinifixMinParafuso --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "12000",
+        //    Height = "20000",
+        //    Thickness = "700",
+        //    Offset = "0",
+        //    JoinSystemType = "minifix",
+        //    Type = "Side",
+        //    IsLandscape = true,
+        //    IsBorderRight = true,
+        //    IsBorderLeft = true,
+        //    IsBorderTop = true,
+        //    IsBorderBottom = true
+        //};
 
         //var payload = new SvgRequest
         //{
@@ -51,9 +60,36 @@ public static class SvgComponentSide
         //    IsBorderTop = true
         //};
 
+        //PecaRebaixoMinifixMinParafuso --OK
+        //var payload = new SvgRequest
+        //{
+        //    Width = "60000",
+        //    Height = "60000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "None",
+        //    Type = "Side",
+        //    IsLandscape = false,
+        //    IsBorderRight = false,
+        //    IsBorderLeft = false,
+        //    IsBorderTop = false,
+        //    IsBorderBottom = false
+        //};
+
         string svgXml = GenerateSvgFromJson(payload);
         return svgXml;
     }
+
+
+    //TODO : terminar o SinglePath do door tres furos, testar circulos pequenos e grandes
+    //iniciar door com quatro furos
+    //iniciar door com 5 furos
+    //criar regra para quadrado e retangulo (todas as peças deverão ter essa regras)
+    //alterar logica de redimensionamento, se flag etiqueta estiver true criar o viewbox nas dimensões da etiqueta
+    //validar logica da flag etiqueta com landscape para não perder a referencia
+    //criar legenda para aparecer o codigo e nome da borda (alterar L1, L2 para B1, B2)
+
+
 
     static string GenerateSvgFromJson(SvgRequest json)
     {
@@ -62,6 +98,21 @@ public static class SvgComponentSide
 
         if (string.IsNullOrEmpty(json.JoinSystemType))
             return GenerateRectangleSvg(json);
+
+        string doorItens = string.Empty;
+
+        if (!string.IsNullOrEmpty(json.JoinSystemType) && json.JoinSystemType.Equals("door")) 
+        {
+            var heightDouble = height / 10.0;
+
+            if (heightDouble >= 9000.1 && heightDouble < 1600.1)
+                doorItens = "triple";
+
+            if (heightDouble >= 1600.1 && heightDouble < 2000.1)
+                doorItens = "quad";
+
+            doorItens = "quin";
+        }
 
         //int width = Convert.ToInt32(json.Width);
         //int height = Convert.ToInt32(json.Height);
@@ -129,7 +180,6 @@ public static class SvgComponentSide
                 svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
         }
 
-
         int? dadoThickness = !string.IsNullOrEmpty(json.Thickness) ? Convert.ToInt32(json.Thickness) : null;
 
         if (dadoThickness is not null)
@@ -171,7 +221,6 @@ public static class SvgComponentSide
                     //add regra um furo, dois furos
                     svg.Add(Minifix.GenerateSide(viewBoxWidth, viewBoxHeight, json.IsLandscape));
                 }
-
             }
             if (json.JoinSystemType.Equals("minifixanddowels"))
             {
@@ -192,7 +241,7 @@ public static class SvgComponentSide
             }
             if (json.JoinSystemType.Equals("door"))
             {
-                svg.Add(Door.Generate(viewBoxWidth, viewBoxHeight));
+                svg.Add(Door.Generate(viewBoxWidth, viewBoxHeight, doorItens));
             }
 
         }
@@ -388,6 +437,57 @@ public static class SvgComponentSide
         svgElement.SetAttributeValue("transform", null);
 
         return svgDoc.Declaration + svgDoc.ToString();
+    }
+
+
+    static string RedimensionarSvg(string svgContent, double novoX, double novoY, double novaLargura, double novaAltura, string unidade = "mm")
+    {
+        try
+        {
+            // Carregar o SVG como XML
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(svgContent);
+
+            XmlElement svgElement = doc.DocumentElement;
+
+            // Obter viewBox original
+            string viewBoxOriginal = svgElement.GetAttribute("viewBox");
+            if (string.IsNullOrEmpty(viewBoxOriginal))
+            {
+                throw new ArgumentException("SVG deve ter um atributo viewBox");
+            }
+
+            // Parse do viewBox: "minX minY width height"
+            string[] viewBoxValues = viewBoxOriginal.Split(' ');
+            if (viewBoxValues.Length != 4)
+            {
+                throw new ArgumentException("viewBox deve ter 4 valores");
+            }
+
+            double minX = double.Parse(viewBoxValues[0]);
+            double minY = double.Parse(viewBoxValues[1]);
+            double larguraViewBox = double.Parse(viewBoxValues[2]);
+            double alturaViewBox = double.Parse(viewBoxValues[3]);
+
+            // Definir as novas dimensões e posição
+            svgElement.SetAttribute("x", $"{novoX}{unidade}");
+            svgElement.SetAttribute("y", $"{novoY}{unidade}");
+            svgElement.SetAttribute("width", $"{novaLargura}{unidade}");
+            svgElement.SetAttribute("height", $"{novaAltura}{unidade}");
+
+            // Manter o viewBox original para preservar as proporções do conteúdo
+            svgElement.SetAttribute("viewBox", viewBoxOriginal);
+
+            // Aplicar preserveAspectRatio para manter proporções e centralizar
+            // "xMidYMid meet" mantém as proporções e centraliza o conteúdo
+            svgElement.SetAttribute("preserveAspectRatio", "xMidYMid meet");
+
+            return doc.OuterXml;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao redimensionar SVG: {ex.Message}", ex);
+        }
     }
 
 

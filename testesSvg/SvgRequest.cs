@@ -16,6 +16,10 @@ public class SvgRequest
     public bool IsBorderRight { get; set; }
     public bool IsLandscape { get; set; }
 
+    public string WidthLabel { get; set; }
+    public string HeightLabel { get; set; }
+    public bool IsTicket { get; set; }
+
     public bool IsAnyBorderValid() => IsBorderBottom || IsBorderTop || IsBorderLeft || IsBorderRight;
     
 }
