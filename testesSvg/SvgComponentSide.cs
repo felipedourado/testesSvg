@@ -18,10 +18,38 @@ public static class SvgComponentSide
     {
         var payload = new SvgRequest
         {
-            Width = "500",
-            Height = "500",
-            IsTicket = true
+            Width = "300",
+            Height = "100",
+            IsTicket = true,
+            IsBorderBottom = true,
+            BorderBottomLabel = "5056158",
+            WidthLabel = "300",
+            HeightLabel = "100",
+            IsBorderLeft = true,
+            BorderLeftLabel = "5056158",
+            IsBorderRight = true,
+            BorderRightLabel = "5056158",
+            IsBorderTop = true,
+            BorderTopLabel = "5056158"
         };
+
+        //quadrado
+        //var payload = new SvgRequest
+        //{
+        //    Width = "300",
+        //    Height = "300",
+        //    IsTicket = true,
+        //    IsBorderBottom = true,
+        //    BorderBottomLabel = "5056158",
+        //    WidthLabel = "300",
+        //    HeightLabel = "300",
+        //    IsBorderLeft = true,
+        //    BorderLeftLabel = "5056158",
+        //    IsBorderRight = true,
+        //    BorderRightLabel = "5056158",
+        //    IsBorderTop = true,
+        //    BorderTopLabel = "5056158"
+        //};
 
         ////PecaRebaixoMinifixMinParafuso --OK
         //var payload = new SvgRequest
@@ -70,14 +98,12 @@ public static class SvgComponentSide
         return svgXml;
     }
 
-
-    //criar a regra do isTicket true para criar viewbox nas dimensões da etiqueta
-    //validar espaço utilizado para ter mais margem no topo
+    //aguardando validação dos tamanhos pre-setados para quadrado e retangulo para corte e borda
+    //trazer a logica do landscape para o isticket true para saber onde vai bordear corretamente
+    //iniciar pre-set para vbone
     //criar regra para quadrado e retangulo (todas as peças deverão ter essa regras, criar um template de quadrado e retangulo fixo)
-    //alterar logica de redimensionamento, se flag etiqueta estiver true criar o viewbox nas dimensões da etiqueta
     //validar logica da flag etiqueta com landscape para não perder a referencia
     //criar legenda para aparecer o codigo e nome da borda (alterar L1, L2 para B1, B2)
-
 
 
     static string GenerateSvgFromJson(SvgRequest json)
@@ -90,7 +116,7 @@ public static class SvgComponentSide
 
         string doorItens = string.Empty;
 
-        if (!string.IsNullOrEmpty(json.JoinSystemType) && json.JoinSystemType.Equals("door")) 
+        if (!string.IsNullOrEmpty(json.JoinSystemType) && json.JoinSystemType.Equals("door"))
         {
             var heightDouble = height / 10.0;
 
@@ -138,8 +164,8 @@ public static class SvgComponentSide
            new XAttribute("viewBox", FormatViewBox(expandedViewBox)),
            new XAttribute("width", w),
            new XAttribute("height", h)
-           , Label.Height(w, h)
-           , Label.Width(w, h)
+           , Label.HeightSystemType(w, h)
+           , Label.WidthSystemType(w, h)
            , CreateBackgroundPath(viewBox.X, viewBox.Y, json.IsLandscape)
        );
 
@@ -240,7 +266,7 @@ public static class SvgComponentSide
         svg.Add(Label.Footer(expandedViewBox.Height, expandedViewBox.Y));
 
         return svg.ToString();
-    
+
     }
 
     static XElement CreateOuterBackgroundPath(int viewBoxX, int viewBoxY)
@@ -374,8 +400,6 @@ public static class SvgComponentSide
         return svgDoc.Declaration + svgDoc.ToString();
     }
 
-
-    //x 54, y 32, w 41, h 20
     static string RedimensionarSvg(string svgContent, double novoX, double novoY, double novaLargura, double novaAltura, string unidade = "mm")
     {
         try
@@ -425,7 +449,6 @@ public static class SvgComponentSide
             throw new Exception($"Erro ao redimensionar SVG: {ex.Message}", ex);
         }
     }
-
 
     static ViewBoxData CalculateViewBox(int width, int height, bool isLandscape)
     {
@@ -563,7 +586,7 @@ public static class SvgComponentSide
         int fontSize = Math.Max(8, viewBoxHeight / 30);
 
         int textX = viewBoxX + (viewBoxWidth / 2);
-       
+
         int marginDistance = (int)(viewBoxHeight * 0.08);
         int textY = (viewBoxY + viewBoxHeight) - marginDistance;
 
@@ -591,12 +614,10 @@ public static class SvgComponentSide
 
 
     //-------------------------------------------------
-
-
     static string GenerateRectangleSvg(SvgRequest svg)
     {
         if (svg.IsTicket)
-            TicketView1(svg);
+            TicketView(svg);
 
         int width = Convert.ToInt32(svg.Width);
         int height = Convert.ToInt32(svg.Height);
@@ -629,7 +650,16 @@ public static class SvgComponentSide
           new XAttribute("width", viewBoxWidth),
           new XAttribute("height", viewBoxHeight));
 
-        svgTeste.Add(BackgroundCut(rectX, rectY, width, height, svg.IsLandscape, squareViewBoxSize));
+        var rectBox = new ViewBoxData
+        {
+            Height = height,
+            Width = width,
+            X = rectX,
+            Y = rectY,
+            IsLandscape = svg.IsLandscape
+        };
+
+        svgTeste.Add(BackgroundCut(rectBox, squareViewBoxSize));
         svgTeste.Add(BorderCut(rectX, rectY, rectX + width, rectY + height, svg, squareViewBoxSize));
 
         svgTeste.Add(CreateTopWidthText(rectX, rectY, width, height, viewBoxWidth, viewBoxHeight, svg.IsLandscape));
@@ -670,11 +700,11 @@ public static class SvgComponentSide
         return svgTeste.ToString();
     }
 
-    static XElement BackgroundCut(int rectX, int rectY, int width, int height, bool isLandscape, int squareViewBoxSize)
+    static XElement BackgroundCut(ViewBoxData rectBox, int squareViewBoxSize, bool? isTicket = null)
     {
         XAttribute transformAttribute = null;
 
-        if (isLandscape)
+        if (rectBox.IsLandscape)
         {
             // Calculate the center of the square viewBox
             double viewBoxCenter = squareViewBoxSize / 2.0;
@@ -686,27 +716,29 @@ public static class SvgComponentSide
 
         var group = new XElement("g", new XAttribute("name", "background"), transformAttribute);
 
-        int x1 = rectX;
-        int y1 = rectY;
-        int x2 = rectX + width;
-        int y2 = rectY;
-        int x3 = rectX + width;
-        int y3 = rectY + height;
-        int x4 = rectX;
-        int y4 = rectY + height;
+        int x1 = rectBox.X;
+        int y1 = rectBox.Y;
+        int x2 = rectBox.X + rectBox.Width;
+        int y2 = rectBox.Y;
+        int x3 = rectBox.X + rectBox.Width;
+        int y3 = rectBox.Y + rectBox.Height;
+        int x4 = rectBox.X;
+        int y4 = rectBox.Y + rectBox.Height;
 
         string pathData = $"M {x1} {y1} L {x2} {y2} L {x3} {y3} L {x4} {y4} Z";
 
+        var valueStroke = isTicket.HasValue && isTicket.Value ? "0.3" : "10";
+
         group.Add(new XElement("path",
              new XAttribute("d", pathData),
-             new XAttribute("style", "fill:none;stroke-width:10;"),
+             new XAttribute("style", $"fill:none;stroke-width:{valueStroke};"),
              new XAttribute("stroke", "black")
          ));
 
         return group;
     }
 
-    static XElement BorderCut(int x1, int y1, int x2, int y2, SvgRequest svg, int squareViewBoxSize)
+    static XElement BorderCut(int x1, int y1, int x2, int y2, SvgRequest svg, int squareViewBoxSize, bool? isTicket = null)
     {
         XAttribute transformAttribute = null;
 
@@ -723,9 +755,12 @@ public static class SvgComponentSide
         var bordergroup = new XElement("g", new XAttribute("name", "border"), transformAttribute);
 
         // Estilo padrão
-        string defaultStyle = "fill:none;stroke:#666;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;";
+        var defaultStroke = isTicket.HasValue && isTicket.Value ? "0.3" : "10";
+        var highlightStroke = isTicket.HasValue && isTicket.Value ? "1" : "30";
+
+        string defaultStyle = $"fill:none;stroke:#666;stroke-width:{defaultStroke};stroke-linejoin:round;stroke-dasharray:none;";
         // Estilo em destaque
-        string highlightStyle = "fill:none;stroke:#000000;stroke-width:30;";
+        string highlightStyle = $"fill:none;stroke:#000000;stroke-width:{highlightStroke};";
 
         var borders = new[]
         {
@@ -831,58 +866,6 @@ public static class SvgComponentSide
         return topWidthGroup;
     }
 
-    //static XElement CreateLeftHeightText(int rectX, int rectY, int width, int height, int viewBoxWidth, int viewBoxHeight, bool isLandscape)
-    //{
-    //    // Calculate the center point for rotation
-    //    int centerX = viewBoxWidth / 2;
-    //    int centerY = viewBoxHeight / 2;
-    //    string text = isLandscape ? width.ToString() : height.ToString();
-
-    //    // Calculate font size based on viewBox height (responsive sizing)
-    //    int fontSize = Math.Max(10, viewBoxHeight / 30); // Minimum 10px, scales with height
-    //    int textMargin = (int)(viewBoxHeight * 0.02); // 2% of viewBox height as margin from rectangle
-
-    //    int textX, textY;
-
-    //    if (isLandscape) // -90 degrees rotation
-    //    {
-    //        // Com rotação -90°, o lado esquerdo do retângulo original fica na parte de baixo
-    //        // O texto deve ficar à esquerda do retângulo visualmente rotacionado
-    //        // Isso significa posicionar à esquerda do centro de rotação menos metade da altura original
-    //        textX = centerX - (height / 2) - textMargin; // À esquerda do retângulo rotacionado
-    //        textY = centerY; // Centralizado verticalmente no viewBox
-    //    }
-    //    else // No rotation (0 degrees)
-    //    {
-    //        // Standard positioning for non-rotated rectangle
-    //        textX = rectX - textMargin; // Position to the left of the rectangle
-    //        textY = rectY + (height / 2); // Center vertically along the rectangle height
-    //    }
-
-    //    var leftHeightGroup = new XElement("g",
-    //        new XAttribute("name", "left-height-label")
-    //    );
-
-    //    // Adjust text alignment based on rotation
-    //    string textAnchor = "end"; // Sempre alinhado à direita (longe do retângulo)
-    //    string dominantBaseline = "middle"; // Sempre centralizado verticalmente
-
-    //    var textElement = new XElement("text",
-    //        new XAttribute("x", textX),
-    //        new XAttribute("y", textY),
-    //        new XAttribute("text-anchor", textAnchor),
-    //        new XAttribute("dominant-baseline", dominantBaseline),
-    //        new XAttribute("font-family", "Arial, sans-serif"),
-    //        new XAttribute("font-size", fontSize),
-    //        new XAttribute("fill", "#666666"),
-    //        text
-    //    );
-
-    //    leftHeightGroup.Add(textElement);
-    //    return leftHeightGroup;
-    //}
-
-
     static XElement CreateLeftHeightText(int rectX, int rectY, int width, int height, int viewBoxWidth, int viewBoxHeight, bool isLandscape)
     {
         // Calculate the center point for rotation
@@ -941,41 +924,6 @@ public static class SvgComponentSide
         leftHeightGroup.Add(textElement);
         return leftHeightGroup;
     }
-
-
-    //static XElement CreateLeftC1Label(int rectX, int rectY, int width, int height, int viewBoxHeight)
-    //{
-    //    // Calculate positioning above the height text (to the left of the rectangle)
-    //    int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
-    //    int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
-
-    //    int textX = rectX - textMargin; // Same X position as height text
-    //    int heightTextY = rectY + (height / 2); // Y position of height text
-    //    int textY = heightTextY - labelSpacing; // Position above the height text
-
-    //    // Calculate font size based on viewBox height (slightly smaller than height text)
-    //    int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
-
-    //    var leftC1Group = new XElement("g",
-    //        new XAttribute("name", "left-c1-label")
-    //    );
-
-    //    var textElement = new XElement("text",
-    //        new XAttribute("x", textX),
-    //        new XAttribute("y", textY),
-    //        new XAttribute("text-anchor", "end"), // Align text to the right (same as height text)
-    //        new XAttribute("dominant-baseline", "bottom"), // Align to bottom so it sits above height text
-    //        new XAttribute("font-family", "Arial, sans-serif"),
-    //        new XAttribute("font-size", fontSize),
-    //        new XAttribute("fill", "#333333"), // Slightly darker than height text
-    //        new XAttribute("font-weight", "bold"), // Make label bold
-    //        "C1"
-    //    );
-
-    //    leftC1Group.Add(textElement);
-
-    //    return leftC1Group;
-    //}
 
     static XElement CreateLeftC1Label(int viewBoxWidth, int viewBoxHeight)
     {
@@ -1042,49 +990,6 @@ public static class SvgComponentSide
         return topL1Group;
     }
 
-    //static XElement CreateRightC2Label(int rectX, int rectY, int width, int height, int viewBoxHeight, bool isLandscape)
-    //{
-    //    int textMargin = (int)(viewBoxHeight * 0.02); // Same margin as height text
-    //    int labelSpacing = (int)(viewBoxHeight * 0.035); // Additional spacing above height text
-    //    int fontSize = Math.Max(8, viewBoxHeight / 30); // Minimum 8px, scales with height
-
-    //    int textX, textY;
-
-    //    if (isLandscape)
-    //    {
-    //        // When rotated -90° (landscape), the visual "right" side is the bottom edge of the original rectangle
-    //        // After rotation, this becomes the right side visually
-    //        textX = rectX + width + textMargin; // To the right of the rectangle
-    //        textY = rectY + height - labelSpacing; // Near the bottom edge (which becomes right side after rotation)
-    //    }
-    //    else
-    //    {
-    //        // Portrait orientation (original logic)
-    //        textX = rectX + width + textMargin; // Position to the right of the rectangle
-    //        int heightTextY = rectY + (height / 2); // Y position of height text
-    //        textY = heightTextY - labelSpacing; // Position above the height text
-    //    }
-
-    //    var rightC2Group = new XElement("g",
-    //        new XAttribute("name", "right-c2-label")
-    //    );
-
-    //    var textElement = new XElement("text",
-    //        new XAttribute("x", textX),
-    //        new XAttribute("y", textY),
-    //        new XAttribute("text-anchor", "start"), // Align text to the left
-    //        new XAttribute("dominant-baseline", "bottom"), // Always use bottom baseline
-    //        new XAttribute("font-family", "Arial, sans-serif"),
-    //        new XAttribute("font-size", fontSize),
-    //        new XAttribute("fill", "#333333"), // Slightly darker than height text
-    //        new XAttribute("font-weight", "bold"), // Make label bold
-    //        "C2"
-    //    );
-
-    //    rightC2Group.Add(textElement);
-    //    return rightC2Group;
-    //}
-
     static XElement CreateRightC2Label(int viewBoxWidth, int viewBoxHeight)
     {
         // Calculate positioning at 80% of viewBox width (20% margin from right)
@@ -1148,99 +1053,16 @@ public static class SvgComponentSide
         return bottomL2Group;
     }
 
+    #region Ticket Print
+
     static XElement TicketView(SvgRequest svg)
     {
+        //quadrado 300 x 300
         //x 54, y 32, w 41, h 20
-        int viewBoxWidth = 41;
-        int viewBoxHeight = 20;
-        int viewBoxX = 54;
-        int viewBoxY = 32;
-
-        var svgTeste = new XElement("svg",
-          new XAttribute("viewBox", $"54 32 41 20"),
-          new XAttribute("width", 41),
-          new XAttribute("height", 20));
-
-        const int thickStrokeWidth = 1;
-        const int padding = 2;
-        const int textPadding = 3;
-
-        int availableWidth = viewBoxWidth - (2 * padding) - thickStrokeWidth - textPadding;
-        int availableHeight = viewBoxHeight - (2 * padding) - thickStrokeWidth - textPadding;
-
-        // Calculate viewBox as a square - use the larger dimension
-        int width = Math.Max(1, availableWidth - 5);
-        int height = Math.Max(1, availableHeight - 3);
-
-        // Calculate offset to center the background element
-        //int offsetX = (viewBoxWidth - originalSvgWidth) / 2;
-        //int offsetY = (viewBoxHeight - originalSvgHeight) / 2;
-
-        // Calculate rectangle position
-        int rectX = viewBoxX + padding + (thickStrokeWidth / 2);
-        int rectY = viewBoxY + padding + (thickStrokeWidth / 2);
-
-        var group = new XElement("g", new XAttribute("name", "background"));
-
-        int x1 = rectX;
-        int y1 = rectY;
-        int x2 = rectX + width;
-        int y2 = rectY;
-        int x3 = rectX + width;
-        int y3 = rectY + height;
-        int x4 = rectX;
-        int y4 = rectY + height;
-
-        string pathData = $"M {x1} {y1} L {x2} {y2} L {x3} {y3} L {x4} {y4} Z";
-
-        group.Add(new XElement("path",
-             new XAttribute("d", pathData),
-             new XAttribute("style", "fill:none;stroke-width:10;"),
-             new XAttribute("stroke", "black")
-         ));
-
-        svgTeste.Add(group);
-
-        var bordergroup = new XElement("g", new XAttribute("name", "border"));
-
-        // Estilo padrão
-        string defaultStyle = "fill:none;stroke:#666;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;";
-        // Estilo em destaque
-        string highlightStyle = "fill:none;stroke:#000000;stroke-width:30;";
-
-        var borders = new[]
-        {
-            new { Name = "top",     X1 = x1,     Y1 = y1,     X2 = x2, Y2 = y1,     Highlight = svg.IsBorderTop },
-            new { Name = "right",   X1 = x2, Y1 = y1,     X2 = x2, Y2 = y2, Highlight = svg.IsBorderRight },
-            new { Name = "bottom",  X1 = x2, Y1 = y2, X2 = x1,     Y2 = y2, Highlight = svg.IsBorderBottom },
-            new { Name = "left",    X1 = x1,     Y1 = y2, X2 = x1,     Y2 = y1,     Highlight = svg.IsBorderLeft }
-        };
-
-        //VALIDAR NO SOFTWARE DE ETIQUETA
-        foreach (var border in borders)
-        {
-            if (border.Highlight)
-                bordergroup.Add(new XElement("line",
-                    new XAttribute("x1", border.X1),
-                    new XAttribute("y1", border.Y1),
-                    new XAttribute("x2", border.X2),
-                    new XAttribute("y2", border.Y2),
-                    new XAttribute("style", border.Highlight ? highlightStyle : defaultStyle)
-                ));
-        }
-
-        svgTeste.Add(bordergroup);
-
-        return svgTeste;
-    }
-
-    static XElement TicketView1(SvgRequest svg)
-    {
-        //x 54, y 32, w 41, h 20
-        int viewBoxX = 54;
-        int viewBoxY = 32;
-        int viewBoxWidth = 41;
-        int viewBoxHeight = 20;
+        int viewBoxX = 49;
+        int viewBoxY = 31;
+        int viewBoxWidth = 48;
+        int viewBoxHeight = 37;
 
         int originalWidth = Convert.ToInt32(svg.Width);
         int originalHeight = Convert.ToInt32(svg.Height);
@@ -1261,21 +1083,24 @@ public static class SvgComponentSide
         // Aplicar escala em todas as dimensões
         int scaledWidth = (int)(originalWidth * scale);
         int scaledHeight = (int)(originalHeight * scale);
-        int scaledPadding = (int)(originalPadding * scale);
-        int scaledStrokeWidth = Math.Max(1, (int)(originalThickStrokeWidth * scale));
-        int scaledTextPadding = (int)(originalTextPadding * scale);
-
-        // Calcular dimensões totais escaladas
-        int scaledSvgWidth = scaledWidth + (2 * scaledPadding) + scaledStrokeWidth + scaledTextPadding + (int)(30 * scale);
-        int scaledSvgHeight = scaledHeight + (2 * scaledPadding) + scaledStrokeWidth + scaledTextPadding + (int)(20 * scale);
 
         // Calcular posição para centralizar no viewBox
-        int offsetX = viewBoxX + (viewBoxWidth - scaledSvgWidth) / 2;
-        int offsetY = viewBoxY + (viewBoxHeight - scaledSvgHeight) / 2;
+        // Centralizar apenas o retângulo principal (width x height) no viewBox
+        int centerX = viewBoxX + viewBoxWidth / 2;
+        int centerY = viewBoxY + viewBoxHeight / 2;
 
-        // Calcular posição final do retângulo (usando dimensões escaladas)
-        int rectX = offsetX + scaledPadding + (scaledStrokeWidth / 2);
-        int rectY = offsetY + scaledPadding + (scaledStrokeWidth / 2);
+        // Posição do retângulo centralizado
+        int rectX = centerX - scaledWidth / 2;
+        int rectY = centerY - scaledHeight / 2;
+
+        var rectBox = new ViewBoxData
+        {
+            Height = scaledHeight,
+            Width = scaledWidth,
+            X = rectX,
+            Y = rectY,
+            IsLandscape = svg.IsLandscape
+        };
 
         // Criar SVG com viewBox fixo
         var svgTeste = new XElement("svg",
@@ -1284,10 +1109,216 @@ public static class SvgComponentSide
             new XAttribute("height", viewBoxHeight));
 
         // Adicionar elementos usando as dimensões e posições escaladas
-        svgTeste.Add(BackgroundCut(rectX, rectY, scaledWidth, scaledHeight, svg.IsLandscape, Convert.ToInt32(scale)));
-        svgTeste.Add(BorderCut(rectX, rectY, rectX + scaledWidth, rectY + scaledHeight, svg, Convert.ToInt32(scale)));
+        svgTeste.Add(BackgroundCut(rectBox, Convert.ToInt32(scale), true));
+        svgTeste.Add(BorderCut(rectX, rectY, rectX + scaledWidth, rectY + scaledHeight, svg, Convert.ToInt32(scale), true));
+        svgTeste.Add(LabelTopWidthTicket(rectX, rectY, rectBox.Width, svg.WidthLabel));
+        svgTeste.Add(LabelLeftHeightTicket(rectX, rectY, rectBox.Height, svg.HeightLabel));
+
+        if (svg.IsBorderRight)
+            svgTeste.Add(LabelBorderRightTicket(rectX, rectY, rectBox.Height, svg.BorderRightLabel));
+        if (svg.IsBorderBottom)
+            svgTeste.Add(LabelBorderBottomTicket(rectX, rectY, rectBox.Width, rectBox.Height, viewBoxHeight, svg.BorderBottomLabel));
+        if (svg.IsBorderLeft)
+            svgTeste.Add(LabelBorderLeftTicket(rectX, rectY, rectBox.Height, svg.BorderLeftLabel));
+        if (svg.IsBorderTop)
+            svgTeste.Add(LabelBorderTopTicket(rectX, rectY, rectBox.Width, rectBox.Height, viewBoxHeight, svg.BorderTopLabel));
+
+
+        svgTeste.Add(LabelFooterTicket(rectX, rectY, rectBox.Width, rectBox.Height, viewBoxHeight));
 
         return svgTeste;
     }
+
+    static XElement LabelTopWidthTicket(int rectX, int rectY, int width, string widthLabel)
+    {
+        int textX, textY;
+
+        // Modo retrato: sem rotação
+        textX = rectX + (width / 2); // Centro horizontal do retângulo
+        textY = rectY + 3;  // Acima do retângulo com margem
+
+        // Criar o grupo SVG
+        var topWidthGroup = new XElement("g", new XAttribute("name", "width-label"));
+
+        // Criar o elemento de texto
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "bottom"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#666666"),
+            widthLabel
+        );
+
+        topWidthGroup.Add(textElement);
+        return topWidthGroup;
+    }
+
+    static XElement LabelLeftHeightTicket(int rectX, int rectY, int height, string heightLabel)
+    {
+        int textX = rectX - 1;
+        double margin = rectY + (height / 2.0);
+        string rotate = margin.ToString().Replace(',', '.');
+
+        double viewY = rectY + (height / 2.0) + 3.5;
+        string textY = viewY.ToString().Replace(',', '.');
+
+        var leftHeightGroup = new XElement("g", new XAttribute("name", "height-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#666666"),
+            new XAttribute("transform", $"rotate(-90 {textX} {rotate})"),
+            heightLabel
+        );
+
+        leftHeightGroup.Add(textElement);
+        return leftHeightGroup;
+    }
+
+    static XElement LabelBorderBottomTicket(int rectX, int rectY, int width, int height, int viewBoxHeight, string borderLabel)
+    {
+        int textMargin = (int)(viewBoxHeight * 0.02);
+        double labelSpacing = viewBoxHeight * 0.068;
+        int textX = rectX + (width / 2) + 1;
+        int rectBottomY = rectY + height;
+        double textY = rectBottomY + textMargin + labelSpacing;
+
+        var bottomL2Group = new XElement("g", new XAttribute("name", "border-bottom-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY.ToString().Replace(',', '.')),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "top"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            borderLabel
+        );
+
+        bottomL2Group.Add(textElement);
+        return bottomL2Group;
+    }
+
+    static XElement LabelBorderLeftTicket(int rectX, int rectY, int height, string labelText, int xOffset = 13)
+    {
+        int textX = rectX - xOffset;
+
+        // Adapta o Y dinamicamente conforme a altura
+        int textY = rectY + height + (height < 15 ? 7 : 1);
+
+        double rotateY = rectY + (height / 2.0);
+
+        var leftBorderLabelGroup = new XElement("g", new XAttribute("name", "border-left-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            new XAttribute("transform", $"rotate(-90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            labelText
+        );
+
+        leftBorderLabelGroup.Add(textElement);
+        return leftBorderLabelGroup;
+    }
+
+    static XElement LabelBorderRightTicket(int rectX, int rectY, int height, string labelText, int xOffset = 11)
+    {
+        int textX = rectX + xOffset; // ligeiramente à direita da borda
+        int textY = rectY - (height < 15 ? 13 : 1); // adaptativo
+
+        double rotateY = rectY + (height / 2.0);
+
+        var rightBorderLabelGroup = new XElement("g", new XAttribute("name", "border-right-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            new XAttribute("transform", $"rotate(90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            labelText
+        );
+
+        rightBorderLabelGroup.Add(textElement);
+        return rightBorderLabelGroup;
+    }
+
+    static XElement LabelBorderTopTicket(int rectX, int rectY, int width, int height, int viewBoxHeight, string labelText)
+    {
+        int textMargin = (int)(viewBoxHeight * 0.02);
+        int labelSpacing = (int)(viewBoxHeight * 0.035);
+
+        int textX = rectX + (width / 2) + 1;
+        int widthTextY = rectY - textMargin;
+        int textY = widthTextY - labelSpacing;
+
+        var topL1Group = new XElement("g", new XAttribute("name", "border-top-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "bottom"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            labelText
+        );
+
+        topL1Group.Add(textElement);
+
+        return topL1Group;
+    }
+
+    static XElement LabelFooterTicket(int rectX, int rectY, int width, int height, int viewBoxHeight)
+    {
+        // Calculate footer positioning
+        int textX = rectX + (width / 2) + 1;
+
+        double labelSpacing = height < 15 ? viewBoxHeight * 0.30 : viewBoxHeight * 0.19;
+        int rectBottomY = rectY + height;
+        double textY = rectBottomY + labelSpacing;
+
+        var footerGroup = new XElement("g", new XAttribute("name", "footer"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY.ToString().Replace(',', '.')),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "bottom"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "2"),
+            new XAttribute("fill", "#333333"),
+            "Face de Alinhamento"
+        );
+
+        footerGroup.Add(textElement);
+
+        return footerGroup;
+    }
+
+    #endregion
+
 }
 
