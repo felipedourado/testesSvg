@@ -800,5 +800,210 @@ namespace testesSvg.Components
 
         #endregion
 
+
+        #region TicketPrint
+        public static IEnumerable<XElement> GenerateSideForTicketView(ViewBoxData rectBox, double scale)
+        {
+            // Calcular as coordenadas proporcionais baseadas no rectBox
+            double[] x1 = CalculateSideX1ForTicketView(rectBox);
+            double[] y1 = CalculateSideY1ForTicketView(rectBox);
+
+            double[] x2 = CalculateSideX2ForTicketView(rectBox);
+            double[] y2 = CalculateSideY2ForTicketView(rectBox);
+
+            return new[]
+            {
+                SideForTicketView(x1, y1, "minifix-side-up-right", rectBox.IsLandscape, scale),
+                SideForTicketView(x1, y2, "minifix-side-down-right", rectBox.IsLandscape, scale),
+                SideForTicketView(x2, y1, "minifix-side-up-left", rectBox.IsLandscape, scale),
+                SideForTicketView(x2, y2, "minifix-side-down-left", rectBox.IsLandscape, scale)
+            };
+        }
+
+        static double[] CalculateSideX1ForTicketView(ViewBoxData rectBox)
+        {
+            // No SVG original: 
+            // - Quadrado vai de -1500 a 1500 (largura = 3000)
+            // - Minifix centro em x = 1425
+            // - Posição relativa: (1425 - (-1500)) / 3000 = 2925 / 3000 = 0.975
+
+            double squareLeft = rectBox.X;
+            double squareWidth = rectBox.Width;
+            double minifixCenterX = squareLeft + (squareWidth * 0.975);
+
+            // Aumentando o raio para ficar mais visível - usando 50 unidades para um quadrado de 3000
+            double scaledRadius = (squareWidth / 3000.0) * 50.0;
+
+            return new double[]
+            {
+            minifixCenterX + scaledRadius * 1.0,     // x[0] - ponto direito
+            minifixCenterX + scaledRadius * 0.866,   // x[1] 
+            minifixCenterX + scaledRadius * 0.5,     // x[2]
+            minifixCenterX,                          // x[3] - centro
+            minifixCenterX - scaledRadius * 0.5,     // x[4]
+            minifixCenterX - scaledRadius * 0.866,   // x[5]
+            minifixCenterX - scaledRadius * 1.0      // x[6] - ponto esquerdo
+            };
+        }
+
+        static double[] CalculateSideY1ForTicketView(ViewBoxData rectBox)
+        {
+            // No SVG original:
+            // - Quadrado vai de -1500 a 1500 (altura = 3000)  
+            // - Minifix centro em y = -1220
+            // - Posição relativa: (-1220 - (-1500)) / 3000 = 280 / 3000 = 0.0933
+
+            double squareTop = rectBox.Y;
+            double squareHeight = rectBox.Height;
+            double minifixCenterY = squareTop + (squareHeight * 0.0933);
+
+            // Aumentando o raio para ficar mais visível - usando 50 unidades para um quadrado de 3000
+            double scaledRadius = (squareHeight / 3000.0) * 50.0;
+
+            return new double[]
+            {
+            minifixCenterY,                          // y[0] - centro
+            minifixCenterY - scaledRadius * 0.5,     // y[1] - superior
+            minifixCenterY - scaledRadius * 0.866,   // y[2] - mais superior
+            minifixCenterY - scaledRadius * 1.0,     // y[3] - topo
+            minifixCenterY + scaledRadius * 0.5,     // y[4] - inferior  
+            minifixCenterY + scaledRadius * 0.866,   // y[5] - mais inferior
+            minifixCenterY + scaledRadius * 1.0      // y[6] - base
+            };
+        }
+
+        static double[] CalculateSideX2ForTicketView(ViewBoxData rectBox)
+        {
+            // No SVG original analisando o minifix-side-up-left:
+            // - Quadrado vai de -1500 a 1500 (largura = 3000)
+            // - Minifix centro em x = -1425 (valor médio dos pontos do minifix)
+            // - Posição relativa: (-1425 - (-1500)) / 3000 = 75 / 3000 = 0.025
+
+            double squareLeft = rectBox.X;
+            double squareWidth = rectBox.Width;
+            double minifixCenterX = squareLeft + (squareWidth * 0.025);
+
+            // Usando o mesmo raio proporcional que no método x1
+            double scaledRadius = (squareWidth / 3000.0) * 50.0;
+
+            return new double[]
+            {
+        minifixCenterX + scaledRadius * 1.0,     // x[0] - ponto direito
+        minifixCenterX + scaledRadius * 0.866,   // x[1] 
+        minifixCenterX + scaledRadius * 0.5,     // x[2]
+        minifixCenterX,                          // x[3] - centro
+        minifixCenterX - scaledRadius * 0.5,     // x[4]
+        minifixCenterX - scaledRadius * 0.866,   // x[5]
+        minifixCenterX - scaledRadius * 1.0      // x[6] - ponto esquerdo
+            };
+        }
+
+        static double[] CalculateSideY2ForTicketView(ViewBoxData rectBox)
+        {
+            // No SVG original analisando o minifix-side-up-left:
+            // - Quadrado vai de -1500 a 1500 (altura = 3000)  
+            // - Minifix centro em y = 1040 (valor médio dos pontos do minifix)
+            // - Posição relativa: (1040 - (-1500)) / 3000 = 2540 / 3000 = 0.8467
+
+            double squareTop = rectBox.Y;
+            double squareHeight = rectBox.Height;
+            double minifixCenterY = squareTop + (squareHeight * 0.8467);
+
+            // Usando o mesmo raio proporcional que no método y1
+            double scaledRadius = (squareHeight / 3000.0) * 50.0;
+
+            return new double[]
+            {
+        minifixCenterY,                          // y[0] - centro
+        minifixCenterY - scaledRadius * 0.5,     // y[1] - superior
+        minifixCenterY - scaledRadius * 0.866,   // y[2] - mais superior
+        minifixCenterY - scaledRadius * 1.0,     // y[3] - topo
+        minifixCenterY + scaledRadius * 0.5,     // y[4] - inferior  
+        minifixCenterY + scaledRadius * 0.866,   // y[5] - mais inferior
+        minifixCenterY + scaledRadius * 1.0      // y[6] - base
+            };
+        }
+
+        static XElement SideForTicketView(double[] x, double[] y, string name, bool isLandscape, double scale)
+        {
+            var group = new XElement("g",
+                new XAttribute("name", name),
+                isLandscape ? new XAttribute("transform", "rotate(-90)") : null);
+
+            // Ajustar a espessura do stroke baseada na escala
+            double strokeWidth = Math.Max(0.1, 4 * scale);
+
+            // Criar os paths individuais do minifix (12 segmentos)
+            AddMinifixBaseQuadPathForTicketView(group, x[0], y[0], x[1], y[1], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[1], y[1], x[2], y[2], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[2], y[2], x[3], y[3], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[3], y[3], x[4], y[2], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[4], y[2], x[5], y[1], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[5], y[1], x[6], y[0], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[6], y[0], x[5], y[4], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[5], y[4], x[4], y[5], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[4], y[5], x[3], y[6], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[3], y[6], x[2], y[5], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[2], y[5], x[1], y[4], strokeWidth);
+            AddMinifixBaseQuadPathForTicketView(group, x[1], y[4], x[0], y[0], strokeWidth);
+
+            // Criar o path completo do círculo
+            var points = new (double X, double Y)[]
+            {
+            (x[0], y[0]),
+            (x[1], y[1]),
+            (x[2], y[2]),
+            (x[3], y[3]),
+            (x[4], y[2]),
+            (x[5], y[1]),
+            (x[6], y[0]),
+            (x[5], y[4]),
+            (x[4], y[5]),
+            (x[3], y[6]),
+            (x[2], y[5]),
+            (x[1], y[4])
+            };
+
+            AddDrawColorCircleForTicketView(group, points, strokeWidth);
+
+            return group;
+        }
+
+        static void AddMinifixBaseQuadPathForTicketView(XElement group, double x1, double y1, double x2, double y2, double strokeWidth)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            string d = $"M {x1.ToString("0.#####", ci)} {y1.ToString("0.#####", ci)} " +
+                      $"L {x2.ToString("0.#####", ci)} {y2.ToString("0.#####", ci)} " +
+                      $"L {x2.ToString("0.#####", ci)} {y2.ToString("0.#####", ci)} " +
+                      $"L {x1.ToString("0.#####", ci)} {y1.ToString("0.#####", ci)} Z";
+
+            group.Add(new XElement("path",
+                new XAttribute("d", d),
+                new XAttribute("style", $"fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:{strokeWidth.ToString("0.##", ci)};"),
+                new XAttribute("stroke", "black")
+            ));
+        }
+
+        static void AddDrawColorCircleForTicketView(XElement group, (double X, double Y)[] points, double strokeWidth)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            var d = "M " + string.Join(" L ", points.Select(p =>
+                $"{p.X.ToString("0.#####", ci)} {p.Y.ToString("0.#####", ci)}"
+            )) + " Z";
+
+            group.Add(new XElement("path",
+                new XAttribute("d", d),
+                new XAttribute("style", $"fill:red;fill-opacity:0.4;stroke-linejoin:round;stroke-width:{strokeWidth.ToString("0.##", ci)};"),
+                new XAttribute("stroke", "black")
+            ));
+        }
+
+
+
+
+
+
+        #endregion
+
     }
 }

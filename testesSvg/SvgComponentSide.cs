@@ -16,55 +16,32 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
+        //PecaRebaixoMinifixMinParafuso --OK
         var payload = new SvgRequest
         {
-            Width = "300",
-            Height = "100",
-            IsTicket = true,
-            IsBorderBottom = true,
-            BorderBottomLabel = "5056158",
-            WidthLabel = "300",
-            HeightLabel = "100",
-            IsBorderLeft = true,
-            BorderLeftLabel = "5056158",
-            IsBorderRight = true,
-            BorderRightLabel = "5056158",
-            IsBorderTop = true,
-            BorderTopLabel = "5056158"
+            Width = "12000",
+            Height = "20000",
+            Thickness = "700",
+            Offset = "1500",
+            JoinSystemType = "minifix",
+            Type = "Side",
+            //IsLandscape = true,
+            //IsBorderRight = true,
+            //IsBorderLeft = true,
+            //IsBorderTop = true,
+            //IsBorderBottom = true
         };
 
-        //quadrado
+        //Retangulo Minifix - Preset TicketPrint
         //var payload = new SvgRequest
         //{
-        //    Width = "300",
-        //    Height = "300",
-        //    IsTicket = true,
-        //    IsBorderBottom = true,
-        //    BorderBottomLabel = "5056158",
-        //    WidthLabel = "300",
-        //    HeightLabel = "300",
-        //    IsBorderLeft = true,
-        //    BorderLeftLabel = "5056158",
-        //    IsBorderRight = true,
-        //    BorderRightLabel = "5056158",
-        //    IsBorderTop = true,
-        //    BorderTopLabel = "5056158"
-        //};
-
-        ////PecaRebaixoMinifixMinParafuso --OK
-        //var payload = new SvgRequest
-        //{
-        //    Width = "12000",
-        //    Height = "20000",
-        //    Thickness = "700",
-        //    Offset = "0",
+        //    Width = "5469",
+        //    Height = "3308",
+        //    Thickness = "290",
+        //    Offset = "412",
         //    JoinSystemType = "minifix",
         //    Type = "Side",
-        //    IsLandscape = true,
-        //    IsBorderRight = true,
-        //    IsBorderLeft = true,
-        //    IsBorderTop = true,
-        //    IsBorderBottom = true
+        //    IsTicket = true
         //};
 
         //var payload = new SvgRequest
@@ -108,6 +85,9 @@ public static class SvgComponentSide
 
     static string GenerateSvgFromJson(SvgRequest json)
     {
+        if (json.IsTicket)
+            TicketView(json);
+        
         int width = Convert.ToInt32(json.Width);
         int height = Convert.ToInt32(json.Height);
 
@@ -129,30 +109,10 @@ public static class SvgComponentSide
             doorItens = "quin";
         }
 
-        //int width = Convert.ToInt32(json.Width);
-        //int height = Convert.ToInt32(json.Height);
-
         int viewBoxX = -width / 20;
         int viewBoxY = -height / 20;
         int viewBoxWidth = width / 10;
         int viewBoxHeight = height / 10;
-
-        // double expandFactor = 1.3; // 30% maior
-        //int expandedviewBoxX1 = (int)(viewBoxX * expandFactor);
-        //int expandedviewBoxY1 = (int)(viewBoxY * expandFactor);
-
-        //int expandedviewBoxWidth1 = (int)(viewBoxWidth * expandFactor);
-        //int expandedviewBoxHeight1 = (int)(viewBoxHeight * expandFactor);
-
-        //var svg = new XElement("svg",
-        //    new XAttribute("viewBox", $"{expandedviewBoxX1} {expandedviewBoxY1} {expandedviewBoxWidth1} {expandedviewBoxHeight1}"),
-        //    new XAttribute("width", width),
-        //    new XAttribute("height", height)
-        //    , Label.CreateLabelGroup(width, height)
-        //    , Label.CreateTopLabelGroup(width, height)
-        //    , CreateBackgroundPath(viewBoxX, viewBoxY)
-        ////  ,CreateBorderGroup(viewBoxWidth, viewBoxHeight, viewBoxX, viewBoxY, true, false, false, true)
-        //);
 
         var viewBox = CalculateViewBox(Convert.ToInt32(json.Width), Convert.ToInt32(json.Height), json.IsLandscape);
         var expandedViewBox = ExpandedViewBox(viewBox);
@@ -261,7 +221,7 @@ public static class SvgComponentSide
 
         }
 
-        var ok = ResizeSvg(svg.ToString(), 48, 37.312);
+        var ok = ResizeSvg(svg.ToString(), 48, 37);
 
         svg.Add(Label.Footer(expandedViewBox.Height, expandedViewBox.Y));
 
@@ -1073,7 +1033,7 @@ public static class SvgComponentSide
         // Calculate original SVG dimensions
         int originalSvgWidth = originalWidth + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 30;
         int originalSvgHeight = originalHeight + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 20;
-
+        
         // Calcular escala para caber no viewBox (mantendo proporção)
         double scaleX = (double)viewBoxWidth / originalSvgWidth;
         double scaleY = (double)viewBoxHeight / originalSvgHeight;
@@ -1102,7 +1062,6 @@ public static class SvgComponentSide
             IsLandscape = svg.IsLandscape
         };
 
-        // Criar SVG com viewBox fixo
         var svgTeste = new XElement("svg",
             new XAttribute("viewBox", $"{viewBoxX} {viewBoxY} {viewBoxWidth} {viewBoxHeight}"),
             new XAttribute("width", viewBoxWidth),
@@ -1110,7 +1069,12 @@ public static class SvgComponentSide
 
         // Adicionar elementos usando as dimensões e posições escaladas
         svgTeste.Add(BackgroundCut(rectBox, Convert.ToInt32(scale), true));
-        svgTeste.Add(BorderCut(rectX, rectY, rectX + scaledWidth, rectY + scaledHeight, svg, Convert.ToInt32(scale), true));
+
+        #region border
+
+        if (svg.IsAnyBorderValid())
+            svgTeste.Add(BorderCut(rectX, rectY, rectX + scaledWidth, rectY + scaledHeight, svg, Convert.ToInt32(scale), true));
+
         svgTeste.Add(LabelTopWidthTicket(rectX, rectY, rectBox.Width, svg.WidthLabel));
         svgTeste.Add(LabelLeftHeightTicket(rectX, rectY, rectBox.Height, svg.HeightLabel));
 
@@ -1123,11 +1087,43 @@ public static class SvgComponentSide
         if (svg.IsBorderTop)
             svgTeste.Add(LabelBorderTopTicket(rectX, rectY, rectBox.Width, rectBox.Height, viewBoxHeight, svg.BorderTopLabel));
 
+        #endregion 
+
+        //metodo para validar o systemType
+        int? dadoThickness = !string.IsNullOrEmpty(svg.Thickness) ? Convert.ToInt32(svg.Thickness) : null;
+
+        if (dadoThickness is not null)
+        {
+            int? dadoOffsetFromEnd = !string.IsNullOrEmpty(svg.Offset) ? Convert.ToInt32(svg.Offset) : null;
+            svgTeste.Add(CreateTicketThickness(scale, scaledWidth, scaledHeight, rectX, rectY, (int)dadoThickness, dadoOffsetFromEnd));
+        }
+
+
+
+
+
+        if (!string.IsNullOrEmpty(svg.JoinSystemType))
+        {
+            if (svg.JoinSystemType.Equals("minifix"))
+            {
+                if (svg.Type.Equals("Base"))
+                    svgTeste.Add(Minifix.GenerateBase(viewBoxWidth, viewBoxHeight, svg.IsLandscape));
+
+                if (svg.Type.Equals("Side"))
+                {
+                    //add regra um furo, dois furos
+                    svgTeste.Add(Minifix.GenerateSideForTicketView(rectBox, scale));
+                }
+            }
+
+        }
 
         svgTeste.Add(LabelFooterTicket(rectX, rectY, rectBox.Width, rectBox.Height, viewBoxHeight));
 
         return svgTeste;
     }
+
+    #region TicketLegends
 
     static XElement LabelTopWidthTicket(int rectX, int rectY, int width, string widthLabel)
     {
@@ -1155,7 +1151,7 @@ public static class SvgComponentSide
         topWidthGroup.Add(textElement);
         return topWidthGroup;
     }
-
+    
     static XElement LabelLeftHeightTicket(int rectX, int rectY, int height, string heightLabel)
     {
         int textX = rectX - 1;
@@ -1317,6 +1313,47 @@ public static class SvgComponentSide
 
         return footerGroup;
     }
+
+    #endregion
+
+    public static XElement CreateTicketThickness(double scale, double scaledWidth, double scaledHeight,
+    int rectX, int rectY, int dadoThickness, int? dadoOffset = 0)
+    {
+        double scaledThickness = dadoThickness * scale;
+        double highlightY;
+
+        // Coordenadas do destaque de espessura
+        if (dadoOffset != null)
+        {
+            double offset = (dadoOffset ?? 0) * scale;
+            highlightY = rectY + scaledHeight - scaledThickness - offset;
+        }
+        else
+            highlightY = rectY + scaledHeight - scaledThickness;
+
+        
+        double highlightHeight = scaledThickness;
+
+        string left = (rectX - 2 * scale).ToString().Replace(',', '.');
+        string right = (rectX + scaledWidth + 2 * scale).ToString().Replace(',', '.');
+        string top = (highlightY).ToString().Replace(',', '.');
+        string bottom = (highlightY + highlightHeight).ToString().Replace(',', '.');
+
+        var group = new XElement("g", new XAttribute("name", "thickness"));
+
+        // Adiciona o retângulo principal (parte vermelha)
+        group.Add(new XElement("path",
+            new XAttribute("d", $"M {left} {top} " +
+                               $"L {right} {top} " +
+                               $"L {right} {bottom} " +
+                               $"L {left} {bottom} Z"),
+            new XAttribute("style", "fill:red;fill-opacity:0.5;stroke-linejoin:round;stroke-width:0.1;"),
+            new XAttribute("stroke", "black")
+        ));
+
+        return group;
+    }
+
 
     #endregion
 
