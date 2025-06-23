@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace testesSvg.Components
 {
     #region testes
-    ////PecaRebaixoMinifixMinParafuso --OK
+    //PecaRebaixoMinifixMinParafuso --OK (UM FURO)
     //var payload = new SvgRequest
     //{
     //    Width = "12000",
@@ -14,8 +14,29 @@ namespace testesSvg.Components
     //    JoinSystemType = "minifix",
     //    Type = "Side"
     //};
+    //PecaRebaixoMinifixMAXParafuso --OK (UM FURO)
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "13999",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifix",
+    //    Type = "Side"
+    //};
 
-    ////PecaRebaixoMinifixMaxParafuso --OK
+    //PecaRebaixoMinifixMinParafuso --OK (DOIS FUROS)
+    //var payload = new SvgRequest
+    //{
+    //    Width = "12000",
+    //    Height = "14000",
+    //    Thickness = "700",
+    //    Offset = "0",
+    //    JoinSystemType = "minifix",
+    //    Type = "Side"
+    //};
+
+    //PecaRebaixoMinifixMaxParafuso --OK (DOIS FUROS)
     //var payload = new SvgRequest
     //{
     //    Width = "219000",

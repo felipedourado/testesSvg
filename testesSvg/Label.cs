@@ -4,7 +4,7 @@ namespace testesSvg
 {
     public static class Label
     {
-        public static XElement HeightSystemType(int width, int height)
+        public static XElement HeightSystemType(int width, int height, int viewBoxHeight, string label)
         {
             var group = new XElement("g", new XAttribute("name", "label-height"));
 
@@ -12,22 +12,21 @@ namespace testesSvg
             //double labelX = -Math.Ceiling((width / 100) * 0.0606);
             //double labelY = -((height / 10) - 70);
 
+            int fontSize = Math.Max(8, viewBoxHeight / 30);
+
             double labelX = -(width / 10) / 2 - 80; // 80 unidades à esquerda da borda
             double labelY = 0; // centro vertical
-
-            // Valor que será exibido no label
-            int labelValue = height / 10;
 
             // Cria o elemento <text>
             var textElement = new XElement("text",
                 new XAttribute("x", labelX),
                 new XAttribute("y", labelY),
-                new XAttribute("font-size", "120"),
+                new XAttribute("font-size", fontSize),
                 new XAttribute("fill", "black"),
                 new XAttribute("text-anchor", "middle"),
                 new XAttribute("dominant-baseline", "middle"),
                 new XAttribute("transform", $"rotate(-90 {labelX} 0)"),
-                labelValue.ToString()
+                label
             );
 
             group.Add(textElement);
@@ -35,7 +34,7 @@ namespace testesSvg
             return group;
         }
 
-        public static XElement WidthSystemType(int width, int height)
+        public static XElement WidthSystemType(int width, int height, int viewBoxHeight, string label)
         {
             var group = new XElement("g", new XAttribute("name", "label-width"));
 
@@ -44,17 +43,17 @@ namespace testesSvg
             double labelY = -Math.Ceiling((height / 10.0) * 0.54);
 
             // Valor que será exibido no label
-            int labelValue = width / 10; // 3500
+            int fontSize = Math.Max(8, viewBoxHeight / 30);
 
             // Cria o elemento <text>
             var textElement = new XElement("text",
                 new XAttribute("x", labelX),
                 new XAttribute("y", labelY),
-                new XAttribute("font-size", "120"),
+                new XAttribute("font-size", fontSize),
                 new XAttribute("fill", "black"),
                 new XAttribute("text-anchor", "middle"),
                 new XAttribute("dominant-baseline", "middle"),
-                labelValue.ToString()
+                label
             );
 
             group.Add(textElement);

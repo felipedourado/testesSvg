@@ -16,21 +16,88 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
-        //PecaRebaixoMinifixMinParafuso --OK
+        //Minifix-Rebaixo-Max - SEM LANDSCAPE
+        //var payload = new SvgRequest
+        //{
+        //    Width = "219000",
+        //    Height = "159000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix",
+        //    Type = "Side",
+        //    IsBorderRight = true,
+        //    IsBorderLeft = true,
+        //    IsBorderTop = true,
+        //    IsBorderBottom = true,
+        //    BorderBottomLabel = "123456",
+        //    BorderLeftLabel = "123456",
+        //    BorderRightLabel = "123456",
+        //    BorderTopLabel = "123456",
+        //    IsTicket = true
+        //};
+
         var payload = new SvgRequest
         {
-            Width = "12000",
-            Height = "20000",
+            Width = "159000",
+            Height = "219000",
             Thickness = "700",
             Offset = "1500",
             JoinSystemType = "minifix",
             Type = "Side",
-            //IsLandscape = true,
-            //IsBorderRight = true,
-            //IsBorderLeft = true,
-            //IsBorderTop = true,
-            //IsBorderBottom = true
+            IsBorderRight = true,
+            IsBorderLeft = true,
+            IsBorderTop = true,
+            IsBorderBottom = true,
+            BorderBottomLabel = "123456",
+            BorderLeftLabel = "123456",
+            BorderRightLabel = "123456",
+            BorderTopLabel = "123456",
+            IsTicket = true,
+            IsLandscape = true
         };
+
+        //Minifix-Rebaixo-Min - SEM LANDSCAPE
+        //var payload = new SvgRequest
+        //{
+        //    Width = "20000",
+        //    Height = "14000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix",
+        //    Type = "Side",
+        //    IsBorderRight = true,
+        //    IsBorderLeft = true,
+        //    IsBorderTop = true,
+        //    IsBorderBottom = true,
+        //    BorderBottomLabel = "123456",
+        //    BorderLeftLabel = "123456",
+        //    BorderRightLabel = "123456",
+        //    BorderTopLabel = "123456",
+        //    IsTicket = true,
+        //    HeightLabel = "14000",
+        //    WidthLabel = "20000"
+        //};
+
+
+        //PecaRebaixoMinifixMinParafuso - COM LANDSCAPE
+        //var payload = new SvgRequest
+        //{
+        //    Width = "14000",
+        //    Height = "20000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix",
+        //    Type = "Side",
+        //    IsBorderRight = true,
+        //    IsBorderLeft = true,
+        //    IsBorderTop = true,
+        //    IsBorderBottom = true,
+        //    BorderBottomLabel = "123456",
+        //    BorderLeftLabel = "123456",
+        //    BorderRightLabel = "123456",
+        //    BorderTopLabel = "123456",
+        //    IsLandscape = true
+        //};
 
         //Retangulo Minifix - Preset TicketPrint
         //var payload = new SvgRequest
@@ -42,33 +109,6 @@ public static class SvgComponentSide
         //    JoinSystemType = "minifix",
         //    Type = "Side",
         //    IsTicket = true
-        //};
-
-        //var payload = new SvgRequest
-        //{
-        //    Width = "1000",
-        //    Height = "2000",
-        //    IsLandscape = true,
-        //    IsBorderBottom = true,
-        //    IsBorderRight = false,
-        //    IsBorderLeft = false,
-        //    IsBorderTop = true
-        //};
-
-        //PecaRebaixoMinifixMinParafuso --OK
-        //var payload = new SvgRequest
-        //{
-        //    Width = "60000",
-        //    Height = "60000",
-        //    Thickness = "700",
-        //    Offset = "1500",
-        //    JoinSystemType = "None",
-        //    Type = "Side",
-        //    IsLandscape = false,
-        //    IsBorderRight = false,
-        //    IsBorderLeft = false,
-        //    IsBorderTop = false,
-        //    IsBorderBottom = false
         //};
 
         string svgXml = GenerateSvgFromJson(payload);
@@ -85,19 +125,21 @@ public static class SvgComponentSide
 
     static string GenerateSvgFromJson(SvgRequest json)
     {
-        if (json.IsTicket)
+        if (json.IsTicket && string.IsNullOrEmpty(json.JoinSystemType))
             TicketView(json);
-        
-        int width = Convert.ToInt32(json.Width);
-        int height = Convert.ToInt32(json.Height);
 
         if (string.IsNullOrEmpty(json.JoinSystemType))
             return GenerateRectangleSvg(json);
+
+        int width = Convert.ToInt32(json.Width);
+        int height = Convert.ToInt32(json.Height);
 
         string doorItens = string.Empty;
 
         if (!string.IsNullOrEmpty(json.JoinSystemType) && json.JoinSystemType.Equals("door"))
         {
+            doorItens = "double";
+
             var heightDouble = height / 10.0;
 
             if (heightDouble >= 9000.1 && heightDouble < 1600.1)
@@ -106,7 +148,8 @@ public static class SvgComponentSide
             if (heightDouble >= 1600.1 && heightDouble < 2000.1)
                 doorItens = "quad";
 
-            doorItens = "quin";
+            if (heightDouble > 2000.1)
+                doorItens = "quin";
         }
 
         int viewBoxX = -width / 20;
@@ -124,8 +167,8 @@ public static class SvgComponentSide
            new XAttribute("viewBox", FormatViewBox(expandedViewBox)),
            new XAttribute("width", w),
            new XAttribute("height", h)
-           , Label.HeightSystemType(w, h)
-           , Label.WidthSystemType(w, h)
+           , Label.HeightSystemType(w, h, expandedViewBox.Height, json.HeightLabel)
+           , Label.WidthSystemType(w, h, expandedViewBox.Height, json.WidthLabel)
            , CreateBackgroundPath(viewBox.X, viewBox.Y, json.IsLandscape)
        );
 
@@ -135,24 +178,24 @@ public static class SvgComponentSide
         if (json.IsLandscape)
         {
             if (json.IsBorderRight)
-                svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderTopLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderTopLabel));
             if (json.IsBorderBottom)
-                svg.Add(CreateRightC2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderRightLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderRightLabel));
             if (json.IsBorderLeft)
-                svg.Add(CreateBottomL2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderBottomLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderBottomLabel));
             if (json.IsBorderTop)
-                svg.Add(CreateLeftC1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderLeftLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderLeftLabel));
         }
         else
         {
             if (json.IsBorderRight)
-                svg.Add(CreateRightC2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderRightLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderRightLabel));
             if (json.IsBorderBottom)
-                svg.Add(CreateBottomL2LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderBottomLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderBottomLabel));
             if (json.IsBorderLeft)
-                svg.Add(CreateLeftC1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderLeftLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderLeftLabel));
             if (json.IsBorderTop)
-                svg.Add(CreateTopL1LabelDrill(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height));
+                svg.Add(BorderTopLabel(expandedViewBox.X, expandedViewBox.Y, expandedViewBox.Width, expandedViewBox.Height, json.BorderTopLabel));
         }
 
         int? dadoThickness = !string.IsNullOrEmpty(json.Thickness) ? Convert.ToInt32(json.Thickness) : null;
@@ -221,12 +264,15 @@ public static class SvgComponentSide
 
         }
 
-        var ok = ResizeSvg(svg.ToString(), 48, 37);
-
         svg.Add(Label.Footer(expandedViewBox.Height, expandedViewBox.Y));
 
-        return svg.ToString();
+        if (json.IsTicket)
+        {
+            var ok = ResizeSvg(svg.ToString(), 48, 37);
+            return ok;
+        }
 
+        return svg.ToString();
     }
 
     static XElement CreateOuterBackgroundPath(int viewBoxX, int viewBoxY)
@@ -341,19 +387,19 @@ public static class SvgComponentSide
         svgElement.SetAttributeValue("preserveAspectRatio", "xMidYMid meet");
 
         // Aplica rotate(-90) em todos os elementos<g>
-        var gElements = svgElement.Descendants().Where(el => el.Name.LocalName == "g");
-        foreach (var g in gElements)
-        {
-            var existingTransform = g.Attribute("transform")?.Value;
-            string newTransform = "rotate(-90)";
+        //var gElements = svgElement.Descendants().Where(el => el.Name.LocalName == "g");
+        //foreach (var g in gElements)
+        //{
+        //    var existingTransform = g.Attribute("transform")?.Value;
+        //    string newTransform = "rotate(-90)";
 
-            if (!string.IsNullOrWhiteSpace(existingTransform))
-            {
-                newTransform = existingTransform + " " + newTransform;
-            }
+        //    if (!string.IsNullOrWhiteSpace(existingTransform))
+        //    {
+        //        newTransform = existingTransform + " " + newTransform;
+        //    }
 
-            g.SetAttributeValue("transform", newTransform);
-        }
+        //    g.SetAttributeValue("transform", newTransform);
+        //}
         // Remove qualquer transform herdado (opcional)
         svgElement.SetAttributeValue("transform", null);
 
@@ -442,6 +488,7 @@ public static class SvgComponentSide
         return $"{viewBox.X} {viewBox.Y} {viewBox.Width} {viewBox.Height}";
     }
 
+    #region LegendasAntigas
     static XElement CreateRightC2LabelDrill(int x, int y, int viewBoxWidth, int viewBoxHeight)
     {
         // Calculate positioning at 20% of viewBox width from right edge
@@ -571,6 +618,145 @@ public static class SvgComponentSide
 
         return groupElement;
     }
+
+    #endregion
+
+    #region LegendasNovas
+
+    static XElement BorderRightLabel(int x, int y, int viewBoxWidth, int viewBoxHeight, string label, int xOffset = 11)
+    {
+        // Calculate offset to center the background element
+        int offsetX = (viewBoxWidth - viewBoxWidth) / 2;
+        int offsetY = (viewBoxHeight - viewBoxWidth) / 2;
+
+        int textX = x + offsetY; // ligeiramente à direita da borda
+
+        double rotateY = y + (viewBoxWidth / 2.0);
+
+        int marginDistance = (int)(viewBoxWidth * 0.02);
+        //int textX = (x + viewBoxWidth) - marginDistance;
+
+        int textY = y + (viewBoxHeight / 2);
+        int fontSize = Math.Max(8, viewBoxHeight / 30);
+
+        var rightC2Group = new XElement("g", new XAttribute("name", "right-c2-label"));
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "end"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            new XAttribute("transform", $"rotate(-90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            label
+        );
+
+        rightC2Group.Add(textElement);
+        return rightC2Group;
+    }
+
+    static XElement BorderLeftLabel(int x, int y, int viewBoxWidth, int viewBoxHeight, string label, int xOffset = 13)
+    {
+        // Valores padrão
+        // Calculate font size based on viewBox height
+        int fontSize = Math.Max(8, viewBoxHeight / 30);
+
+        // Calcular posição X: 20% de distância da margem esquerda
+        // margem esquerda do viewBox = viewBoxX
+        // 20% da largura do viewBox = viewBoxWidth * 0.2
+        int marginDistance = (int)(viewBoxWidth * 0.02);
+
+        int textX = x - xOffset;
+
+        // Calcular posição Y: meio do eixo Y
+        int textY = y + (viewBoxHeight / 2);
+
+        double rotateY = y + (viewBoxHeight / 2.0);
+
+        // Criar o elemento text usando XElement
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "start"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            new XAttribute("transform", $"rotate(-90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            label
+        );
+
+        var groupElement = new XElement("g", new XAttribute("name", "left-c1-label"), textElement);
+
+        return groupElement;
+    }
+
+    static XElement BorderTopLabel(int viewBoxX, int viewBoxY, int viewBoxWidth, int viewBoxHeight, string label)
+    {
+        int fontSize = Math.Max(8, viewBoxHeight / 20);
+
+        int textX = viewBoxX + (viewBoxWidth / 2);
+
+        int marginDistance = (int)(viewBoxHeight * 0.05);
+        int textY = viewBoxY + marginDistance;
+
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            label
+        );
+
+        var groupElement = new XElement("g",
+            new XAttribute("name", "l1-label"),
+            textElement
+        );
+
+        return groupElement;
+    }
+
+    static XElement BorderBottomLabel(int viewBoxX, int viewBoxY, int viewBoxWidth, int viewBoxHeight, string label)
+    {
+        // Calcular posição X: meio do eixo X
+        int fontSize = Math.Max(8, viewBoxHeight / 20);
+
+        int textX = viewBoxX + (viewBoxWidth / 2);
+
+        int marginDistance = (int)(viewBoxHeight * 0.08);
+        int textY = (viewBoxY + viewBoxHeight) - marginDistance;
+
+        // Criar o elemento text usando XElement
+        var textElement = new XElement("text",
+            new XAttribute("x", textX),
+            new XAttribute("y", textY),
+            new XAttribute("text-anchor", "middle"),
+            new XAttribute("dominant-baseline", "middle"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", fontSize),
+            new XAttribute("fill", "#333333"),
+            new XAttribute("font-weight", "bold"),
+            label
+        );
+
+        // Criar o elemento group contendo o text
+        var groupElement = new XElement("g",
+            new XAttribute("name", "l2-label"),
+            textElement
+        );
+
+        return groupElement;
+    }
+
+    #endregion 
 
 
     //-------------------------------------------------
@@ -1033,7 +1219,7 @@ public static class SvgComponentSide
         // Calculate original SVG dimensions
         int originalSvgWidth = originalWidth + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 30;
         int originalSvgHeight = originalHeight + (2 * originalPadding) + originalThickStrokeWidth + originalTextPadding + 20;
-        
+
         // Calcular escala para caber no viewBox (mantendo proporção)
         double scaleX = (double)viewBoxWidth / originalSvgWidth;
         double scaleY = (double)viewBoxHeight / originalSvgHeight;
@@ -1151,7 +1337,7 @@ public static class SvgComponentSide
         topWidthGroup.Add(textElement);
         return topWidthGroup;
     }
-    
+
     static XElement LabelLeftHeightTicket(int rectX, int rectY, int height, string heightLabel)
     {
         int textX = rectX - 1;
@@ -1331,7 +1517,7 @@ public static class SvgComponentSide
         else
             highlightY = rectY + scaledHeight - scaledThickness;
 
-        
+
         double highlightHeight = scaledThickness;
 
         string left = (rectX - 2 * scale).ToString().Replace(',', '.');
