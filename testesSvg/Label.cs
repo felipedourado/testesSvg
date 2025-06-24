@@ -34,6 +34,40 @@ namespace testesSvg
             return group;
         }
 
+        public static XElement HeightSystemType1(int width, int height, int viewBoxHeight, string label)
+        {
+            var group = new XElement("g", new XAttribute("name", "label-height"));
+
+            // Calculate font size - baseado no exemplo: 795 para viewBoxHeight 23850
+            // 795 / 23850 ≈ 0.033 (3.3% da altura)
+            int fontSize = (int)(viewBoxHeight * 0.033);
+
+            // Calcular posição X
+            // No exemplo desejado: labelX = -11030
+            // width = 219000, então -11030 é aproximadamente -5.03% da largura
+            double labelX = -(width * 0.0503);
+
+            // Calcular posição Y
+            // No exemplo desejado: labelY = -350
+            // height = 159000, então -350 é aproximadamente -0.22% da altura
+            double labelY = -(height * 0.0022);
+
+            // Criar o elemento <text>
+            var textElement = new XElement("text",
+                new XAttribute("x", labelX.ToString().Replace(',', '.')),
+                new XAttribute("y", labelY.ToString().Replace(',', '.')),
+                new XAttribute("font-size", fontSize),
+                new XAttribute("fill", "black"),
+                new XAttribute("text-anchor", "middle"),
+                new XAttribute("dominant-baseline", "middle"),
+                new XAttribute("transform", $"rotate(-90 {labelX.ToString().Replace(',', '.')} 0)"),
+                label
+            );
+
+            group.Add(textElement);
+            return group;
+        }
+
         public static XElement WidthSystemType(int width, int height, int viewBoxHeight, string label)
         {
             var group = new XElement("g", new XAttribute("name", "label-width"));

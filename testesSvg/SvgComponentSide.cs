@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Newtonsoft.Json;
+using System.Globalization;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,6 +17,9 @@ public static class SvgComponentSide
 
     public static string GenerateComponent()
     {
+
+        //FALTA AJUSTAR A LEGENDA ESQUERDA PARA QUADRADO
+
         //Minifix-Rebaixo-Max - SEM LANDSCAPE
         //var payload = new SvgRequest
         //{
@@ -33,28 +37,32 @@ public static class SvgComponentSide
         //    BorderLeftLabel = "123456",
         //    BorderRightLabel = "123456",
         //    BorderTopLabel = "123456",
-        //    IsTicket = true
+        //    IsTicket = true,
+        //    HeightLabel = "159000",
+        //    WidthLabel = "219000",
         //};
 
-        var payload = new SvgRequest
-        {
-            Width = "159000",
-            Height = "219000",
-            Thickness = "700",
-            Offset = "1500",
-            JoinSystemType = "minifix",
-            Type = "Side",
-            IsBorderRight = true,
-            IsBorderLeft = true,
-            IsBorderTop = true,
-            IsBorderBottom = true,
-            BorderBottomLabel = "123456",
-            BorderLeftLabel = "123456",
-            BorderRightLabel = "123456",
-            BorderTopLabel = "123456",
-            IsTicket = true,
-            IsLandscape = true
-        };
+        //var payload = new SvgRequest - COM LANDSCAPE
+        //{
+        //    Width = "159000",
+        //    Height = "219000",
+        //    Thickness = "700",
+        //    Offset = "1500",
+        //    JoinSystemType = "minifix",
+        //    Type = "Side",
+        //    IsBorderRight = true,
+        //    IsBorderLeft = true,
+        //    IsBorderTop = true,
+        //    IsBorderBottom = true,
+        //    BorderBottomLabel = "123456",
+        //    BorderLeftLabel = "123456",
+        //    BorderRightLabel = "123456",
+        //    BorderTopLabel = "123456",
+        //    IsTicket = true,
+        //    IsLandscape = true,
+        //    HeightLabel = "159000",
+        //    WidthLabel = "219000"
+        //};
 
         //Minifix-Rebaixo-Min - SEM LANDSCAPE
         //var payload = new SvgRequest
@@ -77,6 +85,29 @@ public static class SvgComponentSide
         //    HeightLabel = "14000",
         //    WidthLabel = "20000"
         //};
+
+
+        //Minifix-Rebaixo-Max - SEM LANDSCAPE
+        var payload = new SvgRequest
+        {
+            Width = "219000",
+            Height = "219000",
+            Thickness = "700",
+            Offset = "1500",
+            JoinSystemType = "minifix",
+            Type = "Side",
+            IsBorderRight = true,
+            IsBorderLeft = true,
+            IsBorderTop = true,
+            IsBorderBottom = true,
+            BorderBottomLabel = "123456",
+            BorderLeftLabel = "123456",
+            BorderRightLabel = "123456",
+            BorderTopLabel = "123456",
+            IsTicket = true,
+            HeightLabel = "159000",
+            WidthLabel = "219000",
+        };
 
 
         //PecaRebaixoMinifixMinParafuso - COM LANDSCAPE
@@ -163,11 +194,17 @@ public static class SvgComponentSide
         var w = json.IsLandscape ? height : width;
         var h = json.IsLandscape ? width : height;
 
+
+        var a = JsonConvert.SerializeObject(expandedViewBox);
+        var b = JsonConvert.SerializeObject(viewBox);
+        var c = JsonConvert.SerializeObject(w);
+        var d = JsonConvert.SerializeObject(h);
+
         var svg = new XElement("svg",
            new XAttribute("viewBox", FormatViewBox(expandedViewBox)),
            new XAttribute("width", w),
            new XAttribute("height", h)
-           , Label.HeightSystemType(w, h, expandedViewBox.Height, json.HeightLabel)
+           , Label.HeightSystemType1(w, h, expandedViewBox.Height, json.HeightLabel)
            , Label.WidthSystemType(w, h, expandedViewBox.Height, json.WidthLabel)
            , CreateBackgroundPath(viewBox.X, viewBox.Y, json.IsLandscape)
        );
@@ -625,22 +662,30 @@ public static class SvgComponentSide
 
     static XElement BorderRightLabel(int x, int y, int viewBoxWidth, int viewBoxHeight, string label, int xOffset = 11)
     {
-        // Calculate offset to center the background element
-        int offsetX = (viewBoxWidth - viewBoxWidth) / 2;
-        int offsetY = (viewBoxHeight - viewBoxWidth) / 2;
+        // Calculate font size - mesmo do BorderLeftLabel
+        int fontSize = (int)(viewBoxHeight * 0.05); // 23850 * 0.05 = 1192.5 ≈ 1192
 
-        int textX = x + offsetY; // ligeiramente à direita da borda
+        // Calcular posição X para o texto
+        // No exemplo desejado: textX = 12999
+        // x = -16425, então 12999 = -16425 + 29424
+        // 29424 / 32850 ≈ 0.896 (89.6% da largura)
+        int marginDistance = (int)(viewBoxWidth * 0.896);
+        int textX = x + marginDistance;
 
-        double rotateY = y + (viewBoxWidth / 2.0);
+        // Calcular posição Y para o texto
+        // No exemplo desejado: textY = 50
+        // y = -11925, então 50 = -11925 + 11975
+        // 11975 / 23850 ≈ 0.502 (50.2% da altura)
+        int textY = y + (int)(viewBoxHeight * 0.502);
 
-        int marginDistance = (int)(viewBoxWidth * 0.02);
-        //int textX = (x + viewBoxWidth) - marginDistance;
+        // Para o transform rotate
+        // No exemplo desejado: rotate(90 11833 0)
+        // rotateX = 11833, que é textX - algum offset
+        // 11833 = 12999 - 1166, onde 1166 é aproximadamente 3.55% da largura
+        double rotateX = textX - (int)(viewBoxWidth * 0.0355);
+        double rotateY = 0; // Centro vertical do viewBox
 
-        int textY = y + (viewBoxHeight / 2);
-        int fontSize = Math.Max(8, viewBoxHeight / 30);
-
-        var rightC2Group = new XElement("g", new XAttribute("name", "right-c2-label"));
-
+        // Criar o elemento text usando XElement
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
@@ -650,31 +695,37 @@ public static class SvgComponentSide
             new XAttribute("font-size", fontSize),
             new XAttribute("fill", "#333333"),
             new XAttribute("font-weight", "bold"),
-            new XAttribute("transform", $"rotate(-90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            new XAttribute("transform", $"rotate(90 {rotateX} {rotateY} )"),
             label
         );
 
-        rightC2Group.Add(textElement);
-        return rightC2Group;
+        var groupElement = new XElement("g", new XAttribute("name", "border-right-label"), textElement);
+
+        return groupElement;
     }
 
     static XElement BorderLeftLabel(int x, int y, int viewBoxWidth, int viewBoxHeight, string label, int xOffset = 13)
     {
-        // Valores padrão
-        // Calculate font size based on viewBox height
-        int fontSize = Math.Max(8, viewBoxHeight / 30);
+        // Calculate font size - baseado no exemplo: 1192 para height 23850
+        int fontSize = (int)(viewBoxHeight * 0.05); // 23850 * 0.05 = 1192.5 ≈ 1192
 
-        // Calcular posição X: 20% de distância da margem esquerda
-        // margem esquerda do viewBox = viewBoxX
-        // 20% da largura do viewBox = viewBoxWidth * 0.2
-        int marginDistance = (int)(viewBoxWidth * 0.02);
+        // Calcular posição X para o texto
+        // No exemplo: x = -16425, textX = -18000
+        // Diferença: -1575, que é aproximadamente 4.8% da largura (32850)
+        int marginDistance = (int)(viewBoxWidth * 0.048);
+        int textX = x - marginDistance;
 
-        int textX = x - xOffset;
+        // Calcular posição Y para o texto
+        // No exemplo: y = -11925, textY = 4000
+        // 4000 = -11925 + 15925
+        // 15925 / 23850 ≈ 0.668 (66.8% da altura)
+        int textY = y + (int)(viewBoxHeight * 0.668);
 
-        // Calcular posição Y: meio do eixo Y
-        int textY = y + (viewBoxHeight / 2);
-
-        double rotateY = y + (viewBoxHeight / 2.0);
+        // Para o transform rotate - valores do exemplo: rotate(-90 -16438 0)
+        // rotateX = -16438, que é x + algum offset
+        // -16438 - (-16425) = -13, praticamente o mesmo que xOffset
+        double rotateX = x - xOffset;
+        double rotateY = 0; // No exemplo é 0, que é o centro vertical do viewBox
 
         // Criar o elemento text usando XElement
         var textElement = new XElement("text",
@@ -686,11 +737,11 @@ public static class SvgComponentSide
             new XAttribute("font-size", fontSize),
             new XAttribute("fill", "#333333"),
             new XAttribute("font-weight", "bold"),
-            new XAttribute("transform", $"rotate(-90 {textX} {rotateY.ToString().Replace(',', '.')} )"),
+            new XAttribute("transform", $"rotate(-90 {rotateX} {rotateY} )"),
             label
         );
 
-        var groupElement = new XElement("g", new XAttribute("name", "left-c1-label"), textElement);
+        var groupElement = new XElement("g", new XAttribute("name", "border-left-label"), textElement);
 
         return groupElement;
     }
@@ -716,25 +767,27 @@ public static class SvgComponentSide
             label
         );
 
-        var groupElement = new XElement("g",
-            new XAttribute("name", "l1-label"),
-            textElement
-        );
+        var groupElement = new XElement("g", new XAttribute("name", "border-top-label"), textElement);
 
         return groupElement;
     }
 
     static XElement BorderBottomLabel(int viewBoxX, int viewBoxY, int viewBoxWidth, int viewBoxHeight, string label)
     {
-        // Calcular posição X: meio do eixo X
-        int fontSize = Math.Max(8, viewBoxHeight / 20);
+        // Calculate font size - mesmo padrão dos outros labels
+        int fontSize = (int)(viewBoxHeight * 0.05); // 23850 * 0.05 = 1192.5 ≈ 1192
 
-        int textX = viewBoxX + (viewBoxWidth / 2);
+        // Calcular posição X: centro do viewBox
+        // No exemplo desejado: textX = 0 (centro horizontal do viewBox)
+        int textX = 0; // Centro do viewBox horizontalmente
 
-        int marginDistance = (int)(viewBoxHeight * 0.08);
-        int textY = (viewBoxY + viewBoxHeight) - marginDistance;
+        // Calcular posição Y para o texto
+        // No exemplo desejado: textY = 9017
+        // viewBoxY = -11925, viewBoxHeight = 23850
+        // 9017 = -11925 + 20942, onde 20942 é aproximadamente 87.8% da altura
+        int marginDistance = (int)(viewBoxHeight * 0.878);
+        int textY = viewBoxY + marginDistance;
 
-        // Criar o elemento text usando XElement
         var textElement = new XElement("text",
             new XAttribute("x", textX),
             new XAttribute("y", textY),
@@ -747,11 +800,7 @@ public static class SvgComponentSide
             label
         );
 
-        // Criar o elemento group contendo o text
-        var groupElement = new XElement("g",
-            new XAttribute("name", "l2-label"),
-            textElement
-        );
+        var groupElement = new XElement("g", new XAttribute("name", "border-bottom-label"), textElement);
 
         return groupElement;
     }
